@@ -3,6 +3,8 @@
 #include <string> // Using: string
 
 /** The entity class **/
+#ifndef ENTITY_H
+#define ENTITY_H
 struct Entity{ 
 	std::string unitName; // The name of the entity (including the civilization designator)
 	int unitAge; // The Age that the entity is available at (1,2,3,4)
@@ -34,6 +36,7 @@ struct Entity{
 							// [18]: Wall_&_Gate
 							// [19]: War_Elephant
 };
+#endif // ENTITY_H
 
 /** Best practice revolves around setting initial values to a declared thing **/ /** I am too lazy to write this multiple times **/
 Entity blankSelection{"",0,0,0,0,0,0,0,
