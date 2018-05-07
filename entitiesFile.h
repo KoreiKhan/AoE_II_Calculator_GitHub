@@ -38,7 +38,7 @@ int checkIsInteger(std::string inputWord){
 
 /** Code to load the entities file, validate the input, and return the input **/
 // We will pass each word to the struct Entity class later
-// We can perform further data validation later:
+// We can perform further data validation inside the conductASearch function at "entity.h":
 	// - Ensuring that word[0] and word[2] are recognized names
 	// - Ensuring that the quantity is only 1 for the building class
 
@@ -100,7 +100,7 @@ void entitiesFile(){
 		}
 		
 
-		// Pass the results back to main
+		// Pass the results back to main (ERRORS)
 		// p1BattleParticipant.unitName = words[0];
 		// p1BattleParticipant.unitQuantity = p1Quantity;
 		// p2BattleParticipant.unitName = words[2];

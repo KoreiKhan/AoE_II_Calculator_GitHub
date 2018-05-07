@@ -19,18 +19,12 @@ int main(){
 	// Load "entities.txt"
 	entitiesFile();
 
-	// Get the name of the entities owned by p1 and p2 from "entities.txt"
-	std::string p1BattleParticipantName = "";
-	std::string p2BattleParticipantName = "";
-
-	// Get the quantity of the entities owned by p1 and p2 from "entities.txt"
-	int p1BattleParticipantQuantity = 0;
-	int p2BattleParticipantQuantity = 0;
-
 	// Conduct a search for p1BattleParticipantName and p2BattleParticipantName to update p1BattleParticipant and p2BattleParticipant 
+	// Note that loading "entities.txt" ought to have passed both the name and quantity of the p1 and p2 entities to p1BattleParticipant and p2BattleParticipant already
 	p1BattleParticipant = conductASearch(p1BattleParticipantName, p1BattleParticipantQuantity);
 	p2BattleParticipant = conductASearch(p2BattleParticipantName, p2BattleParticipantQuantity);
 
-	// Output test
-	std::cout << p1BattleParticipant.unitName;
+	// See if this worked test
+	// Should return the Age pre-requisite for player 1's entity as inputted inside "entities.txt" 
+	std::cout << p1BattleParticipant.unitAge << "\n";
 }
