@@ -6,10 +6,10 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 struct Entity{ 
-	std::string unitName; // The name of the entity (including the civilization designator)
-	int unitAge; // The Age that the entity is available at (1,2,3,4)
-	int unitQuantity; // The quantity of the entity
-	int unitHealth; // The health of the entity
+	std::string entityName; // The name of the entity (including the civilization designator)
+	int entityAge; // The Age that the entity is available at (1,2,3,4)
+	int entityQuantity; // The quantity of the entity
+	int entityHealth; // The health of the entity
 	int standardDamage; // The damage that entities often deal
 	int rangedDamage; // The damage that ranged entities sometime deal
 	int garrisonValue; // The garrison value of the entity
