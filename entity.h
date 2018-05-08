@@ -15,30 +15,12 @@ struct Entity{
 	int rangedDamage; // The damage that ranged entities sometime deal
 	int garrisonValue; // The garrison value of the entity
 	int pointValue; // The points awarded to the enemy for killing the entity
-	bool armorClass[20]; // The 20 armor classes for Age of Empires II: The Age of Conquerors civilizations: 
-							// [0]: Archer 
-							// [1]: Building
-							// [2]: Camel
-							// [3]: Castle 
-							// [4]: Cavalry 
-							// [5]: Cavalry_Archer 
-							// [6]: Eagle_Warrior 
-							// [7]: Gunpowder_Unit 
-							// [8]: Infantry 
-							// [9]: Monk 
-							// [10]: Ram
-							// [11]: Ship 
-							// [12]: Siege_Weapon
-							// [13]: Spearman
-							// [14]: Standard_Building
-							// [15]: Stone_Defence
-							// [16]: Turtle_Ship
-							// [17]: Unique_Unit 
-							// [18]: Wall_&_Gate
-							// [19]: War_Elephant
-
+	bool armorClass[20]; // Hold the 20 armor classes for Age of Empires II: The Age of Conquerors (refer to void outputEntity)
 
 	// Declare the initializer (set the initial values)
 	Entity();
+
+	// Declare a function to output information about an entity
+	void outputEntity();
 };
 #endif // ENTITY_H

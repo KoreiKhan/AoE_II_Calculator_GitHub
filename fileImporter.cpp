@@ -6,7 +6,7 @@
 #include <sstream> // Using: stringstream 
 #include <algorithm> // Using: transform, toupper, .begin(), .end()
 #include "fileImporter.h" // Using: entitiesFile functions
-// #include "entity.h" // Using: Entity class
+#include "entity.h" // Using: Entity class
 
 /** A necessary function to see if a string is an integer **/
 int fileImporter::checkIsInteger(std::string inputWord){
@@ -39,9 +39,9 @@ int fileImporter::checkIsInteger(std::string inputWord){
 }
 
 /** Code to load the entities file, validate the input, and return the input **/
-returnEntities fileImporter::entitiesFile(){
+Entity fileImporter::entitiesFile(int inputPlayerNumber){
 	// Declare the entity to return
-	returnEntities entitiesToReturn;
+	Entity returnEntityCSV;
 
 	// Declare a file object
 	std::ifstream fileObject;
@@ -94,18 +94,28 @@ returnEntities fileImporter::entitiesFile(){
 		std::transform(words[0].begin(), words[0].end(), words[0].begin(), ::toupper);
 		std::transform(words[2].begin(), words[2].end(), words[2].begin(), ::toupper);
 
-		// Display the result to the compiler (optional)
+		// Display the result to the compiler (testing purposes only)
+		/**
 		for(int i = 0; i < 4; i++){
 			std::cout << words[i] << "\n"; // Data validation. There is no whitespace (by default)
 		}
+		**/
 
-		// Return the results
-		entitiesToReturn.p1EntityName = words[0];
-		entitiesToReturn.p2EntityName = words[2];
-		entitiesToReturn.p1EntityQuantity = p1Quantity;
-		entitiesToReturn.p2EntityQuantity = p2Quantity;
+		// Return the entity name / quantity back
+		if(inputPlayerNumber == 1){
+			returnEntityCSV.entityName = words[0];
+			returnEntityCSV.entityQuantity = p1Quantity;
+		}
+		else if(inputPlayerNumber == 2){
+			returnEntityCSV.entityName = words[2];
+			returnEntityCSV.entityQuantity = p2Quantity;
+		}
+		else{
+			std::cout << "Error: Enter 1 for player 1 or 2 for player 2";
+			exit(EXIT_FAILURE);
+		}
 
-		return entitiesToReturn;
+		return returnEntityCSV;
 	}
 
 	// Close the file

@@ -5,21 +5,13 @@
 /** The file importer class **/
 #ifndef FILE_IMPORTER_H
 #define FILE_IMPORTER_H
-// Decalre a struct
-struct returnEntities{
-	std::string p1EntityName;
-	std::string p2EntityName;
-	int p1EntityQuantity;
-	int p2EntityQuantity;
-};
-
 class fileImporter{
 	public:
 	// Referred to functions
 	int checkIsInteger(std::string inputWord);
 
 	// File loading functions
-	returnEntities entitiesFile();
+	Entity entitiesFile(int inputPlayerNumber);
 };
 #endif // FILE_IMPORTER_H
 
