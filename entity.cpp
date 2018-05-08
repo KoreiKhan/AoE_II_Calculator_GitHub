@@ -4,6 +4,7 @@
 #include "entity.h" // Using: entity class
 #include <cstdlib> // Using: exit(EXIT_FAILURE)
 
+// Declare the constructor
 Entity::Entity(){
 	// Set the initial values
 	entityName = "";
@@ -18,6 +19,9 @@ Entity::Entity(){
 		armorClass[i] = false;
 	}
 }
+
+// Declare the deconstructor
+Entity::~Entity(){}
 
 void Entity::outputEntity(){
 	// Declare an integer
@@ -49,13 +53,13 @@ void Entity::outputEntity(){
 	if(standardDamage!=0){
 		std::cout << ", " << standardDamage << "SD";
 	}
-	else if(rangedDamage!=0){
+	if(rangedDamage!=0){
 		std::cout << ", " << rangedDamage << "RD";
 	}
-	else if(pointValue !=0){
+	if(pointValue !=0){
 		std::cout << ", " << pointValue << "PV";
 	}
-	else if(garrisonValue !=0){
+	if(garrisonValue !=0){
 		std::cout << ", " << garrisonValue << "GV";
 	}
 	// Only display the relevant armor classes.

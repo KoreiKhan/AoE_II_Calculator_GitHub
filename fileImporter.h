@@ -7,11 +7,20 @@
 #define FILE_IMPORTER_H
 class fileImporter{
 	public:
-	// Referred to functions
+	// Constructor
+	fileImporter();
+
+	// Check if a string is an integer function
 	int checkIsInteger(std::string inputWord);
 
-	// File loading functions
+	// Get the rest of the information about an entity
+	Entity conductASearch(std::string inputEntityName, int inputEntityQuantity);
+
+	// Get the entity name and quantity function
 	Entity entitiesFile(int inputPlayerNumber);
+
+	// Deconstructor
+	~fileImporter();
 };
 #endif // FILE_IMPORTER_H
 

@@ -17,10 +17,13 @@ struct Entity{
 	int pointValue; // The points awarded to the enemy for killing the entity
 	bool armorClass[20]; // Hold the 20 armor classes for Age of Empires II: The Age of Conquerors (refer to void outputEntity)
 
-	// Declare the initializer (set the initial values)
+	// Declare the initializer/constructor (set the initial values)
 	Entity();
 
 	// Declare a function to output information about an entity
 	void outputEntity();
+
+	// Delare the deconstructor
+	~Entity();
 };
 #endif // ENTITY_H
