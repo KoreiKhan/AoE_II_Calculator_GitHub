@@ -5,9 +5,11 @@
 #include <cstdlib> // Using: exit(EXIT_FAILURE)
 #include <sstream> // Using: stringstream 
 #include <algorithm> // Using: transform, toupper, .begin(), .end()
+#include "fileImporter.h" // Using: entitiesFile functions
+// #include "entity.h" // Using: Entity class
 
 /** A necessary function to see if a string is an integer **/
-int checkIsInteger(std::string inputWord){
+int fileImporter::checkIsInteger(std::string inputWord){
 	// Delare data structures
 	int anInteger = 0;
 	std::stringstream wordConversion;
@@ -37,12 +39,10 @@ int checkIsInteger(std::string inputWord){
 }
 
 /** Code to load the entities file, validate the input, and return the input **/
-// We will pass each word to the struct Entity class later
-// We can perform further data validation inside the conductASearch function at "entity.h":
-	// - Ensuring that word[0] and word[2] are recognized names
-	// - Ensuring that the quantity is only 1 for the building class
+returnEntities fileImporter::entitiesFile(){
+	// Declare the entity to return
+	returnEntities entitiesToReturn;
 
-void entitiesFile(){
 	// Declare a file object
 	std::ifstream fileObject;
 
@@ -80,7 +80,7 @@ void entitiesFile(){
 		}
 
 		// Data validation. Ensure that there are at least four words inside of the words array
-		if(count <=3){
+		if(count <3){
 			std::cout << "Error: Too little input. You must enter the values for up to two players" << "\n";
 			std::cout << "The input is supposed to be: [P1_Entity_Name] [P1_Entity_Quantity] [P2_Entity_Name] [P2_Entity_Quantity]" << "\n";
 			exit(EXIT_FAILURE);
@@ -98,13 +98,14 @@ void entitiesFile(){
 		for(int i = 0; i < 4; i++){
 			std::cout << words[i] << "\n"; // Data validation. There is no whitespace (by default)
 		}
-		
 
-		// Pass the results back to main (ERRORS)
-		// p1BattleParticipant.unitName = words[0];
-		// p1BattleParticipant.unitQuantity = p1Quantity;
-		// p2BattleParticipant.unitName = words[2];
-		// p2BattleParticipant.unitQuantity = p2Quantity;
+		// Return the results
+		entitiesToReturn.p1EntityName = words[0];
+		entitiesToReturn.p2EntityName = words[2];
+		entitiesToReturn.p1EntityQuantity = p1Quantity;
+		entitiesToReturn.p2EntityQuantity = p2Quantity;
+
+		return entitiesToReturn;
 	}
 
 	// Close the file

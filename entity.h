@@ -6,6 +6,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 struct Entity{ 
+	// Declare data members
 	std::string entityName; // The name of the entity (including the civilization designator)
 	int entityAge; // The Age that the entity is available at (1,2,3,4)
 	int entityQuantity; // The quantity of the entity
@@ -35,33 +36,9 @@ struct Entity{
 							// [17]: Unique_Unit 
 							// [18]: Wall_&_Gate
 							// [19]: War_Elephant
+
+
+	// Declare the initializer (set the initial values)
+	Entity();
 };
 #endif // ENTITY_H
-
-/** Best practice revolves around setting initial values to a declared thing **/ /** I am too lazy to write this multiple times **/
-Entity blankSelection{"",0,0,0,0,0,0,0,
-false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false}; // Declare an entity with no values
-
-Entity p1BattleParticipant = blankSelection; // Declare the entity that is participating in the battle for player 1
-Entity p2BattleParticipant = blankSelection; // Declare the entity that is participating in the battle for player 2
-
-/** A function to take a name and quantity, and return the rest of the information about this entity **/ 
-/** Note: 
-	- There are a lot of entities in Age of Empires II: The Board Game so the function is long
-	- The function reduces the amount of user input **/
-Entity conductASearch(std::string inputEntityName, int inputEntityQuantity){
-	Entity returnEntity = blankSelection;
-
-	// Search for the input string and return the entire object
-	if(inputEntityName == "ARCHER_(SARACEN)"){
-		returnEntity = {"ARCHER_(SARACEN)",1,inputEntityQuantity,6,4,5,0,2,
-		true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false}; // Update the entity selected by p1
-	
-	}
-	else if(inputEntityName == "CASTLE"){
-		returnEntity = {"CASTLE",3,inputEntityQuantity,440,0,0,0,30,
-		false,true,false,true,false,false,false,false,false,false,false,false,false,false,true,false,false,false,false}; // Update the entity selected by p2
-	}
-
-	return returnEntity;
-}
