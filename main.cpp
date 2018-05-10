@@ -3,6 +3,9 @@
 /** Created by: Kory **/
 /** Written using English (United States) spelling **/
 
+/** Yet to demonstrate **/
+// Polymorphism (e.g. a void calculate() function that only runs depending on the round of combat)
+
 /** The libaries **/ /** Apparently using namespace std; is bad  **/
 #include <iostream> // Using: cin and cout
 #include <string> // Using: string
@@ -26,4 +29,12 @@ int main(){
 	// Should return everything about p1BattleParticipant and p2BattleParticipant except "modifiers_set_1" and "modifiers_set_2" (yet to implement)
 	p1BattleParticipant.outputEntity();
 	p2BattleParticipant.outputEntity();
+
+
+	// Update values with technology effects
+	// p1BattleParticipant = technologiesCSV.technologiesFile(p1BattleParticipant)
+
+	// Determine damage dealt
+	// battleOutcome(p1BattleParticipant, p2BattleParticipant)
+
 }

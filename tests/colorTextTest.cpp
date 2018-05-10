@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cstdlib> // Using: exit(EXIT_FAILURE)
+// #include "Entity.h"
 
 void displayColorfulText(std::string inputFormatAttribute, std::string inputForegroundColor, std::string inputBackgroundColor, std::string inputText, bool isLineBreak){
 
@@ -164,7 +165,10 @@ int main(){
 	// Declare variable
 	std::string helloWorld = "helloWorld";
 
+	// Entity test;
+	// test.tryColour(".");
+
 	// Get the colored version of the text
-	displayColorfulText("bold", "red", "default", helloWorld, true);
+	displayColorfulText("bold", "cyan", "white", "Hello person", true);
 }
  

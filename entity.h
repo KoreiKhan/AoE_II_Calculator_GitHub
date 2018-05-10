@@ -20,6 +20,9 @@ struct Entity{
 	// Declare the initializer/constructor (set the initial values)
 	Entity();
 
+	// Declare a function to help with making text colorful
+	void displayColorfulText(std::string inputFormatAttribute, std::string inputForegroundColor, std::string inputBackgroundColor, std::string inputText, bool isLineBreak);
+
 	// Declare a function to output information about an entity
 	void outputEntity();
 
