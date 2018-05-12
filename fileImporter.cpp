@@ -1,4 +1,4 @@
-/** The libaries **/ /** Apparently using namespace std; is bad  **/
+/** The libaries **/ 
 #include <iostream> // Using: cin and cout
 #include <string> // Using: string
 #include <fstream> // Using: ifstream, is_open(), good, close()
@@ -6,1763 +6,677 @@
 #include <sstream> // Using: stringstream 
 #include <algorithm> // Using: transform, toupper, .begin(), .end()
 #include "fileImporter.h" // Using: entitiesFile functions
-#include "entity.h" // Using: Entity class
+#include "entity.h" // Using: entity class
 
-/** Declare fileImporter construct and deconstructor **/
+// Functions: The constructor and deconstructor 
 fileImporter::fileImporter(){}
-
 fileImporter::~fileImporter(){}
 
-/** Declare the conduct a search on a large number of Age of Empires II entities function **/
+// Function: Get the rest of the information about an entity
 Entity fileImporter::conductASearch(std::string inputEntityName, int inputEntityQuantity){
-	// Declare the entity to return the rest of the information for
+	// Struct: Declare a blank entity to store the return information
 	Entity returnEntity;
 
-	// Search for the input string and return the entire object
-	// Enter CTRL + F and search for "BANANA" to skip this section
-	if(inputEntityName == "ARCHER"){
-		// runFunction("Archer",2,inputEntityQuantity,6,4,5,0,2)
-		returnEntity.entityName = "Archer";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 6; 
-		returnEntity.standardDamage = 4; 
-		returnEntity.rangedDamage = 5; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2; // 1 wood, 1 gold
-		returnEntity.armorClass[0] = true; // Archer armor class
+	// Behaviour: Search for the input entity name and return the associated entity
+	if (inputEntityName == "ARCHER"){
+		Archer returnArcher; 
+		returnEntity = returnArcher;
 	}
-	else if(inputEntityName == "ARCHER_(SARACEN)"){
-		returnEntity.entityName = "Archer_(Saracen)";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 6; 
-		returnEntity.standardDamage = 4; 
-		returnEntity.rangedDamage = 5; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2; // 1 wood, 1 gold
-		returnEntity.armorClass[0] = true; // Archer armor class
-
-		// 5 standardDamage vs Buildings
+	else if (inputEntityName == "ARCHER_(SARACEN)"){
+		Archer_Saracen returnArcherSaracen; 
+		returnEntity = returnArcherSaracen;
 	}
-	else if(inputEntityName == "ARBALEST"){
-		returnEntity.entityName = "Arbalest";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 8; 
-		returnEntity.standardDamage = 7; 
-		returnEntity.rangedDamage = 8; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2; // 1 wood, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[0] = true; // Archer armor class
+	else if( inputEntityName == "ARBALEST"){
+		Arbalest returnArbalest;
+		returnEntity = returnArbalest;
 	}
 	else if(inputEntityName == "ARBALEST_(BRITON)"){
-		returnEntity.entityName = "Arbalest_(Briton)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 8; 
-		returnEntity.standardDamage = 6; 
-		returnEntity.rangedDamage = 7; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2; // 1 wood, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[0] = true; // Archer armor class
+		Arbalest_Briton returnArbalestBriton;
+		returnEntity = returnArbalestBriton;
+	}
+	else if(inputEntityName == "ARBALEST_(SARACEN)"){
+		Arbalest_Saracen returnArbalestSaracen;
+		returnEntity = returnArbalestSaracen;
 	}
 	else if(inputEntityName == "ARCHERY_RANGE"){
-		returnEntity.entityName = "Archery_Range";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 120; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 10; 
-		returnEntity.pointValue = 11; // 6 wood, 5 villagers
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Archery_Range returnArcheryRange;
+		returnEntity = returnArcheryRange;
 	}
 	else if(inputEntityName == "BARRACKS"){
-		returnEntity.entityName = "Barracks";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 120; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 10; 
-		returnEntity.pointValue = 11; // 6 wood, 5 villagers
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Barracks returnBarracks;
+		returnEntity = returnBarracks;
 	}
 	else if(inputEntityName == "BATTERING_RAM"){
-		returnEntity.entityName = "Battering_Ram";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 41; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 11; // 7 wood, 4 gold
-		returnEntity.armorClass[10] = true; // Ram armor class
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-
-		// 60 standard damage vs Building
-		// There is a rule that Archers and Villagers cannot attack Rams.
-		// There is a rule that this unit can only attack buildings
+		Battering_Ram returnBatteringRam;
+		returnEntity = returnBatteringRam;
 	}
 	else if(inputEntityName == "BATTERING_RAM_(CELT)"){
-		returnEntity.entityName = "Battering_Ram_(Celt)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 41; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 10; // 6 wood, 4 gold
-		returnEntity.armorClass[10] = true; // Ram armor class
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-	
-		// 70 standard damage vs Building
-		// There is a rule that Archers and Villagers cannot attack Rams. 
-		// There is a rule that this is unit can only attack buildings
+		Battering_Ram_Celt returnBatteringRamCelt;
+		returnEntity = returnBatteringRamCelt;
+	}
+	else if(inputEntityName == "BERSERK_(VIKING)"){
+		Berserk_Viking returnBerserkViking;
+		returnEntity = returnBerserkViking;
 	}
 	else if(inputEntityName == "BLACKSMITH"){
-		returnEntity.entityName = "Blacksmith";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 180; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 10; // 6 wood, 4 gold
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Blacksmith returnBlacksmith;
+		returnEntity = returnBlacksmith;
 	}
 	else if(inputEntityName == "CAPPED_RAM"){
-		returnEntity.entityName = "Capped_Ram";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 46; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 11; // 7 wood, 4 gold, 1 book (ignored)
-		returnEntity.armorClass[10] = true; // Ram armor class
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-	
-		// 110 standard damage vs Building
-		// There is a rule that Archers and Villagers cannot attack Rams. 
-		// There is a rule that this is unit can only attack buildings
+		Capped_Ram returnCappedRam;
+		returnEntity = returnCappedRam;
 	}
 	else if(inputEntityName == "CAPPED_RAM_(CELT)"){
-		returnEntity.entityName = "Capped_Ram_Celt";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 46; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 10; // 6 wood, 4 gold, 1 book (ignored)
-		returnEntity.armorClass[10] = true; // Ram armor class
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-	
-		// 120 standard damage vs Building
-		// There is a rule that Archers and Villagers cannot attack Rams. 
-		// There is a rule that this is unit can only attack buildings
+		Capped_Ram_Celt returnCappedRamCelt;
+		returnEntity = returnCappedRamCelt;
 	}
 	else if(inputEntityName == "CASTLE"){
-		returnEntity.entityName = "Castle";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 440; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 10; 
-		returnEntity.pointValue = 30;  // 15 stone, 15 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[3] = true; // Castle armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Castle returnCastle;
+		returnEntity = returnCastle;
 	}
 	else if(inputEntityName == "CASTLE_(FRANK)"){
-		returnEntity.entityName = "Castle_(Frank)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 440; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 10; 
-		returnEntity.pointValue = 25;  // 10 stone, 15 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[3] = true; // Castle armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Castle_Frank returnCastleFrank;
+		returnEntity = returnCastleFrank;
 	}
 	else if(inputEntityName == "CAVALIER"){
-		returnEntity.entityName = "Cavalier";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 30; 
-		returnEntity.standardDamage = 12; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 5;  // 2 food, 3 gold, 1 book (ignored)
-		returnEntity.armorClass[4] = true; // Cavalry armor class
+		Cavalier returnCavalier;
+		returnEntity = returnCavalier;
 	}
 	else if(inputEntityName == "CAVALIER_(FRANK)"){
-		returnEntity.entityName = "Cavalier_(Frank)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 36; 
-		returnEntity.standardDamage = 12; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 5;  // 2 food, 3 gold, 1 book (ignored)
-		returnEntity.armorClass[4] = true; // Cavalry armor class
+		Cavalier_Frank returnCavalierFrank;
+		returnEntity = returnCavalierFrank;
 	}
 	else if(inputEntityName == "CAVALIER_(PERSIAN)"){
-		returnEntity.entityName = "Cavalier_(Persian)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 30; 
-		returnEntity.standardDamage = 12; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 5;  // 2 food, 3 gold, 1 book (ignored)
-		returnEntity.armorClass[4] = true; // Cavalry armor class
-
-		// +2 standardDamage vs Archers
+		Cavalier_Persian returnCavalierPersian;
+		returnEntity = returnCavalierPersian;
 	}
 	else if(inputEntityName == "CAVALRY_ARCHER"){
-		returnEntity.entityName = "Cavalry_Archer";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 12; 
-		returnEntity.standardDamage = 6; 
-		returnEntity.rangedDamage = 7; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 3;  // 1 wood, 2 gold
-		returnEntity.armorClass[0] = true; // Archer armor class
-		returnEntity.armorClass[4] = true; // Cavalry armor class
-		returnEntity.armorClass[5] = true; // Cavalry archer armor class
+		Cavalry_Archer returnCavalryArcher;
+		returnEntity = returnCavalryArcher;
 	}
 	else if(inputEntityName == "CAVALRY_ARCHER_(MONGOL)"){
-		returnEntity.entityName = "Cavalry_Archer_(Mongol)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 12; 
-		returnEntity.standardDamage = 6; 
-		returnEntity.rangedDamage = 9; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 3;  // 1 wood, 2 gold
-		returnEntity.armorClass[0] = true; // Archer armor class
-		returnEntity.armorClass[4] = true; // Cavalry armor class
-		returnEntity.armorClass[5] = true; // Cavalry archer armor class
+		Cavalry_Archer_Mongol returnCavalryArcherMongol;
+		returnEntity = returnCavalryArcherMongol;
 	}
 	else if(inputEntityName == "CHAMPION"){
-		returnEntity.entityName = "Champion";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 20; 
-		returnEntity.standardDamage = 13; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
+		Champion returnChampion;
+		returnEntity = returnChampion;
 	}
 	else if(inputEntityName == "CHAMPION_(CELT)"){
-		returnEntity.entityName = "Champion_(Celt)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 20; 
-		returnEntity.standardDamage = 13; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
+		Champion_Celt returnChampionCelt;
+		returnEntity = returnChampionCelt;
 	}
 	else if(inputEntityName == "CHAMPION_(GOTH)"){
-		returnEntity.entityName = "Champion_(Goth)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 20; 
-		returnEntity.standardDamage = 13; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
-	
-		// +2 vs buildings
+		Champion_Goth returnChampionGoth;
+		returnEntity = returnChampionGoth;
 	}
 	else if(inputEntityName == "CHAMPION_(JAPANESE)"){
-		returnEntity.entityName = "Champion_(Japanese)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 20; 
-		returnEntity.standardDamage = 17; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
-	
-		// +2 vs buildings
+		Champion_Japanese returnChampionJapanese;
+		returnEntity = returnChampionJapanese;
+	}
+	else if(inputEntityName == "CHAMPION_(VIKING)"){
+		Champion_Viking returnChampionViking;
+		returnEntity = returnChampionViking;
 	}
 	else if(
 		(inputEntityName == "CHARLAMAGNE'S_PALACE_AT_AIX_LA'CHAPELLE_(BRITON)") || 
-		(inputEntityName == "BRITON_WONDER") ||
+		(inputEntityName == "WONDER_(BRITON)") ||
 		(inputEntityName == "ROCK_OF_CASHEL_(CELT)") ||
-		(inputEntityName == "CELT_WONDER") ||
+		(inputEntityName == "WONDER_(CELT)") ||
 		(inputEntityName == "THE_GOLDEN_TENT_OF_THE_GREAT_KHAN_(MONGOL)") ||
-		(inputEntityName == "MONGOL_WONDER") ||
+		(inputEntityName == "WONDER_(MONGOL)") ||
 		(inputEntityName == "THE_PALACE_OF_CTESIPHON_ON_THE_TIGRIS_(PERSIAN)") ||
-		(inputEntityName == "PERSIAN_WONDER") ||
+		(inputEntityName == "WONDER_(PERSIAN)") ||
 		(inputEntityName == "TOMB_OF_THEODORIC_(GOTH)") ||
-		(inputEntityName == "GOTH_WONDER") ||
+		(inputEntityName == "WONDER_(GOTH)") ||
+		(inputEntityName == "NOTRE-DAME_CATHEDRAL_(FRANK)") ||
+		(inputEntityName == "NOTRE_DAME_CATHEDRAL_(FRANK)") ||
+		(inputEntityName == "WONDER_(FRANK)") ||
+		(inputEntityName == "STAVE_CHURCH_AT_URNES_(VIKING)") ||
+		(inputEntityName == "WONDER_(VIKING)") ||
+		(inputEntityName == "THE_GREAT_TEMPLE_AT_NARA_(JAPANESE)") ||
+		(inputEntityName == "WONDER_(JAPANESE)") ||
 		(inputEntityName == "WONDER") 
 		){
-		// Represents all Wonders
-		int turnsInPlay = 0;
-		std::cout << "How many turns have the Wonder been in play for?" << "\n";
-		std::cin >> turnsInPlay;
 
-		// The rules state that you win if the wonder is in play for 6 turns
-		if(turnsInPlay < 1 || turnsInPlay > 6){
-			std::cout << "Error: Wonder ought to be in play for 1-6 turns only" << "\n";
-			exit(EXIT_FAILURE);
-		}
+		Wonder returnWonder;
 
-		returnEntity.entityName = "Wonder";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
+		// Behaviour: Get further information about the Wonder
+		returnWonder.updateWonderHP();
 
-		if(turnsInPlay == 1){
-			returnEntity.entityHealth = 110; 
-		}
-		else if (turnsInPlay == 2){
-			returnEntity.entityHealth = 220;
-		}
-		else if(turnsInPlay == 3){
-			returnEntity.entityHealth = 330;
-		}
-		else{
-			returnEntity.entityHealth = 440;
-		}
-		
-		returnEntity.standardDamage = 17; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 90;  // 20 wood, 20 stone, 20 gold, 30 bodies
-		// The rules do not state a point value for the Wonder but it ought to have one
-		returnEntity.armorClass[1] = true; // Building armor class
-
+		returnEntity = returnWonder;
 	}
 	else if(inputEntityName == "CROSSBOWMAN"){
-		returnEntity.entityName = "Crossbowman";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 8; 
-		returnEntity.standardDamage = 5; 
-		returnEntity.rangedDamage = 6; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 wood, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[0] = true; // Archer armor class
+		Crossbowman returnCrossbowman;
+		returnEntity = returnCrossbowman;
 	}
 	else if(inputEntityName == "CROSSBOWMAN_(SARACEN)"){
-		returnEntity.entityName = "Crossbowman_(Saracen)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 8; 
-		returnEntity.standardDamage = 5; 
-		returnEntity.rangedDamage = 6; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 wood, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[0] = true; // Archer armor class
-	
-		// 6 standardDamage vs building
+		Crossbowman_Saracen returnCrossbowmanSaracen;
+		returnEntity = returnCrossbowmanSaracen;
 	}
 	else if(inputEntityName == "DEMOLITION_SHIP"){
-		returnEntity.entityName = "Demolition_Ship";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 13; 
-		returnEntity.standardDamage = 110; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 3;  // 1 wood, 2 gold
-		returnEntity.armorClass[11] = true; // Ship armor class
-
-		// Only attacks in the second round of combat
-		// Units cannot retreat against the Demolition Ship
+		Demolition_Ship returnDemolitionShip;
+		returnEntity = returnDemolitionShip;
+	}
+	else if(inputEntityName == "DEMOLITION_SHIP_(VIKING)"){
+		Demolition_Ship_Viking returnDemolitionShipViking;
+		returnEntity = returnDemolitionShipViking;
 	}
 	else if(inputEntityName == "DOCK"){
-		returnEntity.entityName = "Dock";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 150; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 5; 
-		returnEntity.pointValue = 8;  // 5 wood, 3 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Dock returnDock;
+		returnEntity = returnDock;
 	}
 	else if(inputEntityName == "DOCK_(PERSIAN)"){
-		returnEntity.entityName = "Dock_(Persian)";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 300; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 5; 
-		returnEntity.pointValue = 8;  // 5 wood, 3 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Dock_Persian returnDockPersian;
+		returnEntity = returnDockPersian;
 	}
 	else if(inputEntityName == "DOCK_(VIKING)"){
-		returnEntity.entityName = "DOCK_(VIKING)";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 150; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 5; 
-		returnEntity.pointValue = 6;  // 3 wood, 3 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Dock_Viking returnDockViking;
+		returnEntity = returnDockViking;
+	}
+	else if(inputEntityName == "ELITE_BERSERK_(VIKING)"){
+		Elite_Berserk_Viking returnEliteBerserkViking;
+		returnEntity = returnEliteBerserkViking;
 	}
 	else if(inputEntityName == "ELITE_HUSKARL_(GOTH)"){
-		returnEntity.entityName = "Elite_Huskarl_(Goth)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 20; 
-		returnEntity.standardDamage = 12; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
-		returnEntity.armorClass[17] = true; // Unique unit armor class
-	
-	// 15 standardDamage vs building
+		Elite_Huskarl_Goth returnEliteHuskarlGoth;
+		returnEntity = returnEliteHuskarlGoth;
+	}
+	else if(inputEntityName == "ELITE_LONGBOAT_(VIKING)"){
+		Elite_Longboat_Viking returnEliteLongboatViking;
+		returnEntity = returnEliteLongboatViking;
 	}
 	else if(inputEntityName == "ELITE_LONGBOWMAN_(Briton)"){
-		returnEntity.entityName = "Elite_Longbowman_(Briton)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 8; 
-		returnEntity.standardDamage = 12; 
-		returnEntity.rangedDamage = 10; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 wood, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[0] = true; // Archer armor class
-		returnEntity.armorClass[17] = true; // Unique unit armor class
+		Elite_Longbowman_Briton returnEliteLongbowmanBriton;
+		returnEntity = returnEliteLongbowmanBriton;
+	}
+	else if(inputEntityName == "ELITE_MAMELUKE_(SARACEN)"){
+		Elite_Mameluke_Saracen returnEliteMamelukeSaracen;
+		returnEntity = returnEliteMamelukeSaracen;
+	}
+	else if(inputEntityName == "ELITE_MANGUDAI_(MONGOL)"){
+		Elite_Mangudai_Mongol returnEliteMangudaiMongol;
+		returnEntity = returnEliteMangudaiMongol;
+	}
+	else if(inputEntityName == "ELITE_SAMURAI"){
+		Elite_Samurai_Japanese returnEliteSamurai;
+		returnEntity = returnEliteSamurai;
 	}
 	else if(inputEntityName == "ELITE_SKIRMISHER"){
-		returnEntity.entityName = "Elite_Skirmisher";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 8; 
-		returnEntity.standardDamage = 3; 
-		returnEntity.rangedDamage = 5; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 wood, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[0] = true; // Archer armor class
-	
-		// 16 standardDamage against Archers
+		Elite_Skirmisher returnEliteSkirmisher;
+		returnEntity = returnEliteSkirmisher;
+	}
+	else if(inputEntityName == "ELITE_THROWING_AXEMAN_(FRANK)"){
+		Elite_Throwing_Axeman_Frank returnEliteThrowingAxemanFrank;
+		returnEntity = returnEliteThrowingAxemanFrank;
 	}
 	else if(inputEntityName == "ELITE_WAR_ELEPHANT_(PERSIAN)"){
-		returnEntity.entityName = "Elite_War_Elephant_(Persian)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 126; 
-		returnEntity.standardDamage = 25; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 15;  // 10 food, 5 gold, 1 book (ignored)
-		returnEntity.armorClass[4] = true; // Cavalry armor class
-		returnEntity.armorClass[17] = true; // Unique unit armor class
-		returnEntity.armorClass[19] = true; // War Elephant unit armor class
+		Elite_War_Elephant_Persian returnEliteWarElephantPersian;
+		returnEntity = returnEliteWarElephantPersian;
 
-		// The current entity is limited to 1 token per card 
+		// Behaviour: The current entity is limited to 1 token per card 
 		if(inputEntityQuantity !=1){
 			std::cout << "Error: " << returnEntity.entityName << " can only be of 1 quantity" << "\n";
 			exit(EXIT_FAILURE);
 		}
-	
-		// 60 standardDamage against Buildings
 	}
 	else if(inputEntityName == "ELITE_WOAD_RAIDER_(CELT)"){
-		returnEntity.entityName = "Elite_Woad_Raider_(Celt)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 22; 
-		returnEntity.standardDamage = 13; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 3;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
-		returnEntity.armorClass[17] = true; // Unique unit armor class
-
-		// 17 standardDamage vs Building
+		Elite_Woad_Raider_Celt returnEliteWoadRaiderCelt;
+		returnEntity = returnEliteWoadRaiderCelt;
 	}
 	else if(inputEntityName == "FARM"){
-		returnEntity.entityName = "Farm";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 40; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 4;  // 2 wood, 2 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Farm returnFarm;
+		returnEntity = returnFarm;
+	}
+	else if(inputEntityName == "FAST_FIRE_SHIP"){
+		Fast_Fire_Ship returnFastFireShip;
+		returnEntity = returnFastFireShip;
+	}
+	else if(inputEntityName == "FIRE_SHIP"){
+		Fire_Ship returnFireShip;
+		returnEntity = returnFireShip;
 	}
 	else if(inputEntityName == "FISHING_SHIP_(JAPANESE)"){
-		returnEntity.entityName = "Fishing_Ship_(Japanese)";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 30; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 2 wood
-		returnEntity.armorClass[11] = true; // Ship armor class
+		Fishing_Ship_Japanese returnFishingShipJapanese;
+		returnEntity = returnFishingShipJapanese;
 	}
 	else if(inputEntityName == "FISHING_SHIP_(PERSIAN)"){
-		returnEntity.entityName = "Fishing_Ship_(Persian)";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 16; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 2 wood
-		returnEntity.armorClass[11] = true; // Ship armor class
+		Fishing_Ship_Persian returnFishingShipPersian;
+		returnEntity = returnFishingShipPersian;
 	}
 	else if(inputEntityName == "FORTIFIED_WALL"){
-		returnEntity.entityName = "Fortified_Wall";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 280; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 6;  // 6 stone, 1 book (ignored)
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
-		returnEntity.armorClass[15] = true; // Stone defence armor class
-		returnEntity.armorClass[19] = true; // Wall & Gate armor class
+		Fortified_Wall returnFortifiedWall;
+		returnEntity = returnFortifiedWall;
+	}
+	else if(inputEntityName == "GALLEY"){
+		Galley returnGalley;
+		returnEntity = returnGalley;
 	}
 	else if(inputEntityName == "GALLEY_(JAPANESE)"){
-		returnEntity.entityName = "Galley_(Japanese)";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 30; 
-		returnEntity.standardDamage = 14; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 6;  // 4 wood, 2 gold
-		returnEntity.armorClass[11] = true; // Ship armor class
-
-		// 30 standardAttack vs Longboat, land unit, building, and galley
-		// Bombardment 1 (only eligible to attack in the 1st round of combat)
+		Galley_Japanese returnGalleyJapanese;
+		returnEntity = returnGalleyJapanese;
 	}
 	else if(inputEntityName == "GALLEY_(SARACEN)"){
-		returnEntity.entityName = "Galley_(Saracen)";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 30; 
-		returnEntity.standardDamage = 17; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 6;  // 4 wood, 2 gold
-		returnEntity.armorClass[11] = true; // Ship armor class
-
-		// 35 standardAttack vs Longboat, land unit, building, and galley
-		// Bombardment 0 (only eligible to attack in the 1st round of combat)
+		Galley_Saracen returnGalleySaracen;
+		returnEntity = returnGalleySaracen;
 	}
 	else if(inputEntityName == "GALLEY_(VIKING)"){
-		returnEntity.entityName = "Galley_(Viking)";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 30; 
-		returnEntity.standardDamage = 14; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 3;  // 2 wood, 1 gold
-		returnEntity.armorClass[11] = true; // Ship armor class
-
-		// 30 standardAttack vs Longboat, land unit, building, and galley
-		// Bombardment 0 (only eligible to attack in the 1st round of combat)
+		Galley_Viking returnGalleyViking;
+		returnEntity = returnGalleyViking;
 	}
-	else if(inputEntityName == "GATE"){
-		returnEntity.entityName = "Gate";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 380; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 6;  // 3 stone, 3 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
-		returnEntity.armorClass[15] = true; // Stone defence armor class
-		returnEntity.armorClass[19] = true; // Wall & Gate armor class
+	else if(inputEntityName == "STONE_GATE"){
+		Stone_Gate returnStoneGate;
+		returnEntity = returnStoneGate;
+	}
+	else if(inputEntityName == "GALLEON"){
+		Galleon returnGalleon;
+		returnEntity = returnGalleon;
+	}
+	else if(inputEntityName == "GALLEON_SARACEN"){
+		Galleon_Saracen returnGalleonSaracen;
+		returnEntity = returnGalleonSaracen;
+	}
+	else if(inputEntityName == "GALLEON_VIKING"){
+		Galleon_Viking returnGalleonViking;
+		returnEntity = returnGalleonViking;
+	}
+	else if(inputEntityName == "GALLEON_JAPANESE"){
+		Galleon_Japanese returnGalleonJapanese;
+		returnEntity = returnGalleonJapanese;
 	}
 	else if(inputEntityName == "GOLD_MINE"){
-		returnEntity.entityName = "Gold_Mine";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 80; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 6;  // 3 wood, 3 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Gold_Mine returnGoldMine;
+		returnEntity = returnGoldMine;
 	}
 	else if(inputEntityName == "GOLD_MINE_(JAPANESE)"){
-		returnEntity.entityName = "Gold_Mine_(Japanese)";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 80; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 4;  // 1 wood, 3 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Gold_Mine_Japanese returnGoldMineJapanese;
+		returnEntity = returnGoldMineJapanese;
 	}
 	else if(inputEntityName == "HEAVY_CAMEL"){
-		returnEntity.entityName = "Heavy_Camel";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 30; 
-		returnEntity.standardDamage = 7; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 4;  // 2 food, 2 gold, 1 book (ignored)
-		returnEntity.armorClass[2] = true; // Camel armor class
-
-		// 30 standardDamage against Cavalry
+		Heavy_Camel returnHeavyCamel;
+		returnEntity = returnHeavyCamel;
 	}
 	else if(inputEntityName == "HEAVY_CAVALRY_ARCHER"){
-		returnEntity.entityName = "Heavy_Cavalry_Archer";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 16; 
-		returnEntity.standardDamage = 7; 
-		returnEntity.rangedDamage = 8; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 3;  // 1 wood, 2 gold, 1 book (ignored)
-		returnEntity.armorClass[0] = true; // Archer armor class
-		returnEntity.armorClass[4] = true; // Cavalry armor class
-		returnEntity.armorClass[5] = true; // Cavalry archer armor class
+		Heavy_Cavalry_Archer returnHeavyCavalryArhcer;
+		returnEntity = returnHeavyCavalryArhcer;
 	}
 	else if(inputEntityName == "HEAVY_CAVALRY_ARCHER_(MONGOL)"){
-		returnEntity.entityName = "Heavy_Cavalry_Archer_(Mongol)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 16; 
-		returnEntity.standardDamage = 7; 
-		returnEntity.rangedDamage = 10; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 3;  // 1 wood, 2 gold, 1 book (ignored)
-		returnEntity.armorClass[0] = true; // Archer armor class
-		returnEntity.armorClass[4] = true; // Cavalry armor class
-		returnEntity.armorClass[5] = true; // Cavalry archer armor class
+		Heavy_Cavalry_Archer_Mongol returnHeavyCavalryArcherMongol;
+		returnEntity = returnHeavyCavalryArcherMongol;
+	}
+	else if(inputEntityName == "HEAVY_CAVALRY_ARCHER_(SARACEN)"){
+		Heavy_Cavalry_Archer_Saracen returnHeavyCavalryArcherSaracen;
+		returnEntity = returnHeavyCavalryArcherSaracen;
 	}
 	else if(inputEntityName == "HEAVY_DEMOLITION_SHIP"){
-		returnEntity.entityName = "Heavy_Demolition_Ship";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 16; 
-		returnEntity.standardDamage = 140; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 6;  // 3 wood, 3 gold, 1 book (ignored)
-		returnEntity.armorClass[11] = true; // Ship armor class
-
-		// Only attacks in the second round of combat
-		// Units cannot retreat against the Demolition Ship
+		Heavy_Demolition_Ship returnHeavyDemolitionShip;
+		returnEntity = returnHeavyDemolitionShip;
 	}
 	else if(inputEntityName == "HEAVY_DEMOLITION_SHIP_(VIKING)"){
-		returnEntity.entityName = "Heavy_Demolition_Ship_(Viking)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 16; 
-		returnEntity.standardDamage = 140; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 3;  // 1 wood, 2 gold, 1 book (ignored)
-		returnEntity.armorClass[11] = true; // Ship armor class
-
-		// Only attacks in the second round of combat
-		// Units cannot retreat against the Demolition Ship
+		Heavy_Demolition_Ship_Viking returnHeavyDemolitionShipViking;
+		returnEntity = returnHeavyDemolitionShipViking;
 	}
 	else if(inputEntityName == "HEAVY_SCORPION"){
-		returnEntity.entityName = "Heavy_Scorpion";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 12; 
-		returnEntity.standardDamage = 16; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 8;  // 4 wood, 4 gold, 1 book (ignored)
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-
-		// Bombardment 1
-		// Only attacks in the first round of combat
-		// Area effect attack
+		Heavy_Scorpion returnHeavyScorpion;
+		returnEntity = returnHeavyScorpion;
 	}
 	else if(inputEntityName == "HEAVY_SCORPION_(CELT)"){
-		returnEntity.entityName = "Heavy_Scorpion_(Celt)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 12; 
-		returnEntity.standardDamage = 19; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 7;  // 3 wood, 4 gold, 1 book (ignored)
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-
-		// Bombardment 1
-		// Only attacks in the first round of combat
-		// Area effect attack
+		Heavy_Scorpion_Celt returnHeavyScorpionCelt;
+		returnEntity = returnHeavyScorpionCelt;
 	}
 	else if(inputEntityName == "HOUSE"){
-		returnEntity.entityName = "House";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 80; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 wood, 1 body
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		House returnHouse;
+		returnEntity = returnHouse;
 	}
 	else if(inputEntityName == "HUSKARL_(GOTH)"){
-		returnEntity.entityName = "Huskarl_(Goth)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 16; 
-		returnEntity.standardDamage = 10; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold
-		returnEntity.armorClass[8] = true; // Infantry armor class
-		returnEntity.armorClass[17] = true; // Unique unit armor class
-
-		// 12 standardDamage vs Archers
-		// 12 standardDamage vs Buildings
+		Huskarl_Goth returnHuskarlGoth;
+		returnEntity = returnHuskarlGoth;
 	}
 	else if(inputEntityName == "KNIGHT"){
-		returnEntity.entityName = "Knight";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 26; 
-		returnEntity.standardDamage = 10; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 5;  // 2 food, 3 gold
-		returnEntity.armorClass[4] = true; // Cavalry armor class
+		Knight returnKnight;
+		returnEntity = returnKnight;
 	}
 	else if(inputEntityName == "KNIGHT_(FRANK)"){
-		returnEntity.entityName = "Knight_(Frank)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 32; 
-		returnEntity.standardDamage = 10; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 5;  // 2 food, 3 gold
-		returnEntity.armorClass[4] = true; // Cavalry armor class
+		Knight_Frank returnKnightFrank;
+		returnEntity = returnKnightFrank;
 	}
 	else if(inputEntityName == "KNIGHT_(PERSIAN)"){
-		returnEntity.entityName = "Knight_(Persian)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 26; 
-		returnEntity.standardDamage = 10; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold
-		returnEntity.armorClass[4] = true; // Cavalry armor class
-
-		// +2 standardDamage vs Archers
+		Knight_Persian returnKnightPersian;
+		returnEntity = returnKnightPersian;
 	}
 	else if(inputEntityName == "LIGHT_CAVALRY"){
-		returnEntity.entityName = "Light_Cavalry";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 16; 
-		returnEntity.standardDamage = 7; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 3;  // 3 food, 1 book (ignored)
-		returnEntity.armorClass[4] = true; // Cavalry armor class
+		Light_Cavalry returnLightCavalry;
+		returnEntity = returnLightCavalry;
 	}
 	else if(inputEntityName == "LIGHT_CAVALRY_(MONGOL)"){
-		returnEntity.entityName = "Light_Cavalry_(Mongol)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 20; 
-		returnEntity.standardDamage = 7; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 3;  // 3 food, 1 book (ignored)
-		returnEntity.armorClass[4] = true; // Cavalry armor class
+		Light_Cavalry_Mongol returnLightCavalryMongol;
+		returnEntity = returnLightCavalryMongol;
 	}
 	else if(inputEntityName == "LONG_SWORDSMAN"){
-		returnEntity.entityName = "Long_Swordsman";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 12; 
-		returnEntity.standardDamage = 9; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
+		Long_Swordsman returnLongSwordsman;
+		returnEntity = returnLongSwordsman;
 	}
 	else if(inputEntityName == "LONG_SWORDSMAN_(CELT)"){
-		returnEntity.entityName = "Long_Swordsman_(Celt)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 12; 
-		returnEntity.standardDamage = 9; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
+		Long_Swordsman_Celt returnLongSwordsmanCelt;
+		returnEntity = returnLongSwordsmanCelt;
 	}
 	else if(inputEntityName == "LONG_SWORDSMAN_(GOTH)"){
-		returnEntity.entityName = "Long_Swordsman_(Goth)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 12; 
-		returnEntity.standardDamage = 9; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
-
-		// +2 standardAttack vs Building
-	}
-	else if(inputEntityName == "LONGBOAT_(VIKING)"){
-		returnEntity.entityName = "Longboat_(Viking)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 33; 
-		returnEntity.standardDamage = 14; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 6;  // 3 wood, 3 gold
-		returnEntity.armorClass[11] = true; // Ship armor class
-		returnEntity.armorClass[17] = true; // Unique unit armor class
-
-		// 40 standardAttack vs Demolition Ship, Galley, Longboat, Building, and Land units
-		// Bombardment 1 (only attacks in the first round of combat)
-	}
-	else if(inputEntityName == "LONGBOWMAN_(BRITON)"){
-		returnEntity.entityName = "Longbowman_(Briton)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 8; 
-		returnEntity.standardDamage = 10; 
-		returnEntity.rangedDamage = 8; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 wood, 1 gold
-		returnEntity.armorClass[0] = true; // Archer armor class
-		returnEntity.armorClass[17] = true; // Unique unit armor class
+		Long_Swordsman_Goth returnLongSwordsmanGoth;
+		returnEntity = returnLongSwordsmanGoth;
 	}
 	else if(inputEntityName == "LONGSWORDSMAN_(JAPANESE)"){
-		returnEntity.entityName = "Longswordsman_(Japanese)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 14; 
-		returnEntity.standardDamage = 11; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
+		Long_Swordsman_Japanese returnLongSwordsmanJapanese;
+		returnEntity = returnLongSwordsmanJapanese;
 	}
 	else if(inputEntityName == "LONGSWORDSMAN_(VIKING)"){
-		returnEntity.entityName = "Longswordsman_(Viking)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 16; 
-		returnEntity.standardDamage = 9; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
+		Long_Swordsman_Viking returnLongswordsmanViking;
+		returnEntity = returnLongswordsmanViking;
+	}
+	else if(inputEntityName == "LONGBOAT_(VIKING)"){
+		Longboat_Viking returnLongboatViking;
+		returnEntity = returnLongboatViking;
+	}
+	else if(inputEntityName == "LONGBOWMAN_(BRITON)"){
+		Longbowman_Briton returnLongbowmanBriton;
+		returnEntity = returnLongbowmanBriton;
 	}
 	else if(inputEntityName == "LUMBER_CAMP"){
-		returnEntity.entityName = "Lumber_Camp";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 80; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 6;  // 3 wood, 3 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Lumber_Camp returnLumberCamp;
+		returnEntity = returnLumberCamp;
 	}
 	else if(inputEntityName == "LUMBER_CAMP_(JAPANESE)"){
-		returnEntity.entityName = "Lumber_Camp_(Japanese)";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 80; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 5;  // 2 wood, 3 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Lumber_Camp_Japanese returnLumberCampJapanese;
+		returnEntity = returnLumberCampJapanese;
 	}
 	else if(inputEntityName == "MAMELUKE_(SARACEN)"){
-		returnEntity.entityName = "Mameluke_(Saracen)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 18; 
-		returnEntity.standardDamage = 7; 
-		returnEntity.rangedDamage = 4; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 5;  // 2 food, 3 gold
-		returnEntity.armorClass[0] = true; // Archer armor class
-		returnEntity.armorClass[4] = true; // Cavalry armor class
-		returnEntity.armorClass[2] = true; // Camel armor class
-		returnEntity.armorClass[17] = true; // Unique unit armor class
-
-		// 16 standardAttack vs Cavalry
+		Mameluke_Saracen returnMamelukeSaracen;
+		returnEntity = returnMamelukeSaracen;
 	}
-	else if(inputEntityName == "MAN_AT_ARMS_(VIKING)"){
-		returnEntity.entityName = "Man_At_Arms_(Viking)";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 11; 
-		returnEntity.standardDamage = 6; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
+	else if( (inputEntityName == "MAN_AT_ARMS") || (inputEntityName == "MAN-AT-ARMS") ){
+		Man_At_Arms returnManAtArms;
+		returnEntity = returnManAtArms;
 	}
-	else if(inputEntityName == "MAN_AT_ARMS"){
-		returnEntity.entityName = "Man_At_Arms";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 10; 
-		returnEntity.standardDamage = 6; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
+	else if( (inputEntityName == "MAN_AT_ARMS_(VIKING)") || (inputEntityName == "MAN-AT-ARMS_(VIKING)") ){
+		Man_At_Arms_Viking returnManAtArmsViking;
+		returnEntity = returnManAtArmsViking;
 	}
-	else if(inputEntityName == "MAN_AT_ARMS_(CELT)"){
-		returnEntity.entityName = "Man_At_Arms_(Celt)";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 10; 
-		returnEntity.standardDamage = 6; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
+	else if( (inputEntityName == "MAN_AT_ARMS_(CELT)") || (inputEntityName == "MAN-AT-ARMS_(CELT)") ){
+		Man_At_Arms_Celt returnManAtArmsCelt;
+		returnEntity = returnManAtArmsCelt;
 	}
-	else if(inputEntityName == "MAN_AT_ARMS_(GOTH)"){
-		returnEntity.entityName = "Man_At_Arms_(Goth)";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 10; 
-		returnEntity.standardDamage = 6; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
-
-		// +2 standardDamage vs buildings
+	else if( (inputEntityName == "MAN_AT_ARMS_(GOTH)") || (inputEntityName == "MAN-AT-ARMS_(GOTH)") ){
+		Man_At_Arms_Goth returnManAtArmsGoth;
+		returnEntity = returnManAtArmsGoth;
 	}
-	else if(inputEntityName == "MAN_AT_ARMS_(JAPANESE)"){
-		returnEntity.entityName = "Man_At_Arms_(Japanese)";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 10; 
-		returnEntity.standardDamage = 7; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
+	else if( (inputEntityName == "MAN_AT_ARMS_(JAPANESE)") || (inputEntityName == "MAN-AT-ARMS_(JAPANESE)") ){
+		Man_At_Arms_Japanese returnManAtArmsJapanese;
+		returnEntity = returnManAtArmsJapanese;
 	}
 	else if(inputEntityName == "MANGONEL"){
-		returnEntity.entityName = "Mangonel";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 12; 
-		returnEntity.standardDamage = 40; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 12;  // 7 wood, 5 gold
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-
-		// 80 standardDamage vs Building
-		// Bombardment 1 (only attacks in first round of normal combat)
+		Mangonel returnMangonel;
+		returnEntity = returnMangonel;
 	}
 	else if(inputEntityName == "MANGONEL_(CELT)"){
-		returnEntity.entityName = "Mangonel_(Celt)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 12; 
-		returnEntity.standardDamage = 40; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 11;  // 6 wood, 5 gold
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-
-		// 90 standardDamage vs Building
-		// Bombardment 1 (only attacks in first round of normal combat)
+		Mangonel_Celt returnMangonelCelt;
+		returnEntity = returnMangonelCelt;
 	}
 	else if(inputEntityName == "MANGUDAI_(MONGOL)"){
-		returnEntity.entityName = "Mangudai_(Mongol)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 16; 
-		returnEntity.standardDamage = 8; 
-		returnEntity.rangedDamage = 7; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 5;  // 3 wood, 2 gold
-		returnEntity.armorClass[0] = true; // Archer armor class
-		returnEntity.armorClass[5] = true; // Cavalry Archer armor class
-		returnEntity.armorClass[4] = true; // Cavalry armor class
-		returnEntity.armorClass[17] = true; // Unique unit armor class
-
-		// 14 standardAttack vs Siege
+		Mangudai_Mongol returnMangudaiMongol;
+		returnEntity = returnMangudaiMongol;
 	}
 	else if(inputEntityName == "MARKET"){
-		returnEntity.entityName = "Market";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 180; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 12;  // 6 wood, 6 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Market returnMarket;
+		returnEntity = returnMarket;
 	}
 	else if(inputEntityName == "MARKET_(SARACEN)"){
-		returnEntity.entityName = "Market_(Saracen)";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 180; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 12;  // 6 wood, 6 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Market_Saracen returnMarketSaracen;
+		returnEntity = returnMarketSaracen;
 	}
 	else if(inputEntityName == "MILITIA"){
-		returnEntity.entityName = "Militia";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 8; 
-		returnEntity.standardDamage = 4; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold
-		returnEntity.armorClass[8] = true; // Infantry armor class
+		Militia returnMilitia;
+		returnEntity = returnMilitia;
 	}
 	else if(inputEntityName == "MILITIA_(CELT)"){
-		returnEntity.entityName = "Militia_(Celt)";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 8; 
-		returnEntity.standardDamage = 4; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold
-		returnEntity.armorClass[8] = true; // Infantry armor class
+		Militia_Celt returnMilitiaCelt;
+		returnEntity = returnMilitiaCelt;
 	}
 	else if(inputEntityName == "MILITIA_(GOTH)"){
-		returnEntity.entityName = "Militia_(GOTH)";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 8; 
-		returnEntity.standardDamage = 4; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold
-		returnEntity.armorClass[8] = true; // Infantry armor class
-
-		// +2 standardDamage vs Building
+		Militia_Goth returnMilitiaGoth;
+		returnEntity = returnMilitiaGoth;
 	}
 	else if(inputEntityName == "MILL"){
-		returnEntity.entityName = "Mill";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 80; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 6;  // 3 wood, 3 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Mill returnMill;
+		returnEntity = returnMill;
 	}
 	else if(inputEntityName == "MILL_(JAPANESE)"){
-		returnEntity.entityName = "Mill_(Japanese)";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 80; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 5;  // 2 wood, 3 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Mill_Japanese returnMillJapanese;
+		returnEntity = returnMillJapanese;
 	}
 	else if(inputEntityName == "MONASTERY"){
-		returnEntity.entityName = "Monastery";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 180; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 10; 
-		returnEntity.pointValue = 10;  // 7 wood, 3 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Monastery returnMonastery;
+		returnEntity = returnMonastery;
 	}
 	else if(inputEntityName == "ONAGER"){
-		returnEntity.entityName = "Onager";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 16; 
-		returnEntity.standardDamage = 50; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 12;  // 7 wood, 5 gold, 1 books (ignored)
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-	
-		// 120 standardAttack vs Building
-		// Bombardment 2 (only attacks in the first round)
+		Onager returnOnager;
+		returnEntity = returnOnager;
 	}
 	else if(inputEntityName == "ONAGER_(CELT)"){
-		returnEntity.entityName = "Onager_(Celt)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 16; 
-		returnEntity.standardDamage = 50; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 11;  // 6 wood, 5 gold, 1 books (ignored)
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-
-		// 130 standardAttack vs Building
-		// Bombardment 2 (only attacks in the first round)
+		Onager_Celt returnOnagerCelt;
+		returnEntity = returnOnagerCelt;
 	}
 	else if(inputEntityName == "OUTPOST"){
-		returnEntity.entityName = "Outpost";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 40; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 3;  // 1 wood, 1 stone, 1 body
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Outpost returnOutpost;
+		returnEntity = returnOutpost;
 	}
 	else if(inputEntityName == "PALADIN"){
-		returnEntity.entityName = "Paladin";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 38; 
-		returnEntity.standardDamage = 14; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 5;  // 2 food, 3 gold, 1 book (ignored)
-		returnEntity.armorClass[4] = true; // Cavalry armor class
+		Paladin returnPaladin;
+		returnEntity = returnPaladin;
 	}
 	else if(inputEntityName == "PALADIN_(PERSIAN)"){
-		returnEntity.entityName = "Paladin_(Persian)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 38; 
-		returnEntity.standardDamage = 14; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 5;  // 2 food, 3 gold, 1 book (ignored)
-		returnEntity.armorClass[4] = true; // Cavalry armor class
-	
-		// standardAttack +2 vs Archers
+		Paladin_Persian returnPaladinPersian;
+		returnEntity = returnPaladinPersian;
+	}
+	else if(inputEntityName == "PALADIN_(FRANK)"){
+		Paladin_Frank returnPaladinFrank;
+		returnEntity = returnPaladinFrank;
 	}
 	else if(inputEntityName == "PALISADE_WALL"){
-		returnEntity.entityName = "Palisade_Wall";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 20; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 wood, 1 body
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
-		returnEntity.armorClass[18] = true; // Wall & Gate armor class
+		Palisade_Wall returnPalisadeWall;
+		returnEntity = returnPalisadeWall;
 	}
 	else if(inputEntityName == "PIKEMAN"){
-		returnEntity.entityName = "Pikeman";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 14; 
-		returnEntity.standardDamage = 4; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
-		returnEntity.armorClass[13] = true; // Spearman armor class
-
-		// 40 standardDamage versus Cavalry
+		Pikeman returnPikeman;
+		returnEntity = returnPikeman;
 	}
 	else if(inputEntityName == "PIKEMAN_(CELT)"){
-		returnEntity.entityName = "Pikeman_(Celt)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 14; 
-		returnEntity.standardDamage = 4; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
-		returnEntity.armorClass[13] = true; // Spearman armor class
-
-		// 40 standardDamage versus Cavalry
+		Pikeman_Celt returnPikemanCelt;
+		returnEntity = returnPikemanCelt;
 	}
 	else if(inputEntityName == "PIKEMAN_(GOTH)"){
-		returnEntity.entityName = "Pikeman_(Goth)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 14; 
-		returnEntity.standardDamage = 4; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
-		returnEntity.armorClass[13] = true; // Spearman armor class
-
-		// 40 standardDamage versus Cavalry
-		// +2 standardDamage versus Building
+		Pikeman_Goth returnPikemanGoth;
+		returnEntity = returnPikemanGoth;		
 	}
 	else if(inputEntityName == "PIKEMAN_(JAPANESE)"){
-		returnEntity.entityName = "Pikeman_(Japanese)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 14; 
-		returnEntity.standardDamage = 5; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 wood, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
-		returnEntity.armorClass[13] = true; // Spearman armor class
-
-		// 40 standardDamage versus Cavalry
+		Pikeman_Japanese returnPikemanJapanese;
+		returnEntity = returnPikemanJapanese;
 	}
 	else if(inputEntityName == "PIKEMAN_(VIKING)"){
-		returnEntity.entityName = "Pikeman_(Viking)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 16; 
-		returnEntity.standardDamage = 4; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 wood, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
-		returnEntity.armorClass[13] = true; // Spearman armor class
-
-		// 40 standardDamage versus Cavalry
+		Pikeman_Viking returnPikemanViking;
+		returnEntity = returnPikemanViking;
+	}
+	else if(inputEntityName == "SAMURAI"){
+		Samurai_Japanese returnSamurai;
+		returnEntity = returnSamurai;
 	}
 	else if(inputEntityName == "SCORPION"){
-		returnEntity.entityName = "Scorpion";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 8; 
-		returnEntity.standardDamage = 12; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 8;  // 4 wood, 4 gold 
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-
-		// Area Effect
-		// Bombardment 1 (only attacks in the first round)
+		Scorpion returnScorpion;
+		returnEntity = returnScorpion;
 	}
 	else if(inputEntityName == "SCORPION_(CELT)"){
-		returnEntity.entityName = "Scorpion_(Celt)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 8; 
-		returnEntity.standardDamage = 14; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 7;  // 3 wood, 4 gold 
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-
-		// Area Effect
-		// Bombardment 1 (only attacks in the first round)
+		Scorpion_Celt returnScorpionCelt;
+		returnEntity = returnScorpionCelt;
 	}
 	else if(inputEntityName == "SCOUT_CAVALRY"){
-		returnEntity.entityName = "Scout_Cavalry";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 10; 
-		returnEntity.standardDamage = 5; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 3;  // 3 food
-		returnEntity.armorClass[4] = true; // Cavalry armor class
-
+		Scout_Cavalry returnScoutCavalry;
+		returnEntity = returnScoutCavalry;
 	}
 	else if(inputEntityName == "SIEGE_ONAGER"){
-		returnEntity.entityName = "Siege_Onager";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 20; 
-		returnEntity.standardDamage = 75; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 12;  // 7 wood, 5 gold, 1 books (ignored)
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-
-		// 180 standardAttack vs Building
-		// Bombardment 2 (only attacks in the first round)
+		Siege_Onager returnSiegeOnager;
+		returnEntity = returnSiegeOnager;
 	}
 	else if(inputEntityName == "SIEGE_ONAGER_(CELT)"){
-		returnEntity.entityName = "Siege_Onager_(Celt)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 20; 
-		returnEntity.standardDamage = 75; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 11;  // 6 wood, 5 gold, 1 books (ignored)
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-
-		// 190 standardAttack vs Building
-		// Bombardment 2 (only attacks in the first round)
+		Siege_Onager_Celt returnSiegeOnagerCelt;
+		returnEntity = returnSiegeOnagerCelt;
 	}
 	else if(inputEntityName == "SIEGE_RAM"){
-		returnEntity.entityName = "Siege_Ram";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 60; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 11;  // 7 wood, 4 gold, 1 books (ignored)
-		returnEntity.armorClass[10] = true; // Ram armor class
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-
-		// 220 standardAttack vs Building
-		// Only attacks buildings
+		Siege_Ram returnSiegeRam;
+		returnEntity = returnSiegeRam;
 	}
 	else if(inputEntityName == "SIEGE_RAM_(CELT)"){
-		returnEntity.entityName = "Siege_Ram_(Celt)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 60; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 10;  // 6 wood, 4 gold, 1 books (ignored)
-		returnEntity.armorClass[10] = true; // Ram armor class
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-
-		// 230 standardAttack vs Building
-		// Only attacks buildings
+		Siege_Ram_Celt returnSiegeRamCelt;
+		returnEntity = returnSiegeRamCelt;
 	}
 	else if(inputEntityName == "SIEGE_WORKSHOP"){
-		returnEntity.entityName = "Siege_Workshop";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 180; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 3; 
-		returnEntity.pointValue = 11;  // 7 wood, 4 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Siege_Workshop returnSiegeWorkshop;
+		returnEntity = returnSiegeWorkshop;
 	}
 	else if(inputEntityName == "SKIRMISHER"){
-		returnEntity.entityName = "Skirmisher";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 6; 
-		returnEntity.standardDamage = 2; 
-		returnEntity.rangedDamage = 3; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 wood
-		returnEntity.armorClass[0] = true; // Archer armor class
-
-		// 12 standardDamage vs Archers
-		// 13 rangedDamage vs Archers
+		Skirmisher returnSkirmisher;
+		returnEntity = returnSkirmisher;
 	}
-
 	else if(inputEntityName == "SPEARMAN"){
-		returnEntity.entityName = "Spearman";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 10; 
-		returnEntity.standardDamage = 3; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 wood
-		returnEntity.armorClass[8] = true; // Infantry armor class
-		returnEntity.armorClass[13] = true; // Spearman armor class
-
-		// 25 standardDamage vs Cavalry
+		Spearman returnSpearman;
+		returnEntity = returnSpearman;
 	}
 	else if(inputEntityName == "SPEARMAN_(JAPANESE)"){
-		returnEntity.entityName = "Spearman_(Japanese)";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 10; 
-		returnEntity.standardDamage = 4; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 wood
-		returnEntity.armorClass[8] = true; // Infantry armor class
-		returnEntity.armorClass[13] = true; // Spearman armor class
-
-		// 26 standardDamage vs Cavalry
+		Spearman_Japanese returnSpearmanJapanese;
+		returnEntity = returnSpearmanJapanese;
 	}
 	else if(inputEntityName == "SPEARMAN_(VIKING)"){
-		returnEntity.entityName = "Spearman_(Viking)";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 11; 
-		returnEntity.standardDamage = 3; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 wood
-		returnEntity.armorClass[8] = true; // Infantry armor class
-		returnEntity.armorClass[13] = true; // Spearman armor class
-
-		// 25 standardDamage vs Cavalry
+		Spearman_Viking returnSpearmanViking;
+		returnEntity = returnSpearmanViking;
 	}
 	else if(inputEntityName == "SPEARMAN_(CELT)"){
-		returnEntity.entityName = "Spearman_(Celt)";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 10; 
-		returnEntity.standardDamage = 3; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 wood
-		returnEntity.armorClass[8] = true; // Infantry armor class
-		returnEntity.armorClass[13] = true; // Spearman armor class
-
-		// 25 standardDamage vs Cavalry
+		Spearman_Celt returnSpearmanCelt;
+		returnEntity = returnSpearmanCelt;
 	}
 	else if(inputEntityName == "SPEARMAN_(GOTH)"){
-		returnEntity.entityName = "Spearman_(Goth)";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 10; 
-		returnEntity.standardDamage = 3; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 wood
-		returnEntity.armorClass[8] = true; // Infantry armor class
-		returnEntity.armorClass[13] = true; // Spearman armor class
-
-		// 25 standardDamage vs Cavalry
-		// +2 standardDamage vs Buildings
+		Spearman_Goth returnSpearmanGoth;
+		returnEntity = returnSpearmanGoth;
 	}
 	else if(inputEntityName == "STABLE"){
-		returnEntity.entityName = "Stable";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 120; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 10; 
-		returnEntity.pointValue = 11;  // 6 wood, 5 body
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Stable returnStable;
+		returnEntity = returnStable;
 	}
 	else if(inputEntityName == "STONE_MINE"){
-		returnEntity.entityName = "Stone_Mine";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 80; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 6;  // 3 wood, 3 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Stone_Mine returnStoneMine;
+		returnEntity = returnStoneMine;
 	}
 	else if(inputEntityName == "STONE_MINE_(JAPANESE)"){
-		returnEntity.entityName = "Stone_Mine_(Japanese)";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 80; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 4;  // 1 wood, 3 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Stone_Mine_Japanese returnStoneMineJapanese;
+		returnEntity = returnStoneMineJapanese;
 	}
 	else if(inputEntityName == "STONE_WALL"){
-		returnEntity.entityName = "Stone_Wall";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 150; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 stone, 1 body
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
-		returnEntity.armorClass[15] = true; // Stone defence armor class
-		returnEntity.armorClass[18] = true; // Wall & Gate armor class
+		Stone_Wall returnStoneWall;
+		returnEntity = returnStoneWall;
+	}
+	else if(inputEntityName == "THROWING_AXEMAN_(FRANK)"){
+		Throwing_Axeman_Frank returnThrowingAxemanFrank;
+		returnEntity = returnThrowingAxemanFrank;
 	}
 	else if(inputEntityName == "TOWN_CENTER"){
-		returnEntity.entityName = "Town_Center";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 220; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 17;  // 9 wood, 8 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Town_Center returnTownCenter;
+		returnEntity = returnTownCenter;
 	}
 	else if(inputEntityName == "TOWN_CENTER_(BRITON)"){
-		returnEntity.entityName = "Town_Center_(Briton)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 220; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 12;  // 4 wood, 8 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Town_Center_Briton returnTownCenterBriton;
+		returnEntity = returnTownCenterBriton;
 	}
 	else if(inputEntityName == "TOWN_CENTER_(PERSIAN)"){
-		returnEntity.entityName = "Town_Center_(Persian)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 440; 
-		returnEntity.standardDamage = 0; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 17;  // 9 wood, 8 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
+		Town_Center_Persian returnTownCenterPersian;
+		returnEntity = returnTownCenterPersian;
+	}
+	else if(inputEntityName == "TRADE_COG"){
+		Trade_Cog returnTradeCog;
+		returnEntity = returnTradeCog;
 	}
 	else if(inputEntityName == "TREBUCHET"){
-		returnEntity.entityName = "Trebuchet";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 36; 
-		returnEntity.standardDamage = 200; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 17;  // 7 wood, 5 gold, 5 bodies
-		returnEntity.armorClass[12] = true; // Siege weapon armor class
-		// Ram armorClass if unpacked. Perhaps check this during the combat calculation phase
-
-		// 450 standardAttack vs Buildings
-		// Bombardment 3 (only attacks in first round)
+		Trebuchet returnTrebuchet;
+		// Behaviour: Get further information about the Trebuchet
+		returnTrebuchet.updateTrebuchetArmorClass();
+		returnEntity = returnTrebuchet;
 	}
 	else if(inputEntityName == "TWO-HANDED_SWORDSMAN"){
-		returnEntity.entityName = "Two-handed_Swordsman";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 16; 
-		returnEntity.standardDamage = 11; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
+		Two_Handed_Swordsman returnTwoHandedSwordsman;
+		returnEntity = returnTwoHandedSwordsman;
 	}
-	else if(inputEntityName == "TWO-HANDED_SWORDSMAN_(CELT)"){
-		returnEntity.entityName = "Two-handed_Swordsman_(CELT)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 16; 
-		returnEntity.standardDamage = 11; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
+	else if( (inputEntityName == "TWO-HANDED_SWORDSMAN_(CELT)") || (inputEntityName == "TWO_HANDED_SWORDSMAN_(CELT)") ){
+		Two_Handed_Swordsman_Celt returnTwoHandedSwordsmanCelt;
+		returnEntity = returnTwoHandedSwordsmanCelt;
 	}
-	else if(inputEntityName == "TWO-HANDED_SWORDSMAN_(GOTH)"){
-		returnEntity.entityName = "Two-handed_Swordsman_(Goth)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 16; 
-		returnEntity.standardDamage = 11; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
-	
-		// +2 standardAttack vs Building
+	else if( (inputEntityName == "TWO-HANDED_SWORDSMAN_(GOTH)") || (inputEntityName == "TWO_HANDED_SWORDSMAN_(GOTH)") ){
+		Two_Handed_Swordsman_Goth returnTwoHandedSwordsmanGoth;
+		returnEntity = returnTwoHandedSwordsmanGoth;
 	}
-	else if(inputEntityName == "TWO-HANDED_SWORDSMAN_(JAPANESE)"){
-		returnEntity.entityName = "Two-handed_Swordsman_(Japanese)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 16; 
-		returnEntity.standardDamage = 14; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
+	else if( (inputEntityName == "TWO-HANDED_SWORDSMAN_(JAPANESE)") || (inputEntityName == "TWO_HANDED_SWORDSMAN_(JAPANESE)") ){
+		Two_Handed_Swordsman_Japanese returnTwoHandedSwordsmanJapanese;
+		returnEntity = returnTwoHandedSwordsmanJapanese;
 	}
-	else if(inputEntityName == "TWO-HANDED_SWORDSMAN_(VIKING)"){
-		returnEntity.entityName = "Two-handed_Swordsman_(Viking)";
-		returnEntity.entityAge = 4;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 19; 
-		returnEntity.standardDamage = 11; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold, 1 book (ignored)
-		returnEntity.armorClass[8] = true; // Infantry armor class
+	else if( (inputEntityName == "TWO-HANDED_SWORDSMAN_(VIKING)") || (inputEntityName == "TWO_HANDED_SWORDSMAN_(VIKING)") ){
+		Two_Handed_Swordsman_Viking returnTwoHandedSwordsmanViking;
+		returnEntity = returnTwoHandedSwordsmanViking;
 	}
 	else if(inputEntityName == "VILLAGER"){
-		returnEntity.entityName = "Villager";
-		returnEntity.entityAge = 1;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 4; 
-		returnEntity.standardDamage = 3; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 1;  // 1 food
-
-		// No armor class
+		Villager returnVillager;
+		returnEntity = returnVillager;
 	}
 	else if(inputEntityName == "WAR_ELEPHANT_(PERSIAN)"){
-		returnEntity.entityName = "War_Elephant_(Persian)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 94; 
-		returnEntity.standardDamage = 15; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 15;  // 15 food, 5 gold
-		returnEntity.armorClass[4] = true; // Cavalry armor class
-		returnEntity.armorClass[17] = true; // War Elephant armor class
-		returnEntity.armorClass[19] = true; // Unique Unit armor class
+		War_Elephant_Persian returnWarElephantPersian;
+		returnEntity = returnWarElephantPersian;
 
 		// The current entity is limited to 1 token per card 
 		if(inputEntityQuantity !=1){
 			std::cout << "Error: " << returnEntity.entityName << " can only be of 1 quantity" << "\n";
 			exit(EXIT_FAILURE);
 		}
-
-		// 3o standardDamage versus building
 	}
 	else if(inputEntityName == "WAR_GALLEY"){
-		returnEntity.entityName = "War_Galley";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 34; 
-		returnEntity.standardDamage = 16; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 6;  // 4 wood, 2 gold, 1 book (ignore)
-		returnEntity.armorClass[11] = true; // Ship armor class
-
-		// Bombardment 1 (only attacks in the first round of normal combat)
-		// 40 standardDamage versus Longboat, Land unit, Building, and Galley
+		War_Galley returnWarGalley;
+		returnEntity = returnWarGalley;
 	}
 	else if(inputEntityName == "WAR_GALLEY_(JAPANESE)"){
-		returnEntity.entityName = "War_Galley_(Japanese)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 34; 
-		returnEntity.standardDamage = 16; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 6;  // 4 wood, 2 gold, 1 book (ignore)
-		returnEntity.armorClass[11] = true; // Ship armor class
-
-		// Bombardment 2 (only attacks in the first round of normal combat)
-		// 40 standardDamage versus Longboat, Land unit, Building, and Galley
+		War_Galley_Japanese returnWarGalleyJapanese;
+		returnEntity = returnWarGalleyJapanese;
 	}
 	else if(inputEntityName == "WAR_GALLEY_(SARACEN)"){
-		returnEntity.entityName = "War_Galley_(Saracen)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 34; 
-		returnEntity.standardDamage = 20; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 6;  // 4 wood, 2 gold, 1 book (ignore)
-		returnEntity.armorClass[11] = true; // Ship armor class
-
-		// Bombardment 1 (only attacks in the first round of normal combat)
-		// 50 standardDamage versus Longboat, Land unit, Building, and Galley
+		War_Galley_Saracen returnWarGalleySaracen;
+		returnEntity = returnWarGalleySaracen;
 	}
 	else if(inputEntityName == "WAR_GALLEY_(VIKING)"){
-		returnEntity.entityName = "War_Galley_(Viking)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 34; 
-		returnEntity.standardDamage = 16; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 3;  // 2 wood, 1 gold, 1 book (ignore)
-		returnEntity.armorClass[11] = true; // Ship armor class
-
-		// Bombardment 1 (only attacks in the first round of normal combat)
-		// 40 standardDamage versus Longboat, Land unit, Building, and Galley
+		War_Galley_Viking returnWarGalleyViking;
+		returnEntity = returnWarGalleyViking;
 	}
 	else if(inputEntityName == "WATCH_TOWER"){
-		returnEntity.entityName = "Watch_Tower";
-		returnEntity.entityAge = 2;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 100; 
-		returnEntity.standardDamage = 15; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 9;  // 5 stone, 5 bodies
-		returnEntity.armorClass[1] = true; // Building armor class
-		returnEntity.armorClass[14] = true; // Standard building armor class
-		returnEntity.armorClass[15] = true; // Stone defence armor class
-
-		// Bombardment 1 (only attacks in the first round of normal combat)
+		Watch_Tower returnWatchTower;
+		returnEntity = returnWatchTower;
 	}
 	else if(inputEntityName == "WOAD_RAIDER_(CELT)"){
-		returnEntity.entityName = "Woad_Raider_(Celt)";
-		returnEntity.entityAge = 3;
-		returnEntity.entityQuantity = inputEntityQuantity; 
-		returnEntity.entityHealth = 18; 
-		returnEntity.standardDamage = 8; 
-		returnEntity.rangedDamage = 0; 
-		returnEntity.garrisonValue = 0; 
-		returnEntity.pointValue = 2;  // 1 food, 1 gold
-		returnEntity.armorClass[8] = true; // Infantry armor class
-		returnEntity.armorClass[17] = true; // Unique unit armor class
-
-		// 12 standardDamage vs Buildings
+		Woad_Raider_Celt returnWoadRaiderCelt;
+		returnEntity = returnWoadRaiderCelt;
 	}
-
 	else{
-		// Make sure that the name inputted into entites.txt is recognized
-		std::cout << "Error: The name you entered for one of the entities was not recognized" << "\n";
+		std::cout << "Error: " << inputEntityName << " inside of entities.csv is an unrecognized name of an entity" << "\n";
 		exit(EXIT_FAILURE);
 	}
 
-	// A few more data validation tests for my manual input
-	// Make sure that I entered the age in correctly
+	// Behaviour: Make sure that an Age within the range of 1-4 was entered
 	if(returnEntity.entityAge <1 || returnEntity.entityAge > 5){
 		// Error: Age not recognized
 		std::cout << "Error: " << returnEntity.entityName << " contains an Age other than 1-4" << "\n";
 		exit(EXIT_FAILURE); 
 	}
-	// Make sure that each entity has at least 1 armor class
+
+	// Behaviour: Make sure that each entity (except for Villagers) has at least 1 armor class
 	bool hasArmorClass = false;
 	for(int i = 0; i < 20; i ++){
 		if(returnEntity.armorClass[i] == true){
@@ -1776,38 +690,45 @@ Entity fileImporter::conductASearch(std::string inputEntityName, int inputEntity
 			exit(EXIT_FAILURE); 
 		}
 	}
-	// Make sure that entities with the building armor class only have a quantity of 1
-	if(returnEntity.armorClass[1] == true && inputEntityQuantity!=1){
-		// Error: Only 1 building can participate in a battle
-		std::cout << "Error: " << returnEntity.entityName << " is a building with !=1 quantity" << "\n";
-		exit(EXIT_FAILURE);
-	}
-	// Make sure that entities with the siege weapon armor class only have a quantity of 1
-	if(returnEntity.armorClass[12] == true && inputEntityQuantity !=1){
-		std::cout << "Error: " << returnEntity.entityName << " can only be of 1 quantity" << "\n";
-		exit(EXIT_FAILURE);
-	}
-	// Make sure that entities with the ship armor class only have a quantity of 1
-	if(returnEntity.armorClass[11] == true && inputEntityQuantity !=1){
-		std::cout << "Error: " << returnEntity.entityName << " can only be of 1 quantity" << "\n";
-		exit(EXIT_FAILURE);
-	}
 
+	// Behaviour: Calculate the number of armor classes the entity has now
+	returnEntity.entitiesArmorClasses = returnEntity.returnNumberOfArmorClasses();
+
+	// Behaviour: Store the quantity of the entity inside of the entity now
+	returnEntity.entityQuantity = inputEntityQuantity;
+
+	// Behaviour: Make sure that entities with the building armor class only have a quantity of 1
+	if(returnEntity.armorClass[1] == true && inputEntityQuantity!=1){
+		std::cout << "Error: " << returnEntity.entityName << " is a building and buildings can only be of 1 quantity" << "\n";
+		exit(EXIT_FAILURE);
+	}
+	// Behaviour: Make sure that entities with the siege weapon armor class only have a quantity of 1
+	if(returnEntity.armorClass[12] == true && inputEntityQuantity !=1){
+		std::cout << "Error: " << returnEntity.entityName << " is a siege weapon and siege weapons can only be of 1 quantity" << "\n";
+		exit(EXIT_FAILURE);
+	}
+	// Behavuour: Make sure that entities with the ship armor class only have a quantity of 1
+	if(returnEntity.armorClass[11] == true && inputEntityQuantity !=1){
+		std::cout << "Error: " << returnEntity.entityName << " is a ship and ships can only be of 1 quantity" << "\n";
+		exit(EXIT_FAILURE);
+	}
 
 	return returnEntity;
 }
 // BANANA
 
 
-/** A necessary function to see if a string is an integer **/
+// Function: Check if a string is an integer
 int fileImporter::checkIsInteger(std::string inputWord){
-	// Delare data structures
+	// Variable: Declare an integer data type
 	int anInteger = 0;
+
+	// Object: Declare the object that shall store the word and try to put the word into the integer
 	std::stringstream wordConversion;
 	wordConversion << inputWord;
 	wordConversion >> anInteger;
 
-	// Check to see if the string to integer conversion worked
+	// Behaviour: See if the string to integer conversion was successful
 	if(wordConversion.good()){
 		std::cout << "Error: No valid first quantity" << "\n";
 		exit(EXIT_FAILURE);
@@ -1818,101 +739,197 @@ int fileImporter::checkIsInteger(std::string inputWord){
 			exit(EXIT_FAILURE);
 		}
 		else{
-			std::cout << "Error: A quantity of < 1 is unacceptable" << "\n";
+			std::cout << "Error: A quantity of < 1 is still unacceptable" << "\n";
 			exit(EXIT_FAILURE);
 		}
 	}
-	else{
-		// std::cout << checkInteger[0] << "\n"; // Optionally display the output
-	}
+	else{}
 
 	return anInteger;
 }
 
-/** Code to load the entities file, validate the input, and return the input **/
+// Function: Get the entity name and quantity
 Entity fileImporter::entitiesFile(int inputPlayerNumber){
-	// Declare the entity to return
+	// Struct: Declare an entity to store the return values
 	Entity returnEntityCSV;
 
-	// Declare a file object
-	std::ifstream fileObject;
+	// Behaviour: Open "entities.csv"
+	inputFile.open("entities.csv");
 
-	// Open "entities.csv"
-	fileObject.open("entities.csv");
-
-	// Error: Check if "entities.csv" exists or is successfully opened
-	if(!fileObject.is_open()){
+	// Behaviour: Check if "entities.csv" did not open successfully
+	if(!inputFile.is_open()){
 		// The file did not open
-		std::cout << "Error: Opening the file" << "\n";
+		std::cout << "Error: Failed to open the file called 'entites.csv'" << "\n";
 		exit(EXIT_FAILURE);
 	}
 	else{
-
-		// Declare an array that can hold up to four words and a variable to increment this array
+		// Array: Hold up to four words to represent the four words inside of 'entites.csv'
 		std::string words[4] = {"","","",""};
+
+		// Variable: A counter used to increment the words array
 		int count = 0;
 
-		// Declare a string that can hold one word
+		// Variable: A string that can hold one input word at a time
 		std::string word;
 
-		// While we aren't at the end of the file keep running. Similar to .good() and .eof() 
-		while(fileObject>>word){
-			// Data validation. Ensure that the user doesn't exceed the array bounds of words[4]
+		// Behaviour: While we aren't at the end of the file keep running. Similar to .good() and .eof() 
+		while(inputFile>>word){
+			// Behaviour: Ensure that the user does not exceed the array bounds of words[4]
 			if(count == 4){
 				std::cout << "Error: Too much input. Only enter the values for up to two players" << "\n";
 				std::cout << "The input is supposed to be: [P1_Entity_Name] [P1_Entity_Quantity] [P2_Entity_Name] [P2_Entity_Quantity]" << "\n";
 				exit(EXIT_FAILURE);
 			}
 			else{
-				// Pass the word into the words array
+				// Behaviour: Pass the word into the words array and increment the counter
 				words[count] = word;
 				count ++;
 			}
 		}
 
-		// Data validation. Ensure that there are at least four words inside of the words array
+		// Behaviour: Ensure that there are at least four words inside of the words array
 		if(count <3){
 			std::cout << "Error: Too little input. You must enter the values for up to two players" << "\n";
 			std::cout << "The input is supposed to be: [P1_Entity_Name] [P1_Entity_Quantity] [P2_Entity_Name] [P2_Entity_Quantity]" << "\n";
 			exit(EXIT_FAILURE);
 		}
 
-		// Ensure that the integer elements are of the correct data type (i.e. they are integers)
-		int p1Quantity = checkIsInteger(words[1]);
-		int p2Quantity = checkIsInteger(words[3]);
-
-		// Data validation. Convert words[0] and words[2] into all caps
-		std::transform(words[0].begin(), words[0].end(), words[0].begin(), ::toupper);
-		std::transform(words[2].begin(), words[2].end(), words[2].begin(), ::toupper);
-
-		// Display the result to the compiler (testing purposes only)
-		/**
-		for(int i = 0; i < 4; i++){
-			std::cout << words[i] << "\n"; // Data validation. There is no whitespace (by default)
-		}
-		**/
-
-		// Return the entity name / quantity back
+		
+		// Behaviour: Check what player's values ought to be returned
 		if(inputPlayerNumber == 1){
-			returnEntityCSV.entityName = words[0];
+			// Behaviour: Ensure that the integer elements are of the correct data type (i.e. they are integers)
+			int p1Quantity = checkIsInteger(words[1]);
+
+			// Behaviour: Convert words[0] into all caps
+			std::transform(words[0].begin(), words[0].end(), words[0].begin(), ::toupper);
+
+			// Behaviour: Put the input entity name and quantity for player 1 inside of the returnEntityCSV object.
 			returnEntityCSV.entityQuantity = p1Quantity;
+			returnEntityCSV.entityName = words[0];
 		}
 		else if(inputPlayerNumber == 2){
-			returnEntityCSV.entityName = words[2];
+			// Behaviour: Ensure that the integer elements are of the correct data type (i.e. they are integers)
+			int p2Quantity = checkIsInteger(words[3]);
+
+			// Behaviour: Convert words[2] into all caps
+			std::transform(words[2].begin(), words[2].end(), words[2].begin(), ::toupper);
+
+			// Behaviour: Put the input entity name and quantity for player 12 inside of the returnEntityCSV object.
 			returnEntityCSV.entityQuantity = p2Quantity;
+			returnEntityCSV.entityName = words[2];
 		}
-		else{
-			std::cout << "Error: Enter 1 for player 1 or 2 for player 2";
+		// Behaviour: Get the rest of the information about the input entity (without user input)
+		returnEntityCSV = conductASearch(returnEntityCSV.entityName, returnEntityCSV.entityQuantity);
+
+		// Behaviour: Close the file
+		inputFile.close();
+
+		// Behaviour: Return the information about a single entity
+		return returnEntityCSV;
+	}
+}
+
+// Function: Get the active technologies from 'p1_technologies.csv' or 'p2_technologies.csv'
+int* fileImporter::technologyFile(std::string inputTechnologyFilename){
+	// Behaviour: Open "technologies.csv" for player 1 or player 2 (not both)
+	if(inputTechnologyFilename == "technologies_p1.csv"){
+		inputFile.open("technologies_p1.csv");
+	}
+	else if(inputTechnologyFilename == "technologies_p2.csv"){
+		inputFile.open("technologies_p2.csv");
+	}
+	else{
+		std::cout << "Error: " << inputTechnologyFilename << " not recognized" << "\n";
+		exit(EXIT_FAILURE);
+	}
+
+	// Behaviour: Check if "technologies_[p1/p2].csv" successfully opened
+	if(!inputFile.is_open()){
+		std::cout << "Error: Failed to open the file called 'technologies_[p1/p2].csv'" << "\n";
+		exit(EXIT_FAILURE);
+	}
+	else{
+		// Variable: Declare the number of technologies (17)
+		int rows = 17;
+
+		// Variable: Declare the layout (an active column technologies and technology name column)
+		int columns = 2; 
+
+		// Variable: Declarea and calculate the number of words in the technologies array
+		int arrayWords = columns * rows;
+
+		// Array: Declare and initialize the words array
+		std::string words[arrayWords];
+		for(int i = 0; i < arrayWords; i ++){
+			words[i] = "";
+		}
+
+		// Variable: Declare the words array incrementer
+		int count = 0;
+
+		// Variable: Declare a string to store current word in the file
+		std::string word = "";
+
+
+		// Behaviour: While we are not at the end of the file keep running. Similar to .good() and .eof() 
+		while(inputFile>>word){
+			// Behaviour: Ensure that the user does not exceed the array bounds
+			if(count >= arrayWords+1){
+				std::cout << "Error: You have entered too much input into " <<  inputTechnologyFilename << "\n";
+				std::cout << "You will have to replace the existing " << inputTechnologyFilename << " file with the one in the backups folder" << "\n";
+				exit(EXIT_FAILURE);
+			}
+			else{
+				// Behaviour: Pass the word into the words array and increment the counter
+				words[count] = word;
+				count ++;
+			}
+		}
+
+		// Behaviour: Ensure that the words array contains all of the words
+		if(count <=arrayWords-1){
+			std::cout << "Error: You have entered too little input input into " << inputTechnologyFilename << "\n";
+			std::cout << "You will have to replace the existing " << inputTechnologyFilename << " file with the one in the backups folder" << "\n";
 			exit(EXIT_FAILURE);
 		}
 
-		// Run a huge SEARCH function and return the rest of the information (without user input)
-		returnEntityCSV = conductASearch(returnEntityCSV.entityName, returnEntityCSV.entityQuantity);
+		// Pointer: Declare an array to store the even words
+		// Fun fact: 
+		// - The new keyword is required to store the pointer in the heap and not the stack
+		// - Storing the pointer in the heap will prevent the pointer from being deleted straight away
+		int* everySecondElement = new int[arrayWords/2]; 
 
-		return returnEntityCSV;
+		// Integer: Declare an integer to increment the everySecondElement array
+		int incrementInnerArray = 0;
+
+		// Integer: Declare an integer to increment the words array (checking if the words are even)
+		int incrementOutsideArray = 0;
+
+		// Behaviour: Run a loop to find the even numbers of the array
+		for(int i = 0; i < arrayWords; i ++){
+			// Behaviour: Check if the words array counter is an even number
+			if(incrementOutsideArray % 2 == 0){
+				// Behaviour: Make sure that the words input is either 0 or 1 before trying to convert the string into an integer
+				if (words[i] !="0" && words[i] !="1"){
+					std::cout << "Error: For each technology, enter 0 (inactive) or 1 (active) only" << " not " << words[i] << "\n";
+					std::cout << "Note that you must leave the technology names next to the numbers" << "\n";
+					std::cout << "You may have to replace the existing " << inputTechnologyFilename << " file with the one in the backups folder" << "\n";
+					exit(EXIT_FAILURE);
+				}
+				// Behaviour: Get the even element of the words array and pass this into the every second element array
+				everySecondElement[incrementInnerArray] = atoi(words[i].c_str());
+
+				// Behaviour: Increment the every second element array
+				incrementInnerArray++;
+			}
+			// Behaviour: Increment the words array counter
+			incrementOutsideArray++;
+		}
+
+		// Behaviour: Close the file
+		inputFile.close();
+
+		// Behaviour: Return a string of technologies
+		return everySecondElement;
 	}
-
-	// Close the file
-	fileObject.close();
 }
-

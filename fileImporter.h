@@ -1,26 +1,30 @@
-/** The libaries **/ /** Apparently using namespace std; is bad  **/
+/** The libaries **/ 
 #include <string> // Using: string
-#include "entity.h" // Using: Entity class
+#include <fstream> // Using: ifstream, is_open(), good, close()
+#include "entity.h" // Using: entity class
 
 /** The file importer class **/
 #ifndef FILE_IMPORTER_H
 #define FILE_IMPORTER_H
 class fileImporter{
 	public:
-	// Constructor
-	fileImporter();
+	// Object: A single common file object to store the input file
+	std::ifstream inputFile;
 
-	// Check if a string is an integer function
+	// Functions: The constructor and deconstructor 
+	fileImporter();
+	~fileImporter();
+
+	// Function: Check if a string is an integer
 	int checkIsInteger(std::string inputWord);
 
-	// Get the rest of the information about an entity
-	Entity conductASearch(std::string inputEntityName, int inputEntityQuantity);
-
-	// Get the entity name and quantity function
+	// Function: Get the entity name and quantity from 'entities.csv'
 	Entity entitiesFile(int inputPlayerNumber);
 
-	// Deconstructor
-	~fileImporter();
+	// Function: Get the rest of the information about an entity
+	Entity conductASearch(std::string inputEntityName, int inputEntityQuantity);
+
+	// Function: Get the active technologies from 'p1_technologies.csv' or 'p2_technologies.csv'
+	int* technologyFile(std::string inputTechnologyFilename);
 };
 #endif // FILE_IMPORTER_H
-
