@@ -19,12 +19,12 @@ class fileImporter{
 	int checkIsInteger(std::string inputWord);
 
 	// Function: Get the entity name and quantity from 'entities.csv'
-	Entity entitiesFile(int inputPlayerNumber);
+	Entity entitiesFile(std::string inputEntityFilename, int inputPlayerNumber);
 
 	// Function: Get the rest of the information about an entity
 	Entity conductASearch(std::string inputEntityName, int inputEntityQuantity);
 
-	// Function: Get the active technologies from 'p1_technologies.csv' or 'p2_technologies.csv'
-	int* technologyFile(std::string inputTechnologyFilename);
+	// Function: Get the active technologies from '[p1/p2]_technologies.csv' or the active events from '[p1/p2]_events.csv'
+	int* aTechnologyOrEventFile(std::string inputTechnologyOrEventsFilename, int numberOfRows);
 };
 #endif // FILE_IMPORTER_H

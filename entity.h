@@ -1600,7 +1600,3 @@ struct Siege_Ram_Celt: Siege_Ram{
 	~Siege_Ram_Celt();
 };
 #endif // SIEGE_RAM_CELT_H
-
-
-
-

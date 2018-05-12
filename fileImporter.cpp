@@ -749,17 +749,22 @@ int fileImporter::checkIsInteger(std::string inputWord){
 }
 
 // Function: Get the entity name and quantity
-Entity fileImporter::entitiesFile(int inputPlayerNumber){
+Entity fileImporter::entitiesFile(std::string inputEntityFilename, int inputPlayerNumber){
 	// Struct: Declare an entity to store the return values
 	Entity returnEntityCSV;
 
+	// Behaviour: Check that the filename is correct
+	if (inputEntityFilename!="import/entities.csv"){
+		std::cout << "Error: Input filename supposed to be called 'import/entities.csv'" << "\n";
+		exit(EXIT_FAILURE);
+	}
+
 	// Behaviour: Open "entities.csv"
-	inputFile.open("entities.csv");
+	inputFile.open(inputEntityFilename);
 
 	// Behaviour: Check if "entities.csv" did not open successfully
 	if(!inputFile.is_open()){
-		// The file did not open
-		std::cout << "Error: Failed to open the file called 'entites.csv'" << "\n";
+		std::cout << "Error: Failed to open the file called" << inputEntityFilename << "\n";
 		exit(EXIT_FAILURE);
 	}
 	else{
@@ -829,33 +834,35 @@ Entity fileImporter::entitiesFile(int inputPlayerNumber){
 	}
 }
 
-// Function: Get the active technologies from 'p1_technologies.csv' or 'p2_technologies.csv'
-int* fileImporter::technologyFile(std::string inputTechnologyFilename){
-	// Behaviour: Open "technologies.csv" for player 1 or player 2 (not both)
-	if(inputTechnologyFilename == "technologies_p1.csv"){
-		inputFile.open("technologies_p1.csv");
-	}
-	else if(inputTechnologyFilename == "technologies_p2.csv"){
-		inputFile.open("technologies_p2.csv");
-	}
-	else{
-		std::cout << "Error: " << inputTechnologyFilename << " not recognized" << "\n";
+// Function: Get the active technologies from '[p1/p2]_technologies.csv' or the active events from '[p1/p2]_events.csv'
+int* fileImporter::aTechnologyOrEventFile(std::string inputTechnologyOrEventsFilename, int numberOfRows){
+	// Behaviour: Open "[p1/p2]_technologies.csv" or "[p1/p2]_events.csv" for player 1 or 2 (not both)
+	inputFile.open(inputTechnologyOrEventsFilename);
+
+	// Behaviour: Check that the filename is correct
+	if (
+		(inputTechnologyOrEventsFilename!="import/technologies_p1.csv") &&
+		(inputTechnologyOrEventsFilename!="import/technologies_p2.csv") &&
+		(inputTechnologyOrEventsFilename!="import/events_p1.csv") &&
+		(inputTechnologyOrEventsFilename!="import/events_p2.csv")
+		){
+		std::cout << "Error: Input filename supposed to be called 'import/[p1/p2]_technologies.csv' or 'import/[p1/p2]_events.csv'" << "\n";
 		exit(EXIT_FAILURE);
 	}
-
-	// Behaviour: Check if "technologies_[p1/p2].csv" successfully opened
+	
+	// Behaviour: Check if "technologies_[p1/p2].csv" or "[p1/p2]_events.csv" successfully opened
 	if(!inputFile.is_open()){
-		std::cout << "Error: Failed to open the file called 'technologies_[p1/p2].csv'" << "\n";
+		std::cout << "Error: Failed to open the file called " << inputTechnologyOrEventsFilename << "\n";
 		exit(EXIT_FAILURE);
 	}
 	else{
-		// Variable: Declare the number of technologies (17)
-		int rows = 17;
+		// Variable: Declare the number of technologies (17) or events (?)
+		int rows = numberOfRows;
 
-		// Variable: Declare the layout (an active column technologies and technology name column)
+		// Variable: Declare the layout (an active column and the name column)
 		int columns = 2; 
 
-		// Variable: Declarea and calculate the number of words in the technologies array
+		// Variable: Declarea an array to store the number of words in the file
 		int arrayWords = columns * rows;
 
 		// Array: Declare and initialize the words array
@@ -875,8 +882,8 @@ int* fileImporter::technologyFile(std::string inputTechnologyFilename){
 		while(inputFile>>word){
 			// Behaviour: Ensure that the user does not exceed the array bounds
 			if(count >= arrayWords+1){
-				std::cout << "Error: You have entered too much input into " <<  inputTechnologyFilename << "\n";
-				std::cout << "You will have to replace the existing " << inputTechnologyFilename << " file with the one in the backups folder" << "\n";
+				std::cout << "Error: You have entered too much input into " <<  inputTechnologyOrEventsFilename << "\n";
+				std::cout << "You will have to replace the existing " << inputTechnologyOrEventsFilename << " file with the default one" << "\n";
 				exit(EXIT_FAILURE);
 			}
 			else{
@@ -888,8 +895,8 @@ int* fileImporter::technologyFile(std::string inputTechnologyFilename){
 
 		// Behaviour: Ensure that the words array contains all of the words
 		if(count <=arrayWords-1){
-			std::cout << "Error: You have entered too little input input into " << inputTechnologyFilename << "\n";
-			std::cout << "You will have to replace the existing " << inputTechnologyFilename << " file with the one in the backups folder" << "\n";
+			std::cout << "Error: You have entered too little input input into " << inputTechnologyOrEventsFilename << "\n";
+			std::cout << "You will have to replace the existing " << inputTechnologyOrEventsFilename << " file with the default one" << "\n";
 			exit(EXIT_FAILURE);
 		}
 
@@ -911,9 +918,9 @@ int* fileImporter::technologyFile(std::string inputTechnologyFilename){
 			if(incrementOutsideArray % 2 == 0){
 				// Behaviour: Make sure that the words input is either 0 or 1 before trying to convert the string into an integer
 				if (words[i] !="0" && words[i] !="1"){
-					std::cout << "Error: For each technology, enter 0 (inactive) or 1 (active) only" << " not " << words[i] << "\n";
-					std::cout << "Note that you must leave the technology names next to the numbers" << "\n";
-					std::cout << "You may have to replace the existing " << inputTechnologyFilename << " file with the one in the backups folder" << "\n";
+					std::cout << "Error: For each row, enter 0 (inactive) or 1 (active) only" << " not " << words[i] << "\n";
+					std::cout << "Note that you must leave the names next to the numbers" << "\n";
+					std::cout << "You may have to replace the existing " << inputTechnologyOrEventsFilename << " file with the default one" << "\n";
 					exit(EXIT_FAILURE);
 				}
 				// Behaviour: Get the even element of the words array and pass this into the every second element array

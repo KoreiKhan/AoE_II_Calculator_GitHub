@@ -38,7 +38,7 @@ Archer::~Archer(){}
 
 Archer_Saracen::Archer_Saracen(){
 	entityName += "_(Saracen)";
-	// 5 standardDamage vs Buildings
+	// 5 standardDamage vs Buildings (implemented)
 }
 
 Archer_Saracen::~Archer_Saracen(){}
@@ -63,7 +63,7 @@ Arbalest_Briton::~Arbalest_Briton(){}
 
 Arbalest_Saracen::Arbalest_Saracen(){
 	entityName += "_(Saracen)"; 
-	// 8 standardDamage versus buildings
+	// 8 standardDamage versus buildings (implemented)
 }
 
 Arbalest_Saracen::~Arbalest_Saracen(){}
@@ -111,7 +111,7 @@ Battering_Ram::Battering_Ram(){
 	pointValue = 11; // 7 wood, 4 gold
 	armorClass[10] = true; // Ram armor class
 	armorClass[12] = true; // Siege weapon armor class
-	// 60 standard damage vs Building
+	// 60 standard damage vs Building (implemented)
 	// There is a rule that Archers and Villagers cannot attack Rams.
 	// There is a rule that this unit can only attack buildings
 }
@@ -121,7 +121,7 @@ Battering_Ram::~Battering_Ram(){}
 Battering_Ram_Celt::Battering_Ram_Celt(){
 	entityName += "_(Celt)";
 	pointValue = 10; // 6 wood, 4 gold
-	// 70 standard damage vs Building
+	// 70 standard damage vs Building (implemented)
 }
 
 Battering_Ram_Celt::~Battering_Ram_Celt(){}
@@ -147,7 +147,7 @@ Capped_Ram::Capped_Ram(){
 	entityName = "Capped_Ram";
 	entityAge = 4;
 	entityHealth = 46; 
-	// 110 standard damage vs Building
+	// 110 standard damage vs Building (implemented)
 	// There is a rule that Archers and Villagers cannot attack Rams. 
 	// There is a rule that this is unit can only attack buildings
 }
@@ -156,7 +156,7 @@ Capped_Ram::~Capped_Ram(){}
 
 Capped_Ram_Celt::Capped_Ram_Celt(){
 	entityName += "_Celt";
-	// 120 standard damage vs Building
+	// 120 standard damage vs Building (implemented)
 }
 
 Capped_Ram_Celt::~Capped_Ram_Celt(){}
@@ -199,7 +199,7 @@ Cavalier_Frank::~Cavalier_Frank(){}
 
 Cavalier_Persian::Cavalier_Persian(){
 	entityName += "_(Persian)";
-	// +2 standardDamage vs Archers
+	// +2 standardDamage vs Archers (implemented)
 }
 
 Cavalier_Persian::~Cavalier_Persian(){}
@@ -220,7 +220,7 @@ Cavalry_Archer::~Cavalry_Archer(){}
 
 Cavalry_Archer_Saracen::Cavalry_Archer_Saracen(){
 	entityName += "_(Saracen)";
-	// 9 standardDamage vs. Building
+	// 9 standardDamage vs. Building (implemented)
 }
 
 Cavalry_Archer_Saracen::~Cavalry_Archer_Saracen(){}
@@ -256,7 +256,7 @@ Champion_Viking::~Champion_Viking(){}
 
 Champion_Goth::Champion_Goth(){
 	entityName += "_(Goth)";
-	// +2 vs buildings
+	// +2 vs buildings (implemented)
 }
 
 Champion_Goth::~Champion_Goth(){}
@@ -264,7 +264,7 @@ Champion_Goth::~Champion_Goth(){}
 Champion_Japanese::Champion_Japanese(){
 	entityName += "_(Japanese)";
 	standardDamage = 17; 
-	// +2 vs buildings
+	// +2 vs buildings (implemented)
 }
 
 Champion_Japanese::~Champion_Japanese(){}
@@ -281,7 +281,7 @@ Crossbowman::~Crossbowman(){}
 
 Crossbowman_Saracen::Crossbowman_Saracen(){
 	entityName += "_(Saracen)";
-	// 6 standardDamage vs building
+	// 6 standardDamage vs building (implemented)
 }
 
 Crossbowman_Saracen::~Crossbowman_Saracen(){}
@@ -349,7 +349,7 @@ Elite_Huskarl_Goth::Elite_Huskarl_Goth(){
 	entityAge = 4; 
 	entityHealth = 20; 
 	standardDamage = 12; 
-	// 15 standardDamage vs building
+	// 15 standardDamage vs building (implemented)
 }
 
 Elite_Huskarl_Goth::~Elite_Huskarl_Goth(){}
@@ -359,7 +359,7 @@ Elite_Longboat_Viking::Elite_Longboat_Viking(){
 	entityAge = 4;
 	entityHealth = 36; 
 	standardDamage = 16; 
-	// 50 standardDamage versus Demolition Ship, Galley, Longboat, Building, & Land Unit
+	// 50 standardDamage versus Demolition Ship, Galley, Longboat, Building, & Land Unit (implemented)
 	// Bombardment 2 
 }
 
@@ -381,7 +381,7 @@ Elite_Mangudai_Mongol::Elite_Mangudai_Mongol(){
 	entityHealth = 16; 
 	standardDamage = 10; 
 	rangedDamage = 9; 
-	// 1 standardDamage versus Siege
+	// 16 standardDamage versus Siege (implemented)
 }
 
 Elite_Mangudai_Mongol::~Elite_Mangudai_Mongol(){}
@@ -392,7 +392,7 @@ Elite_Mameluke_Saracen::Elite_Mameluke_Saracen(){
 	entityHealth = 22; 
 	standardDamage = 8; 
 	rangedDamage = 5; 
-	// 20 standardDamage versus Cavalry
+	// 20 standardDamage versus Cavalry (implemented)
 }
 
 Elite_Mameluke_Saracen::~Elite_Mameluke_Saracen(){}
@@ -402,8 +402,8 @@ Elite_Samurai_Japanese::Elite_Samurai_Japanese(){
 	entityAge = 4;
 	entityHealth = 20; 
 	standardDamage = 12;
-	// 15 standardDamage versus Building
-	// 18 standardDamage versus Unique units
+	// 15 standardDamage versus Building (implemented)
+	// 18 standardDamage versus Unique units (implemented)
 }
 
 Elite_Samurai_Japanese::~Elite_Samurai_Japanese(){}
@@ -414,7 +414,7 @@ Elite_Skirmisher::Elite_Skirmisher(){
 	entityHealth = 8; 
 	standardDamage = 3; 
 	rangedDamage = 5; 
-	// 16 standardDamage against Archers
+	// 16 standardDamage against Archers (implemented)
 }
 
 Elite_Skirmisher::~Elite_Skirmisher(){}
@@ -425,7 +425,7 @@ Elite_Throwing_Axeman_Frank::Elite_Throwing_Axeman_Frank(){
 	entityHealth = 16; 
 	standardDamage = 8; 
 	rangedDamage = 5;
-	// 12 standardDamage versus Building
+	// 12 standardDamage versus Building (implemented)
 }
 
 Elite_Throwing_Axeman_Frank::~Elite_Throwing_Axeman_Frank(){}
@@ -436,7 +436,7 @@ Elite_War_Elephant_Persian::Elite_War_Elephant_Persian(){
 	entityHealth = 126; 
 	standardDamage = 25; 
 	// Limited to 1 token per card
-	// 60 standardDamage against Buildings
+	// 60 standardDamage against Buildings (implemented)
 }
 
 Elite_War_Elephant_Persian::~Elite_War_Elephant_Persian(){}
@@ -446,7 +446,7 @@ Elite_Woad_Raider_Celt::Elite_Woad_Raider_Celt(){
 	entityAge = 4;
 	entityHealth = 22; 
 	standardDamage = 13; 
-	// 17 standardDamage vs Building
+	// 17 standardDamage vs Building (implemented)
 }
 
 Elite_Woad_Raider_Celt::~Elite_Woad_Raider_Celt(){}
@@ -467,7 +467,8 @@ Fast_Fire_Ship::Fast_Fire_Ship(){
 	entityAge = 4;
 	entityHealth = 30; 
 	standardDamage = 6;
-	// 12 AP vs. Galley, Longboat, Building, Land Units & Fire Ship
+	// Roll a 1d6. Multiply the result by standardDamage to determine damage per round
+	// 12 AP vs. Galley, Longboat, Building, Land Units & Fire Ship (implemented)
 	// Bombardment 2
 }
 
@@ -481,7 +482,7 @@ Fire_Ship::Fire_Ship(){
 	pointValue = 6;  // 3 wood, 3 gold
 	armorClass[11] = true; // Ship armor class
 	// Roll a 1d6. Multiply the result by standardDamage to determine damage per round
-	// 10 AP vs. Galley, Longboat, Building, Land Units & Fire Ship
+	// 10 AP vs. Galley, Longboat, Building, Land Units & Fire Ship (implemented)
 }
 
 Fire_Ship::~Fire_Ship(){}
@@ -522,7 +523,7 @@ Galleon::Galleon(){
 	entityAge = 4;
 	entityHealth = 40;
 	standardDamage = 18;
-	// 50 standardDamage versus Longboat, Land Unit, Buildings, and Galley
+	// 50 standardDamage versus Longboat, Land Unit, Buildings, and Galley (implemented)
 	// Bombardment 2
 }
 
@@ -532,7 +533,7 @@ Galleon_Saracen::Galleon_Saracen(){
 	entityName += "_(Saracen)";
 	entityAge = 4;
 	standardDamage = 23;
-	// 60 standardDamage versus Longboat, Land Unit, Buildings, and Galley
+	// 60 standardDamage versus Longboat, Land Unit, Buildings, and Galley (implemented)
 	// Bombardment 2
 }
 
@@ -560,7 +561,7 @@ Galley::Galley(){
 	standardDamage = 14;
 	pointValue = 6;  // 4 wood, 2 gold
 	armorClass[11] = true; // Ship armor class
-	// 30 standardAttack vs Longboat, land unit, building, and galley
+	// 30 standardAttack vs Longboat, land unit, building, and galley (implemented)
 	// Bombardment 0 (only eligible to attack in the 1st round of combat)
 }
 
@@ -576,7 +577,7 @@ Galley_Japanese::~Galley_Japanese(){}
 Galley_Saracen::Galley_Saracen(){
 	entityName += "_(Saracen)";
 	standardDamage = 17; 
-	// 35 standardAttack vs Longboat, land unit, building, and galley
+	// 35 standardAttack vs Longboat, land unit, building, and galley (implemented)
 }
 
 Galley_Saracen::~Galley_Saracen(){}
@@ -604,7 +605,7 @@ Throwing_Axeman_Frank::Throwing_Axeman_Frank(){
 	rangedDamage = 4;
 	entityHealth = 14;
 	pointValue = 2; // 1 fold, 1 gold
-	// 9 standardDamage vs Building
+	// 9 standardDamage vs Building (I)
 }
 
 Throwing_Axeman_Frank::~Throwing_Axeman_Frank(){}
@@ -640,7 +641,7 @@ Heavy_Camel::Heavy_Camel(){
 	entityAge = 3;
 	entityHealth = 30; 
 	standardDamage = 7; 
-	// 30 standardDamage against Cavalry
+	// 30 standardDamage against Cavalry (I)
 }
 
 Heavy_Camel::~Heavy_Camel(){}
@@ -664,7 +665,7 @@ Heavy_Cavalry_Archer_Mongol::~Heavy_Cavalry_Archer_Mongol(){}
 
 Heavy_Cavalry_Archer_Saracen::Heavy_Cavalry_Archer_Saracen(){
 	entityName += "_(Saracen)";
-	// 10 standardDamage versus Building
+	// 10 standardDamage versus Building (I)
 }
 
 Heavy_Cavalry_Archer_Saracen::~Heavy_Cavalry_Archer_Saracen(){}
@@ -724,8 +725,8 @@ Huskarl_Goth::Huskarl_Goth(){
 	pointValue = 2;  // 1 food, 1 gold
 	armorClass[8] = true; // Infantry armor class
 	armorClass[17] = true; // Unique unit armor class
-	// 12 standardDamage vs Archers
-	// 12 standardDamage vs Buildings
+	// 12 standardDamage vs Archers (I)
+	// 12 standardDamage vs Buildings (I)
 }
 
 Huskarl_Goth::~Huskarl_Goth(){}
@@ -751,7 +752,7 @@ Knight_Frank::~Knight_Frank(){}
 Knight_Persian::Knight_Persian(){
 	entityName += "_(Persian)";
 	pointValue = 2;  // 1 food, 1 gold
-	// +2 standardDamage vs Archers
+	// +2 standardDamage vs Archers (I)
 }
 
 Knight_Persian::~Knight_Persian(){}
@@ -816,7 +817,7 @@ Long_Swordsman_Celt::~Long_Swordsman_Celt(){}
 
 Long_Swordsman_Goth::Long_Swordsman_Goth(){
 	entityName += "_(Goth)";
-	// +2 standardAttack vs Building
+	// +2 standardAttack vs Building (I)
 }
 
 Long_Swordsman_Goth::~Long_Swordsman_Goth(){}
@@ -865,7 +866,7 @@ Mameluke_Saracen::Mameluke_Saracen(){
 	armorClass[4] = true; // Cavalry armor class
 	armorClass[2] = true; // Camel armor class
 	armorClass[17] = true; // Unique unit armor class
-	// 16 standardAttack vs Cavalry
+	// 16 standardAttack vs Cavalry (I)
 }
 
 Mameluke_Saracen::~Mameluke_Saracen(){}
@@ -887,7 +888,7 @@ Man_At_Arms_Celt::~Man_At_Arms_Celt(){}
 
 Man_At_Arms_Goth::Man_At_Arms_Goth(){
 	entityName += "_(Goth)";
-	// +2 standardDamage vs buildings
+	// +2 standardDamage vs buildings (I)
 }
 
 Man_At_Arms_Goth::~Man_At_Arms_Goth(){}
@@ -913,7 +914,7 @@ Mangonel::Mangonel(){
 	standardDamage = 40; 
 	pointValue = 12;  // 7 wood, 5 gold
 	armorClass[12] = true; // Siege weapon armor class
-	// 80 standardDamage vs Building
+	// 80 standardDamage vs Building (I)
 	// Bombardment 1 (only attacks in first round of normal combat)
 }
 
@@ -922,7 +923,7 @@ Mangonel::~Mangonel(){}
 Mangonel_Celt::Mangonel_Celt(){
 	entityName += "_(Celt)";
 	pointValue = 11;  // 6 wood, 5 gold
-	// 90 standardDamage vs Building
+	// 90 standardDamage vs Building (I)
 }
 
 Mangonel_Celt::~Mangonel_Celt(){}
@@ -938,7 +939,7 @@ Mangudai_Mongol::Mangudai_Mongol(){
 	armorClass[5] = true; // Cavalry Archer armor class
 	armorClass[4] = true; // Cavalry armor class
 	armorClass[17] = true; // Unique unit armor class
-	// 14 standardAttack vs Siege
+	// 14 standardAttack vs Siege (I)
 }
 
 Mangudai_Mongol::~Mangudai_Mongol(){}
@@ -979,7 +980,7 @@ Militia_Celt::~Militia_Celt(){}
 
 Militia_Goth::Militia_Goth(){
 	entityName += "_(Goth)";
-	// +2 standardDamage vs Building
+	// +2 standardDamage vs Building (I)
 }
 
 Militia_Goth::~Militia_Goth(){}
@@ -1019,7 +1020,7 @@ Onager::Onager(){
 	entityAge = 4;
 	entityHealth = 16; 
 	standardDamage = 50; 
-	// 120 standardAttack vs Building
+	// 120 standardAttack vs Building (I)
 	// Bombardment 2 (only attacks in the first round)
 }
 
@@ -1027,7 +1028,7 @@ Onager::~Onager(){}
 
 Onager_Celt::Onager_Celt(){
 	entityName += "_(Celt)";
-	// 130 standardAttack vs Building
+	// 130 standardAttack vs Building (I)
 	// Bombardment 2 (only attacks in the first round)
 }
 
@@ -1056,7 +1057,7 @@ Paladin::~Paladin(){}
 
 Paladin_Persian::Paladin_Persian(){
 	entityName += "_(Persian)";
-	// standardAttack +2 vs Archers
+	// standardAttack +2 vs Archers (I)
 }
 
 Paladin_Persian::~Paladin_Persian(){}
@@ -1085,7 +1086,7 @@ Pikeman::Pikeman(){
 	entityAge = 3;
 	entityHealth = 14; 
 	standardDamage = 4; 
-	// 40 standardDamage versus Cavalry
+	// 40 standardDamage versus Cavalry (I)
 }
 
 Pikeman::~Pikeman(){}
@@ -1098,7 +1099,7 @@ Pikeman_Celt::~Pikeman_Celt(){}
 
 Pikeman_Goth::Pikeman_Goth(){
 	entityName += "_(Goth)";
-	// +2 standardDamage versus Building
+	// +2 standardDamage versus Building (I)
 }
 
 Pikeman_Goth::~Pikeman_Goth(){}
@@ -1125,6 +1126,8 @@ Samurai_Japanese::Samurai_Japanese(){
 	pointValue = 2;  // 1 gold, 1 food
 	armorClass[8] = true; // Infantry armor class
 	armorClass[19] = true; // Unique unit armor class
+	// 10 standardDamage versus buildings (I)
+	// 12 standardDamage versus Unique units (I)
 }
 
 Samurai_Japanese::~Samurai_Japanese(){}
@@ -1166,7 +1169,7 @@ Siege_Onager::Siege_Onager(){
 	entityAge = 4;
 	entityHealth = 20; 
 	standardDamage = 75; 
-	// 180 standardAttack vs Building
+	// 180 standardAttack vs Building (I)
 	// Bombardment 2 (only attacks in the first round)
 }
 
@@ -1174,7 +1177,7 @@ Siege_Onager::~Siege_Onager(){}
 
 Siege_Onager_Celt::Siege_Onager_Celt(){
 	entityName += "_(Celt)";
-	// 190 standardAttack vs Building
+	// 190 standardAttack vs Building (I)
 }
 
 Siege_Onager_Celt::~Siege_Onager_Celt(){}
@@ -1183,7 +1186,7 @@ Siege_Ram::Siege_Ram(){
 	entityName = "Siege_Ram";
 	entityAge = 4;
 	entityHealth = 60; 
-	// 220 standardAttack vs Building
+	// 220 standardAttack vs Building (I)
 	// Only attacks buildings
 }
 
@@ -1191,7 +1194,7 @@ Siege_Ram::~Siege_Ram(){}
 
 Siege_Ram_Celt::Siege_Ram_Celt(){
 	entityName += "_(Celt)"; 
-	// 230 standardAttack vs Building
+	// 230 standardAttack vs Building (I)
 }
 
 Siege_Ram_Celt::~Siege_Ram_Celt(){}
@@ -1216,8 +1219,8 @@ Skirmisher::Skirmisher(){
 	rangedDamage = 3; 
 	pointValue = 2;  // 1 food, 1 wood
 	armorClass[0] = true; // Archer armor class
-	// 12 standardDamage vs Archers
-	// 13 rangedDamage vs Archers
+	// 12 standardDamage vs Archers (I)
+	// 13 rangedDamage vs Archers (I)
 }
 
 Skirmisher::~Skirmisher(){}
@@ -1230,7 +1233,7 @@ Spearman::Spearman(){
 	pointValue = 2;  // 1 food, 1 wood
 	armorClass[8] = true; // Infantry armor class
 	armorClass[13] = true; // Spearman armor class
-	// 25 standardDamage vs Cavalry
+	// 25 standardDamage vs Cavalry (I)
 }
 
 Spearman::~Spearman(){}
@@ -1243,7 +1246,7 @@ Spearman_Celt::~Spearman_Celt(){}
 
 Spearman_Goth::Spearman_Goth(){
 	entityName += "_(Goth)";
-	// +2 standardDamage vs Buildings
+	// +2 standardDamage vs Buildings (I)
 }
 
 Spearman_Goth::~Spearman_Goth(){}
@@ -1251,7 +1254,7 @@ Spearman_Goth::~Spearman_Goth(){}
 Spearman_Japanese::Spearman_Japanese(){
 	entityName += "_(Japanese)";
 	standardDamage = 4; 
-	// 26 standardDamage vs Cavalry
+	// 26 standardDamage vs Cavalry (I)
 }
 
 Spearman_Japanese::~Spearman_Japanese(){}
@@ -1339,7 +1342,7 @@ Trebuchet::Trebuchet(){
 	standardDamage = 200; 
 	pointValue = 17;  // 7 wood, 5 gold, 5 bodies
 	armorClass[12] = true; // Siege weapon armor class
-	// 450 standardAttack vs Buildings
+	// 450 standardAttack vs Buildings (I)
 	// Bombardment 3 (only attacks in first round)
 }
 
@@ -1363,7 +1366,7 @@ Two_Handed_Swordsman_Celt::~Two_Handed_Swordsman_Celt(){}
 
 Two_Handed_Swordsman_Goth::Two_Handed_Swordsman_Goth(){
 	entityName += "_(Goth)";
-	// +2 standardAttack vs Building
+	// +2 standardAttack vs Building (I)
 }
 
 Two_Handed_Swordsman_Goth::~Two_Handed_Swordsman_Goth(){}
@@ -1413,7 +1416,7 @@ War_Galley::War_Galley(){
 	entityHealth = 34; 
 	standardDamage = 16; 
 	// Bombardment 1 (only attacks in the first round of normal combat)
-	// 40 standardDamage versus Longboat, Land unit, Building, and Galley
+	// 40 standardDamage versus Longboat, Land unit, Building, and Galley (I)
 }
 
 War_Galley::~War_Galley(){}
@@ -1428,7 +1431,7 @@ War_Galley_Japanese::~War_Galley_Japanese(){}
 War_Galley_Saracen::War_Galley_Saracen(){
 	entityName += "_(Saracen)";
 	standardDamage = 20; 
-	// 50 standardDamage versus Longboat, Land unit, Building, and Galley
+	// 50 standardDamage versus Longboat, Land unit, Building, and Galley (I)
 }
 
 War_Galley_Saracen::~War_Galley_Saracen(){}
@@ -1461,7 +1464,7 @@ Woad_Raider_Celt::Woad_Raider_Celt(){
 	pointValue = 2;  // 1 food, 1 gold
 	armorClass[8] = true; // Infantry armor class
 	armorClass[17] = true; // Unique unit armor class
-	// 12 standardDamage vs Buildings
+	// 12 standardDamage vs Buildings (I)
 }
 
 Woad_Raider_Celt::~Woad_Raider_Celt(){}
@@ -1722,7 +1725,7 @@ void Entity::outputEntity(){
 	displayColorfulText("bold","red","white", medievalAge, false);
 	std::cout << " ";
 	displayColorfulText("bold","white","blue", entityName, false);
-	std::cout << " with ";
+	std::cout << " with a total of ";
 	displayColorfulText("bold", "red", "default", std::to_string(entityHealth), false);
 	std::cout << "HP"; 
 
