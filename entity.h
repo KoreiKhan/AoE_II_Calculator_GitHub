@@ -29,7 +29,7 @@ struct Entity{
 	void displayColorfulText(std::string inputFormatAttribute, std::string inputForegroundColor, std::string inputBackgroundColor, std::string inputText, bool isLineBreak);
 
 	// Function: Return entity information
-	void outputEntity();
+	void outputEntity(const int inputPlayerNumber);
 };
 #endif // ENTITY_H
 
@@ -213,6 +213,16 @@ struct Market: Entity{
 	~Market();
 };
 #endif // MARKET_H
+
+/** Inherited class from Entity: Monk **/
+#ifndef MONK_H
+#define MONK_H
+struct Monk: Entity{ 
+	// Functions: The constructor and deconstructor
+	Monk();
+	~Monk();
+};
+#endif // MONK_H
 
 /** Inherited class from Entity: Outpost **/
 #ifndef OUTPOST_H

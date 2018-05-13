@@ -1015,6 +1015,17 @@ Monastery::Monastery(){
 
 Monastery::~Monastery(){}
 
+Monk::Monk(){
+	entityName = "Monk";
+	entityAge = 3;
+	entityHealth = 3;  
+	pointValue = 3;  // 3 food
+	armorClass[9] = true; // Monk armor class
+
+}
+
+Monk::~Monk(){}
+
 Onager::Onager(){
 	entityName = "Onager";
 	entityAge = 4;
@@ -1696,153 +1707,166 @@ void Entity::displayColorfulText(std::string inputFormatAttribute, std::string i
 }
 
 // Function: Return entity information
-void Entity::outputEntity(){
-	// Variable: Store the pre-requisite Age in text format
-	std::string medievalAge = "";
-
-	// Behaviour: Convert the integer entityAge to text format
-	switch(entityAge){
-		case 1:
-		medievalAge = "Dark_Age";
-		break;
-		case 2:
-		medievalAge = "Feudal_Age";
-		break;
-		case 3:
-		medievalAge = "Castle_Age";
-		break;
-		case 4:
-		medievalAge = "Imperial_Age";
-		break;
-		default:
-		std::cout << "Error: Age not recognized";
-		exit(EXIT_FAILURE);
-	}
-
-	// Behaviour: Return standard information about the entity to the console
-	displayColorfulText("bold","yellow","magenta", std::to_string(entityQuantity), false);
+void Entity::outputEntity(const int inputPlayerNumber){
+	// Behaviour: Display the player's name first (no matter what)
+	std::string playerName = std::to_string(inputPlayerNumber);
+	displayColorfulText("bold", "white", "default", "player " + playerName + "'s", false);
 	std::cout << " ";
-	displayColorfulText("bold","red","white", medievalAge, false);
-	std::cout << " ";
-	displayColorfulText("bold","white","blue", entityName, false);
-	std::cout << " with a total of ";
-	displayColorfulText("bold", "red", "default", std::to_string(entityHealth), false);
-	std::cout << "HP"; 
 
-	// Behaviour: Return further information about the entities values if the value is present
-	if(standardDamage!=0){
-		std::cout << ", ";
-		displayColorfulText("bold", "yellow", "default", std::to_string(standardDamage), false);
-		std::cout << "SD";
+	// Behaviour: Check that the entity is not dead before proceeding
+	if(entityQuantity >=1){
+		// Variable: Store the pre-requisite Age in text format
+		std::string medievalAge = "";
+
+		// Behaviour: Convert the integer entityAge to text format
+		switch(entityAge){
+			case 1:
+			medievalAge = "Dark_Age";
+			break;
+			case 2:
+			medievalAge = "Feudal_Age";
+			break;
+			case 3:
+			medievalAge = "Castle_Age";
+			break;
+			case 4:
+			medievalAge = "Imperial_Age";
+			break;
+			default:
+			std::cout << "Error: Age not recognized for " << entityName << "\n";
+			exit(EXIT_FAILURE);
+		}
+
+		// Behaviour: Return standard information about the entity to the console
+		displayColorfulText("bold","white","magenta", std::to_string(entityQuantity), false);
+		std::cout << " ";
+		displayColorfulText("bold","white","dark_gray", medievalAge, false);
+		std::cout << " ";
+		displayColorfulText("bold","white","light_blue", entityName, false);
+		std::cout << " have a total of ";
+		displayColorfulText("bold", "red", "default", std::to_string(entityHealth), false);
+		std::cout << "HP"; 
+
+		// Behaviour: Return further information about the entities values if the value is present
+		if(standardDamage!=0){
+			std::cout << ", ";
+			displayColorfulText("bold", "yellow", "default", std::to_string(standardDamage), false);
+			std::cout << "SD";
+		}
+		if(rangedDamage!=0){
+			std::cout << ", ";
+			displayColorfulText("bold", "magenta", "default", std::to_string(rangedDamage), false);
+			std::cout << "RD";
+		}
+		if(pointValue !=0){
+			std::cout << ", ";
+			displayColorfulText("bold", "cyan", "default", std::to_string(pointValue), false);
+			std::cout << "PV"; 
+		}
+		if(garrisonValue !=0){
+			std::cout << ", ";
+			displayColorfulText("bold", "green", "default", std::to_string(garrisonValue), false);
+			std::cout << "GV";
+		}
+
+		// Behaviour: Return further information about the entities armor classes if the armor class is present
+		std::cout << " of type: ";
+
+		// Array: Store whether or not an armor class has been displayed
+		bool displayedArmorClass[20] = {false};
+
+		// Behaviour: Only display each armor class once and add a space after each armor class except for the last class
+		for(int i = 0; i != entitiesArmorClasses; i ++){
+			if( (armorClass[0] == true) && (displayedArmorClass[0] == false) ) {
+				displayColorfulText("bold","white","blue", "Archer", false);
+				displayedArmorClass[0] = true;
+			}
+			else if( (armorClass[1] == true) && (displayedArmorClass[1] == false) ) {
+				displayColorfulText("bold","white","blue", "Building", false);
+				displayedArmorClass[1] = true;
+			}
+			else if( (armorClass[2] == true) && (displayedArmorClass[2] == false) ) {
+				displayColorfulText("bold","white","blue", "Camel", false);
+				displayedArmorClass[2] = true;
+			}
+			else if( (armorClass[3] == true) && (displayedArmorClass[3] == false) ) {
+				displayColorfulText("bold","white","blue", "Castle", false);
+				displayedArmorClass[3] = true;
+			}
+			else if( (armorClass[4] == true) && (displayedArmorClass[4] == false) ) {
+				displayColorfulText("bold","white","blue", "Cavalry", false);
+				displayedArmorClass[4] = true;
+			}
+			else if( (armorClass[5] == true) && (displayedArmorClass[5] == false) ) {
+				displayColorfulText("bold","white","blue", "Cavalry_Archer", false);
+				displayedArmorClass[5] = true;
+			}
+			else if( (armorClass[6] == true) && (displayedArmorClass[6] == false) ) {
+				displayColorfulText("bold","white","blue", "Eagle_Warrior", false);
+				displayedArmorClass[6] = true;
+			}
+			else if( (armorClass[7] == true) && (displayedArmorClass[7] == false) ) {
+				displayColorfulText("bold","white","blue", "Gunpowder_Unit", false);
+				displayedArmorClass[7] = true;
+			}
+			else if( (armorClass[8] == true) && (displayedArmorClass[8] == false) ) {
+				displayColorfulText("bold","white","blue", "Infantry", false);
+				displayedArmorClass[8] = true;
+			}
+			else if( (armorClass[9] == true) && (displayedArmorClass[9] == false) ) {
+				displayColorfulText("bold","white","blue", "Monk", false);
+				displayedArmorClass[9] = true;
+			}
+			else if( (armorClass[10] == true) && (displayedArmorClass[10] == false) ) {
+				displayColorfulText("bold","white","blue", "Ram", false);
+				displayedArmorClass[10] = true;
+			}
+			else if( (armorClass[11] == true) && (displayedArmorClass[11] == false) ) {
+				displayColorfulText("bold","white","blue", "Ship", false);
+				displayedArmorClass[11] = true;
+			}
+			else if( (armorClass[12] == true) && (displayedArmorClass[12] == false) ) {
+				displayColorfulText("bold","white","blue", "Siege_Weapon", false);
+				displayedArmorClass[12] = true;
+			}
+			else if( (armorClass[13] == true) && (displayedArmorClass[13] == false) ) {
+				displayColorfulText("bold","white","blue", "Spearman", false);
+				displayedArmorClass[13] = true;
+			}
+			else if( (armorClass[14] == true) && (displayedArmorClass[14] == false) ) {
+				displayColorfulText("bold","white","blue", "Standard_Building", false);
+				displayedArmorClass[14] = true;
+			}
+			else if( (armorClass[15] == true) && (displayedArmorClass[15] == false) ) {
+				displayColorfulText("bold","white","blue", "Stone_Defence", false);
+				displayedArmorClass[15] = true;
+			}
+			else if( (armorClass[16] == true) && (displayedArmorClass[16] == false) ) {
+				displayColorfulText("bold","white","blue", "Turtle_Ship", false);
+				displayedArmorClass[16] = true;
+			}
+			else if( (armorClass[17] == true) && (displayedArmorClass[17] == false) ) {
+				displayColorfulText("bold","white","blue", "Unique_Unit", false);
+				displayedArmorClass[17] = true;
+			}
+			else if( (armorClass[18] == true) && (displayedArmorClass[18] == false) ) {
+				displayColorfulText("bold","white","blue", "Wall_&_Gate", false);
+				displayedArmorClass[18] = true;
+			}
+			else if( (armorClass[19] == true) && (displayedArmorClass[19] == false) ) {
+				displayColorfulText("bold","white","blue", "War_Elephant", false);
+				displayedArmorClass[19] = true;
+			}
+
+			if(i != entitiesArmorClasses - 1){
+				std::cout << " ";
+			}
+		}
 	}
-	if(rangedDamage!=0){
-		std::cout << ", ";
-		displayColorfulText("bold", "magenta", "default", std::to_string(rangedDamage), false);
-		std::cout << "RD";
-	}
-	if(pointValue !=0){
-		std::cout << ", ";
-		displayColorfulText("bold", "cyan", "default", std::to_string(pointValue), false);
-		std::cout << "PV"; 
-	}
-	if(garrisonValue !=0){
-		std::cout << ", ";
-		displayColorfulText("bold", "green", "default", std::to_string(garrisonValue), false);
-		std::cout << "GV";
-	}
-
-	// Behaviour: Return further information about the entities armor classes if the armor class is present
-	std::cout << " of type: ";
-
-	// Array: Store whether or not an armor class has been displayed
-	bool displayedArmorClass[20] = {false};
-
-	// Behaviour: Only display each armor class once and add a space after each armor class except for the last class
-	for(int i = 0; i != entitiesArmorClasses; i ++){
-		if( (armorClass[0] == true) && (displayedArmorClass[0] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Archer", false);
-			displayedArmorClass[0] = true;
-		}
-		else if( (armorClass[1] == true) && (displayedArmorClass[1] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Building", false);
-			displayedArmorClass[1] = true;
-		}
-		else if( (armorClass[2] == true) && (displayedArmorClass[2] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Camel", false);
-			displayedArmorClass[2] = true;
-		}
-		else if( (armorClass[3] == true) && (displayedArmorClass[3] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Castle", false);
-			displayedArmorClass[3] = true;
-		}
-		else if( (armorClass[4] == true) && (displayedArmorClass[4] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Cavalry", false);
-			displayedArmorClass[4] = true;
-		}
-		else if( (armorClass[5] == true) && (displayedArmorClass[5] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Cavalry_Archer", false);
-			displayedArmorClass[5] = true;
-		}
-		else if( (armorClass[6] == true) && (displayedArmorClass[6] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Eagle_Warrior", false);
-			displayedArmorClass[6] = true;
-		}
-		else if( (armorClass[7] == true) && (displayedArmorClass[7] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Gunpowder_Unit", false);
-			displayedArmorClass[7] = true;
-		}
-		else if( (armorClass[8] == true) && (displayedArmorClass[8] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Infantry", false);
-			displayedArmorClass[8] = true;
-		}
-		else if( (armorClass[9] == true) && (displayedArmorClass[9] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Monk", false);
-			displayedArmorClass[9] = true;
-		}
-		else if( (armorClass[10] == true) && (displayedArmorClass[10] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Ram", false);
-			displayedArmorClass[10] = true;
-		}
-		else if( (armorClass[11] == true) && (displayedArmorClass[11] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Ship", false);
-			displayedArmorClass[11] = true;
-		}
-		else if( (armorClass[12] == true) && (displayedArmorClass[12] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Siege_Weapon", false);
-			displayedArmorClass[12] = true;
-		}
-		else if( (armorClass[13] == true) && (displayedArmorClass[13] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Spearman", false);
-			displayedArmorClass[13] = true;
-		}
-		else if( (armorClass[14] == true) && (displayedArmorClass[14] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Standard_Building", false);
-			displayedArmorClass[14] = true;
-		}
-		else if( (armorClass[15] == true) && (displayedArmorClass[15] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Stone_Defence", false);
-			displayedArmorClass[15] = true;
-		}
-		else if( (armorClass[16] == true) && (displayedArmorClass[16] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Turtle_Ship", false);
-			displayedArmorClass[16] = true;
-		}
-		else if( (armorClass[17] == true) && (displayedArmorClass[17] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Unique_Unit", false);
-			displayedArmorClass[17] = true;
-		}
-		else if( (armorClass[18] == true) && (displayedArmorClass[18] == false) ) {
-			displayColorfulText("bold", "blue", "default", "Wall_&_Gate", false);
-			displayedArmorClass[18] = true;
-		}
-		else if( (armorClass[19] == true) && (displayedArmorClass[19] == false) ) {
-			displayColorfulText("bold", "blue", "default", "War_Elephant", false);
-			displayedArmorClass[19] = true;
-		}
-
-		if(i != entitiesArmorClasses - 1){
-			std::cout << " ";
-		}
+	// Behaviour: Display something different if the entity is dead
+	else if(entityQuantity <=0){
+		displayColorfulText("bold","white","light_blue", entityName, false);
+		std::cout << " is dead";
 	}
 
 	std::cout << "\n";

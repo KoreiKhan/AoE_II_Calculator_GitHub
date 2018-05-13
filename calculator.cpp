@@ -1,5 +1,9 @@
 /** The libaries **/ 
 #include <iostream> // Using: cin, cout
+#include <string> // Using: string
+#include <cstdlib> // Using: exit(EXIT_FAILURE)
+#include <stdlib.h> // Using: atoi
+#include <cmath> // Using: floor
 #include "entity.h" // Using: entity class
 #include "calculator.h" // Using: calculator class
 
@@ -798,16 +802,253 @@ Entity modifiersCalculator::applyAllModifiersP2(const int inputP2PlayerNumber, E
 }
 
 // Function: The constructor/deconstructor
-combatCalculator::combatCalculator(){}
+combatCalculator::combatCalculator(){
+	healingEffectP1 = false;
+	startingQuantityP1 = 0;
+	healingEffectP2 = false;
+	startingQuantityP2 = 0;
+	dieRoll = 0;
+	dieRollInput = "";
+}
 combatCalculator::~combatCalculator(){}
 
 // Function: Set the battle participants
 void combatCalculator::setCombatParticipants(Entity inputP1CombatParticipant, Entity inputP2CombatParticipant){
-	combatParticipant1 = inputP1CombatParticipant;
-	combatParticipant2 = inputP2CombatParticipant;
+	combatParticipantP1 = inputP1CombatParticipant;
+	combatParticipantP2 = inputP2CombatParticipant;
+}
+
+void combatCalculator::checkD6DieInput(std::string inputdieRollString){
+	if(
+		(inputdieRollString != "1") &&
+		(inputdieRollString != "2") &&
+		(inputdieRollString != "3") &&
+		(inputdieRollString != "4") &&
+		(inputdieRollString != "5") &&
+		(inputdieRollString != "6")
+	){
+		std::cout << "Error: A d6 die only reads the numbers 1-6" << "\n";
+		exit(EXIT_FAILURE);
+	}
+	else{
+		// The input is fine}
+	}
+}
+
+// Function: The constructor / deconstructor
+round1::round1(){
+	monkPowersActivated = false;
+}
+round1::~round1(){}
+
+// Function: Calculate the outcome of a battle
+Entity round1::roundOutcome(const int inputPlayerNumber, int inputRunTimes){
+	// Make sure that the results are not calculated twice
+	if(inputRunTimes == 0){
+		// Bool: See if the monk powers are activated for player 1 and 2
+		bool monkPowersActivatedP1 = false;
+		bool monkPowersActivatedP2 = false;
+
+		// Behaviour: See if player 1 has a monk
+		if(combatParticipantP1.armorClass[9] == true){
+			// Behaviour: Make sure that the quantity of monks is correct
+			if( (combatParticipantP1.entityQuantity < 0) && (combatParticipantP1.entityQuantity > 5) ){
+				std::cout << "Error: The first player's battle participant must have between 0-5 monks" << "\n";
+				exit(EXIT_FAILURE);
+			}
+
+			// Behaviour: Ask the user if they are performing a conversion or healing attempt and store the answer
+			std::string calculationModeP1 = "0";
+			std::cout << "Is player 1's monk performing a conversion (enter 0) or healing attempt (enter 1)?" << "\n";
+			std::cin >> calculationModeP1;
+
+			// Behaviour: Validate the input before proceeding
+			if( (calculationModeP1 != "0") && (calculationModeP1 != "1") ){
+				std::cout << "Error: Player 1 entered non-zero and non-one for the monk" << "\n";
+				exit(EXIT_FAILURE);
+			}
+
+			// Reference: Generating a random number between 0 and 6 is not random enough so I get dice input
+			// Behaviour: Ask the user to roll a dice and enter the results of the dice roll
+			std::cout << "Get player 1 to roll a d6 dice and enter the result" << "\n";
+			std::cin >> dieRollInput;
+
+			// Behaviour: Validate the input before proceeding
+			checkD6DieInput(dieRollInput);
+
+			// Conver the dice roll input string into an integer
+			dieRoll = atoi(dieRollInput.c_str());
+
+			// Behaviour: See if the monk powers are activated
+			if(combatParticipantP1.entityQuantity >= dieRoll){
+				monkPowersActivatedP1 = true;
+			}
+			
+			// Behaviour: Act on the success odds
+			if( (monkPowersActivatedP1 == true) && (calculationModeP1 == "0") ){
+				// Behaviour: Act on the conversion attempt being successful
+				std::cout << "The conversion attempt by player 1's monk was successful" << "\n";
+				combatParticipantP2.entityQuantity --;
+				monkPowersActivated = true;
+			}
+			else if ( (monkPowersActivatedP1 == true) && (calculationModeP1 == "1") ){
+				// Behaviour: Act on the healing attempt being successful
+				std::cout << "The healing attempt by player 1's monk was successful" << "\n";
+				healingEffectP1 = true;
+				combatParticipantP1.entityQuantity ++;
+				startingQuantityP1 = combatParticipantP1.entityQuantity;
+				monkPowersActivated = true;
+			}
+			else{
+				// Behaviour: Return the fact that the attempt was unsuccessful
+				std::cout << "Player 1's monk powers failed to activate" << "\n";
+			}
+		}
+
+		// Behaviour: See if player 2 has a monk
+		if(combatParticipantP2.armorClass[9] == true){
+			// Behaviour: Make sure that the quantity of monks is correct
+			if( (combatParticipantP2.entityQuantity < 0) && (combatParticipantP2.entityQuantity > 5) ){
+				std::cout << "Error: The second player's battle participant must have between 0-5 monks" << "\n";
+				exit(EXIT_FAILURE);
+			}
+
+			// Behaviour: Ask the user if they are performing a conversion or healing attempt and store the answer
+			std::string calculationModeP2 = "0";
+			std::cout << "Is player 2's monk performing a conversion (enter 0) or healing attempt (enter 1)?" << "\n";
+			std::cin >> calculationModeP2;
+
+			// Behaviour: Validate the input before proceeding
+			if( (calculationModeP2 != "0") && (calculationModeP2 != "1") ){
+				std::cout << "Error: Player 2 entered non-zero and non-one for the monk" << "\n";
+				exit(EXIT_FAILURE);
+			}
+
+			// Reference: Generating a random number between 0 and 6 is not random enough so I get dice input
+			// Behaviour: Ask the user to roll a dice and enter the results of the dice roll
+			std::cout << "Get player 2 to roll a d6 dice and enter the result" << "\n";
+			std::cin >> dieRollInput;
+
+			// Behaviour: Validate the input before proceeding
+			checkD6DieInput(dieRollInput);
+
+			// Conver the dice roll input string into an integer
+			dieRoll = atoi(dieRollInput.c_str());
+
+			// Behaviour: See if the monk powers are activated
+			if(combatParticipantP2.entityQuantity >= dieRoll){
+				monkPowersActivatedP2 = true;
+			}
+			// Behaviour: Act on the success odds
+			if( (monkPowersActivatedP2 == true) && (calculationModeP2 == "0") ){
+				// Behaviour: Act on the conversion attempt being successful
+				std::cout << "The conversion attempt by player 2's monk was successful" << "\n";
+				combatParticipantP2.entityQuantity --;
+				monkPowersActivated = true;
+			}
+			else if ( (monkPowersActivatedP2 == true) && (calculationModeP2 == "1") ){
+				// Behaviour: Act on the healing attempt being successful
+				std::cout << "The healing attempt by player 2's monk was successful" << "\n";
+				healingEffectP2 = true;
+				combatParticipantP2.entityQuantity ++;
+				startingQuantityP2 = combatParticipantP2.entityQuantity;
+				monkPowersActivated = true;
+			}
+			else{
+				// Behaviour: Return the fact that the attempt was unsuccessful
+				std::cout << "Player 2's monk powers failed to activate" << "\n";
+			}
+		}
+
+		// Behaviour: Check if either monk did something (for output purposes)
+		if ( (monkPowersActivatedP1 == true) || (monkPowersActivatedP2 == true) ){
+			monkPowersActivated = true;
+		}
+	}
+
+	// Behaviour: Return the entities with the combat results applied
+	if(inputPlayerNumber == 1){
+		return combatParticipantP1;
+	}
+	else if(inputPlayerNumber == 2){
+		return combatParticipantP2;
+	}
+	else{}
+}
+
+// Functions: The constructor and deconstructor
+round2::round2(){
+	// Behaviour: Initialize the default values
+	rangedAttackActivated = false;
+}
+
+round2::~round2(){
+
 }
 
 // Function: Calculate the outcome of a battle
-void round1::roundOutcome(){
-	std::cout << "Round 1 calculations" << "\n";
+Entity round2::roundOutcome(const int inputPlayerNumber, int inputRunTimes){
+	// Make sure that the results are not calculated twice
+	if(inputRunTimes == 0){
+// Integer: Declare the number of units killed in this round
+		int p1EntityDeaths = 0;
+		int p2EntityDeaths = 0;
+
+		// Behaviour: Check if player 1 or player 2 has an archer and if they do that they are not fighting cavalry
+		if( (((combatParticipantP1.armorClass[0] == true) || (combatParticipantP1.armorClass[5] == true)) && (combatParticipantP2.armorClass[4] != true))
+			|| (((combatParticipantP2.armorClass[0] == true) || (combatParticipantP2.armorClass[5] == true)) && (combatParticipantP1.armorClass[4] != true))
+		){
+			// Behaviour: Determine the amount of damage dealt (simultaneously dealt)
+			// Behaviour: Calculate the number of units P2 killed
+			p1EntityDeaths = std::floor( (combatParticipantP2.rangedDamage) / (combatParticipantP1.entityHealth) ); 
+
+			// Behaviour: Calculate the number of units P1 killed
+			p2EntityDeaths = std::floor( (combatParticipantP1.rangedDamage) / (combatParticipantP2.entityHealth) ); 
+
+			// Behaviour: Track that ranged damage occured
+			rangedAttackActivated = true;
+		}
+
+		// Behaviour: Update the quantity based on the results
+		if(rangedAttackActivated == true){
+			// Behaviour: Divide the standardDamage / pointValue by the current quantity to get the values by 1
+			combatParticipantP1.standardDamage /= combatParticipantP1.entityQuantity;
+			combatParticipantP2.standardDamage /= combatParticipantP2.entityQuantity;
+			combatParticipantP1.rangedDamage /= combatParticipantP1.entityQuantity;
+			combatParticipantP2.rangedDamage /= combatParticipantP2.entityQuantity;
+			combatParticipantP1.pointValue /= combatParticipantP1.entityQuantity;
+			combatParticipantP2.pointValue /= combatParticipantP2.entityQuantity;
+
+			// Behaviour: Now decrease the quantity
+			combatParticipantP1.entityQuantity -= p1EntityDeaths;
+			combatParticipantP2.entityQuantity -= p2EntityDeaths;
+
+			// Behaviour: Now multiply the standardDamage, rangedDamage, and pointValue by the new quantity
+			combatParticipantP1.standardDamage *= combatParticipantP1.entityQuantity;
+			combatParticipantP2.standardDamage *= combatParticipantP2.entityQuantity;
+			combatParticipantP1.rangedDamage *= combatParticipantP1.entityQuantity;
+			combatParticipantP2.rangedDamage *= combatParticipantP2.entityQuantity;
+			combatParticipantP1.pointValue *= combatParticipantP1.entityQuantity;
+			combatParticipantP2.pointValue *= combatParticipantP2.entityQuantity;
+		}
+	}
+		
+	// Behaviour: Return the entities with the combat results applied
+	if(inputPlayerNumber == 1){
+		return combatParticipantP1;
+	}
+	else if(inputPlayerNumber == 2){
+		return combatParticipantP2;
+	}
+	else{}
+}
+
+// Function: Calculate the outcome of a battle
+Entity round3::roundOutcome(const int inputPlayerNumber, int inputRunTimes){
+	std::cout << "Round 3 calculations" << "\n";
+}
+
+// Function: Calculate the outcome of a battle
+Entity round4::roundOutcome(const int inputPlayerNumber, int inputRunTimes){
+	std::cout << "Round 4 calculations" << "\n";
 }

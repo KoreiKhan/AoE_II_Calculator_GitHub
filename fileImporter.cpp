@@ -5,6 +5,7 @@
 #include <cstdlib> // Using: exit(EXIT_FAILURE)
 #include <sstream> // Using: stringstream 
 #include <algorithm> // Using: transform, toupper, .begin(), .end()
+#include <stdlib.h> // Using: atoi
 #include "fileImporter.h" // Using: entitiesFile functions
 #include "entity.h" // Using: entity class
 
@@ -456,6 +457,10 @@ Entity fileImporter::conductASearch(std::string inputEntityName, int inputEntity
 		Monastery returnMonastery;
 		returnEntity = returnMonastery;
 	}
+	else if(inputEntityName == "MONK"){
+		Monk returnMonk;
+		returnEntity = returnMonk;
+	}
 	else if(inputEntityName == "ONAGER"){
 		Onager returnOnager;
 		returnEntity = returnOnager;
@@ -666,6 +671,7 @@ Entity fileImporter::conductASearch(std::string inputEntityName, int inputEntity
 	}
 	else{
 		std::cout << "Error: " << inputEntityName << " inside of entities.csv is an unrecognized name of an entity" << "\n";
+		std::cout << "Either I have not implemented the entity or you mistyped the name of the entity" << "\n";
 		exit(EXIT_FAILURE);
 	}
 
