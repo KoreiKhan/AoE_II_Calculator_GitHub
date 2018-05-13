@@ -809,6 +809,7 @@ combatCalculator::combatCalculator(){
 	startingQuantityP2 = 0;
 	dieRoll = 0;
 	dieRollInput = "";
+	aDeathHasOccured = false;
 }
 combatCalculator::~combatCalculator(){}
 
@@ -843,8 +844,8 @@ round1::~round1(){}
 
 // Function: Calculate the outcome of a battle
 Entity round1::roundOutcome(const int inputPlayerNumber, int inputRunTimes){
-	// Make sure that the results are not calculated twice
-	if(inputRunTimes == 0){
+	// Make sure that the results are not calculated twice and that there have been no deaths
+	if ( (inputRunTimes == 0) && (aDeathHasOccured == false) ){
 		// Bool: See if the monk powers are activated for player 1 and 2
 		bool monkPowersActivatedP1 = false;
 		bool monkPowersActivatedP2 = false;
@@ -966,6 +967,14 @@ Entity round1::roundOutcome(const int inputPlayerNumber, int inputRunTimes){
 		}
 	}
 
+	// Behaviour: Check if a death has occured
+	if( (combatParticipantP1.entityQuantity == 0) || (combatParticipantP2.entityQuantity == 0) ){
+		aDeathHasOccured = true;
+	}
+	else{
+		aDeathHasOccured = false;
+	}
+
 	// Behaviour: Return the entities with the combat results applied
 	if(inputPlayerNumber == 1){
 		return combatParticipantP1;
@@ -988,9 +997,9 @@ round2::~round2(){
 
 // Function: Calculate the outcome of a battle
 Entity round2::roundOutcome(const int inputPlayerNumber, int inputRunTimes){
-	// Make sure that the results are not calculated twice
-	if(inputRunTimes == 0){
-// Integer: Declare the number of units killed in this round
+	// Make sure that the results are not calculated twice and that there have been no deaths
+	if ( (inputRunTimes == 0) && (aDeathHasOccured == false) ){
+		// Integer: Declare the number of units killed in this round
 		int p1EntityDeaths = 0;
 		int p2EntityDeaths = 0;
 
@@ -1012,8 +1021,6 @@ Entity round2::roundOutcome(const int inputPlayerNumber, int inputRunTimes){
 		// Behaviour: Update the quantity based on the results
 		if(rangedAttackActivated == true){
 			// Behaviour: Divide the standardDamage / pointValue by the current quantity to get the values by 1
-			combatParticipantP1.standardDamage /= combatParticipantP1.entityQuantity;
-			combatParticipantP2.standardDamage /= combatParticipantP2.entityQuantity;
 			combatParticipantP1.rangedDamage /= combatParticipantP1.entityQuantity;
 			combatParticipantP2.rangedDamage /= combatParticipantP2.entityQuantity;
 			combatParticipantP1.pointValue /= combatParticipantP1.entityQuantity;
@@ -1024,13 +1031,19 @@ Entity round2::roundOutcome(const int inputPlayerNumber, int inputRunTimes){
 			combatParticipantP2.entityQuantity -= p2EntityDeaths;
 
 			// Behaviour: Now multiply the standardDamage, rangedDamage, and pointValue by the new quantity
-			combatParticipantP1.standardDamage *= combatParticipantP1.entityQuantity;
-			combatParticipantP2.standardDamage *= combatParticipantP2.entityQuantity;
 			combatParticipantP1.rangedDamage *= combatParticipantP1.entityQuantity;
 			combatParticipantP2.rangedDamage *= combatParticipantP2.entityQuantity;
 			combatParticipantP1.pointValue *= combatParticipantP1.entityQuantity;
 			combatParticipantP2.pointValue *= combatParticipantP2.entityQuantity;
 		}
+	}
+
+	// Behaviour: Check if a death has occured
+	if( (combatParticipantP1.entityQuantity == 0) || (combatParticipantP2.entityQuantity == 0) ){
+		aDeathHasOccured = true;
+	}
+	else{
+		aDeathHasOccured = false;
 	}
 		
 	// Behaviour: Return the entities with the combat results applied
@@ -1043,9 +1056,80 @@ Entity round2::roundOutcome(const int inputPlayerNumber, int inputRunTimes){
 	else{}
 }
 
+// Functions: The constructor and deconstructor
+round3::round3(){
+	// Bool: See if an entity from either players did something for the first round of standard combat
+	bool standardAttack1Activated = false;
+}
+
+round3::~round3(){
+}
+
 // Function: Calculate the outcome of a battle
 Entity round3::roundOutcome(const int inputPlayerNumber, int inputRunTimes){
-	std::cout << "Round 3 calculations" << "\n";
+	// Integer: Declare the number of units killed in this round
+	int p1EntityDeaths = 0;
+	int p2EntityDeaths = 0;
+
+	// Make sure that the results are not calculated twice and that there have been no deaths
+	if ( (inputRunTimes == 0) && (aDeathHasOccured == false) ){
+		// Behaviour: Determine the amount of damage dealt (simultaneously dealt)
+		// Behaviour: Calculate the number of units P2 killed
+		p1EntityDeaths = std::floor( (combatParticipantP2.standardDamage) / (combatParticipantP1.entityHealth) ); 
+
+		// Behaviour: Calculate the number of units P1 killed
+		p2EntityDeaths = std::floor( (combatParticipantP1.standardDamage) / (combatParticipantP2.entityHealth) ); 
+
+		// Behaviour: Track that ranged damage occured
+		standardAttack1Activated = true;
+
+		// Behaviour: Update the quantity based on the results
+		if(standardAttack1Activated == true){
+		// Behaviour: Divide the standardDamage / pointValue by the current quantity to get the values by 1
+		combatParticipantP1.standardDamage /= combatParticipantP1.entityQuantity;
+		combatParticipantP2.standardDamage /= combatParticipantP2.entityQuantity;
+		combatParticipantP1.pointValue /= combatParticipantP1.entityQuantity;
+		combatParticipantP2.pointValue /= combatParticipantP2.entityQuantity;
+
+		// Behaviour: Now decrease the quantity
+		combatParticipantP1.entityQuantity -= p1EntityDeaths;
+		combatParticipantP2.entityQuantity -= p2EntityDeaths;
+
+		std::cout << "p1 deaths " << p1EntityDeaths << "\n";
+		std::cout << "p1 quantity A) " << combatParticipantP1.entityQuantity << "\n";
+
+		// Behaviour: Now multiply the standardDamage, rangedDamage, and pointValue by the new quantity
+		combatParticipantP1.standardDamage *= combatParticipantP1.entityQuantity;
+		combatParticipantP2.standardDamage *= combatParticipantP2.entityQuantity;
+		combatParticipantP1.pointValue *= combatParticipantP1.entityQuantity;
+		combatParticipantP2.pointValue *= combatParticipantP2.entityQuantity;
+		
+		}
+	}
+
+	// Behaviour: Check if a death has occured
+	if( (combatParticipantP1.entityQuantity == 0) || (combatParticipantP2.entityQuantity == 0) ){
+		aDeathHasOccured = true;
+	}
+	else{
+		aDeathHasOccured = false;
+	}
+		
+	// Behaviour: Return the entities with the combat results applied
+	if(inputPlayerNumber == 1){
+		std::cout << "p1 quantity B) " << combatParticipantP1.entityQuantity << "\n";
+		return combatParticipantP1;
+	}
+	else if(inputPlayerNumber == 2){
+		return combatParticipantP2;
+	}
+}
+
+// Functions: The constructor and deconstructor
+round4::round4(){
+}
+
+round4::~round4(){
 }
 
 // Function: Calculate the outcome of a battle

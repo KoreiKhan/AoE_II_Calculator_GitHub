@@ -47,6 +47,9 @@ class combatCalculator{
 	// String: Store the user input for the die roll
 	std::string dieRollInput;
 
+	// Bool: Store whether or not one of the unit has died
+	bool aDeathHasOccured;
+
 	public:
 	// Struct: Declare the entities participating in the battle
 	Entity combatParticipantP1;
@@ -78,6 +81,7 @@ class round1: public combatCalculator{
 	round1();
 	~round1();
 
+	// Function: Calculate the outcome of a battle
 	Entity roundOutcome(const int inputPlayerNumber, int inputRunTimes);
 };
 #endif // COMBAT_CALCULATOR_ROUND_1_H
@@ -93,6 +97,7 @@ class round2: public combatCalculator{
 	round2();
 	~round2();
 
+	// Function: Calculate the outcome of a battle
 	Entity roundOutcome(const int inputPlayerNumber, int inputRunTimes);
 };
 #endif // COMBAT_CALCULATOR_ROUND_2_H
@@ -101,6 +106,14 @@ class round2: public combatCalculator{
 #define COMBAT_CALCULATOR_ROUND_3_H
 class round3: public combatCalculator{
 	public:
+	// Bool: See if an entity from either players did something for the first round of standard combat
+	bool standardAttack1Activated;
+
+	// Functions: The constructor and deconstructor
+	round3();
+	~round3();
+
+	// Function: Calculate the outcome of a battle
 	Entity roundOutcome(const int inputPlayerNumber, int inputRunTimes);
 };
 #endif // COMBAT_CALCULATOR_ROUND_3_H
@@ -109,6 +122,11 @@ class round3: public combatCalculator{
 #define COMBAT_CALCULATOR_ROUND_4_H
 class round4: public combatCalculator{
 	public:
+	// Functions: The constructor and deconstructor
+	round4();
+	~round4();
+
+	// Function: Calculate the outcome of a battle
 	Entity roundOutcome(const int inputPlayerNumber, int inputRunTimes);
 };
 #endif // COMBAT_CALCULATOR_ROUND_4_H
