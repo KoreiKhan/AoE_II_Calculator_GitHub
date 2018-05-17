@@ -15,7 +15,7 @@ struct Entity{
 	int rangedDamage; 
 	int garrisonValue; 
 	int pointValue; 
-	bool armorClass[20]; 
+	bool armorClass[42]; 
 	int entitiesArmorClasses;
 
 	// Functions: The constructor and deconstructor

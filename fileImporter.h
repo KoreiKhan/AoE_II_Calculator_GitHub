@@ -24,7 +24,7 @@ class fileImporter{
 	// Function: Get the rest of the information about an entity
 	Entity conductASearch(std::string inputEntityName, int inputEntityQuantity);
 
-	// Function: Get the active technologies from '[p1/p2]_technologies.csv' or the active events from '[p1/p2]_events.csv'
-	int* aTechnologyOrEventFile(std::string inputTechnologyOrEventsFilename, int numberOfRows);
+	// Function: Get the active technologies from '[p1/p2]_technologies.csv', the active events from '[p1/p2]_events.csv', or player details from 'players.csv'
+	int* aSplitColumnFile(std::string inputTechnologyOrEventsFilename, int numberOfRows);
 };
 #endif // FILE_IMPORTER_H

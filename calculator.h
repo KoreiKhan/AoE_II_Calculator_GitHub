@@ -2,7 +2,7 @@
 #include <iostream> // Using: cin, cout
 #include "entity.h" // Using: Entity class
 
-/** The calculator class **/
+/** The modifiers calculator class **/
 #ifndef MODIFIERS_CALCULATOR_H
 #define MODIFIERS_CALCULATOR_H
 class modifiersCalculator{
@@ -18,115 +18,105 @@ class modifiersCalculator{
 	Entity applyTechnologyEffects(Entity inputBattleParticipant, int* inputTechnologies);
 
 	// Function: Apply the effects of just the events
-	Entity applyEventCardEffects(Entity inputBattleParticipant, int* inputEvents);
+	Entity applyEventCardEffects(Entity inputBattleParticipant, int* inputEvents, int inputAttackingPlayerNumber, int inputAge);
 
 	// Function: Apply the effects of 1) attack bonuses, 2) technologies, 3) the relevant event cards, and 4) quantity for player 1's battle participant
-	Entity applyAllModifiersP1(const int inputP1PlayerNumber, Entity inputP1BattleParticipant, int* inputP1Technologies, int* inputP1Events, Entity inputP2BattleParticipant);
+	Entity applyAllModifiersP1(const int inputP1PlayerNumber, Entity inputP1BattleParticipant, int* inputP1Technologies, int* inputP1Events, Entity inputP2BattleParticipant, int inputAttackingPlayerNumber, int inputPlayer1Age);
 
 	// Function: Apply the effects of 1) attack bonuses, 2) technologies, 3) the relevant event cards, and 4) quantity for player 2's battle participant
-	Entity applyAllModifiersP2(const int inputP2PlayerNumber, Entity inputP2BattleParticipant, int* inputP2Technologies, int* inputP2Events, Entity inputP1BattleParticipant);
+	Entity applyAllModifiersP2(const int inputP2PlayerNumber, Entity inputP2BattleParticipant, int* inputP2Technologies, int* inputP2Events, Entity inputP1BattleParticipant, int inputAttackingPlayerNumber, int inputPlayer2Age);
 };
 #endif // MODIFIERS_CALCULATOR_H
 
-/** The calculator class **/
+/** The combat calculator class **/
 #ifndef COMBAT_CALCULATOR_H
 #define COMBAT_CALCULATOR_H
 class combatCalculator{
 	// Reference: I do not need to access this data outside of this superclass and the subclasses
 	protected:
-	// Boolean: Declare whether or not the quantity of the current entities ought to be increas by 1
-	// Reference: The quantity ought to go down by 1 if the quantity does not change for the entire battle
-	bool healingEffectP1;
-	int startingQuantityP1;
-	bool healingEffectP2;
-	int startingQuantityP2; 
+	// Boolean: Declare whether or not the quantity of the current entities ought to stay increased by 1 due to monk combat
+	// Reference: The quantity ought to go down by 1 if the quantity does not change for the entire battle and healing effect is true for each player
+	bool healingEffectP1, healingEffectP2;
+	int startingQuantityP1, startingQuantityP2;
 
-	// Int: Store the latest die roll
-	int dieRoll;
-
-	// String: Store the user input for the die roll
-	std::string dieRollInput;
+	// Int: Store the die roll input 
+	int d6DieRoll;
 
 	// Bool: Store whether or not one of the unit has died
 	bool aDeathHasOccured;
 
+	// String: Store whether or not an entity is retreating
+	std::string isRetreating;
+
 	public:
 	// Struct: Declare the entities participating in the battle
-	Entity combatParticipantP1;
-	Entity combatParticipantP2;
+	Entity combatParticipantP1, combatParticipantP2;
 
 	// Functions: The constructor and deconstructor 
 	combatCalculator();
 	~combatCalculator();
 
-	// Function: Check the d6 die input
-	void checkD6DieInput(std::string inputdieRollString);
+	// Function: Generate d6 die input
+	int generateD6DieInput();
 
 	// Function: Set the battle participants
 	void setCombatParticipants(Entity inputP1CombatParticipant, Entity inputP2CombatParticipant);
 
+	// Function: Return the modified battle participants based on the input player number
+	Entity returnModifiedBattleParticipants(const int inputPlayerNumber);
+
+	/** Function: Output the entity information with a message **/
+	void outputEntityInformation(std::string inputMessage);
+
+	// Function: Check if any of the entities have died before proceeding to the next round of combat
+	void checkIfDead();
+
+	// Function: Check if the attacking ranged archer is retreating
+	void checkIfRetreating();
+
+	// Function: Make some final checks (after the end of the rounds of combat)
+	void finalChecks();
+
 	// Function: Calculate the outcome of a battle
-	virtual Entity roundOutcome(const int inputPlayerNumber, int inputRunTimes) = 0; // Abstract class with no implementation (overrided by the subclasses)
+	virtual void roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber) = 0; // Abstract class with no implementation (overrided by the subclasses)
 };
 #endif // COMBAT_CALCULATOR_H
 
-#ifndef COMBAT_CALCULATOR_ROUND_1_H
-#define COMBAT_CALCULATOR_ROUND_1_H
-class round1: public combatCalculator{
-	public:
-	// Bool: Track if a monk from either players did something
-	bool monkPowersActivated;
-
-	// Functions: The constructor and deconstructor
-	round1();
-	~round1();
-
-	// Function: Calculate the outcome of a battle
-	Entity roundOutcome(const int inputPlayerNumber, int inputRunTimes);
-};
-#endif // COMBAT_CALCULATOR_ROUND_1_H
-
-#ifndef COMBAT_CALCULATOR_ROUND_2_H
-#define COMBAT_CALCULATOR_ROUND_2_H
-class round2: public combatCalculator{
-	public:
-	// Bool: Track if a ranged unit from either players did something
-	bool rangedAttackActivated;
-
-	// Functions: The constructor and deconstructor
-	round2();
-	~round2();
-
-	// Function: Calculate the outcome of a battle
-	Entity roundOutcome(const int inputPlayerNumber, int inputRunTimes);
-};
-#endif // COMBAT_CALCULATOR_ROUND_2_H
-
-#ifndef COMBAT_CALCULATOR_ROUND_3_H
-#define COMBAT_CALCULATOR_ROUND_3_H
-class round3: public combatCalculator{
-	public:
-	// Bool: See if an entity from either players did something for the first round of standard combat
-	bool standardAttack1Activated;
-
-	// Functions: The constructor and deconstructor
-	round3();
-	~round3();
-
-	// Function: Calculate the outcome of a battle
-	Entity roundOutcome(const int inputPlayerNumber, int inputRunTimes);
-};
-#endif // COMBAT_CALCULATOR_ROUND_3_H
-
-#ifndef COMBAT_CALCULATOR_ROUND_4_H
-#define COMBAT_CALCULATOR_ROUND_4_H
-class round4: public combatCalculator{
+#ifndef COMBAT_CALCULATOR_MONK_ROUNDS_H
+#define COMBAT_CALCULATOR_MONK_ROUNDS_H
+class monkRounds: public combatCalculator{
 	public:
 	// Functions: The constructor and deconstructor
-	round4();
-	~round4();
+	monkRounds();
+	~monkRounds();
 
-	// Function: Calculate the outcome of a battle
-	Entity roundOutcome(const int inputPlayerNumber, int inputRunTimes);
+	// Function: Calculate the outcome of a monk battle
+	void roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber);
 };
-#endif // COMBAT_CALCULATOR_ROUND_4_H
+#endif // COMBAT_CALCULATOR_MONK_ROUNDS_H
+
+#ifndef COMBAT_CALCULATOR_ARCHER_ROUNDS_H
+#define COMBAT_CALCULATOR_ARCHER_ROUNDS_H
+class archerRounds: public combatCalculator{
+	public:
+	// Functions: The constructor and deconstructor
+	archerRounds();
+	~archerRounds();
+
+	// Function: Calculate the outcome of a ranged battle
+	void roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber);
+};
+#endif // COMBAT_CALCULATOR_ARCHER_ROUNDS_H
+
+#ifndef COMBAT_CALCULATOR_STANDARD_ROUNDS_H
+#define COMBAT_CALCULATOR_STANDARD_ROUNDS_H
+class standardRounds: public combatCalculator{
+	public:
+	// Functions: The constructor and deconstructor
+	standardRounds();
+	~standardRounds();
+
+	// Function: Calculate the outcome of a standard battle
+	void roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber);
+};
+#endif // COMBAT_CALCULATOR_STANDARD_ROUNDS_H

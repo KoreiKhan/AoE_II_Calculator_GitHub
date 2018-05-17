@@ -1,9 +1,10 @@
 /** The libaries **/ 
 #include <iostream> // Using: cin, cout
 #include <string> // Using: string
-#include <cstdlib> // Using: exit(EXIT_FAILURE)
+#include <cstdlib> // Using: exit(EXIT_FAILURE), srand(), rand()
 #include <stdlib.h> // Using: atoi
 #include <cmath> // Using: floor
+#include <ctime> // Using: time()
 #include "entity.h" // Using: entity class
 #include "calculator.h" // Using: calculator class
 
@@ -51,19 +52,19 @@ Entity modifiersCalculator::applyRockPaperScissorsEffects(Entity inputBattlePart
 
 	// Battering_Ram line
 	if(
-	(applyRockPaperScissorsModifiers.entityName == "Battering_Ram") &&
+	(applyRockPaperScissorsModifiers.armorClass[27] == true) && // Battering Ram
 	(comparisonEntity.armorClass[1] == true) // Building
 	){
 		applyRockPaperScissorsModifiers.standardDamage = 60;
 	}
 	else if(
-	(applyRockPaperScissorsModifiers.entityName == "Capped_Ram") &&
+	(applyRockPaperScissorsModifiers.armorClass[28] == true) && // Capped ram
 	(comparisonEntity.armorClass[1] == true) // Building
 	){
 		applyRockPaperScissorsModifiers.standardDamage = 110;
 	}
 	else if(
-	(applyRockPaperScissorsModifiers.entityName == "Siege_Ram") &&
+	(applyRockPaperScissorsModifiers.armorClass[29] == true) && // Siege ram
 	(comparisonEntity.armorClass[1] == true) // Building
 	){
 		applyRockPaperScissorsModifiers.standardDamage = 220;
@@ -111,7 +112,13 @@ Entity modifiersCalculator::applyRockPaperScissorsEffects(Entity inputBattlePart
 
 	// Camel line
 	if(
-	(applyRockPaperScissorsModifiers.entityName == "Heavy_Camel") &&
+	(applyRockPaperScissorsModifiers.armorClass[30] == true) && // Camel
+	(comparisonEntity.armorClass[4] == true) // Cavalry
+	){
+		applyRockPaperScissorsModifiers.standardDamage = 20;
+	}
+	else if(
+	(applyRockPaperScissorsModifiers.armorClass[31] == true) && // Heavy camel armor class
 	(comparisonEntity.armorClass[4] == true) // Cavalry
 	){
 		applyRockPaperScissorsModifiers.standardDamage = 30;
@@ -280,7 +287,7 @@ Entity modifiersCalculator::applyRockPaperScissorsEffects(Entity inputBattlePart
 
 	// Skirmisher line
 	if(
-	(applyRockPaperScissorsModifiers.entityName == "Skirmisher") && (
+	(applyRockPaperScissorsModifiers.armorClass[32] == true) && ( // Skirmisher
 		(comparisonEntity.armorClass[0] == true) || // Archer
 		(comparisonEntity.armorClass[5] == true) // Cavalry Archer
 	)){
@@ -288,7 +295,7 @@ Entity modifiersCalculator::applyRockPaperScissorsEffects(Entity inputBattlePart
 		applyRockPaperScissorsModifiers.rangedDamage = 13;
 	}
 	else if(
-	(applyRockPaperScissorsModifiers.entityName == "Elite_Skirmisher") && (
+	(applyRockPaperScissorsModifiers.armorClass[33] == true) && ( // Elite Skirmisher
 		(comparisonEntity.armorClass[0] == true) || // Archer
 		(comparisonEntity.armorClass[5] == true) // Cavalry Archer
 	)){
@@ -333,22 +340,22 @@ Entity modifiersCalculator::applyRockPaperScissorsEffects(Entity inputBattlePart
 
 	// Fire_Ship line
 	if(
-	(applyRockPaperScissorsModifiers.entityName == "Fire_Ship") && (
+	(applyRockPaperScissorsModifiers.armorClass[23] == true) && ( // Fire Ship
 		// Yet to add the armor classes for the entities I search for with a string
 		(comparisonEntity.armorClass[1] == true) || // Building
-		(comparisonEntity.entityName == "Fire_Ship") ||
-		(comparisonEntity.entityName == "Galley") || 
+		(comparisonEntity.armorClass[23] == true) || // Fire Ship
+		(comparisonEntity.armorClass[22] == true) || // Galley
 		(comparisonEntity.entityName == "Longboat_(Viking)") ||
 		(comparisonEntity.armorClass[11] != true) // Non-Ship (Land unit)
 	)){
 		applyRockPaperScissorsModifiers.standardDamage = 10;
 	}
 	else if(
-	(applyRockPaperScissorsModifiers.entityName == "Fast_Fire_Ship") && (
+	(applyRockPaperScissorsModifiers.armorClass[34] == true) && ( // Fast Fire Ship
 		// Yet to add the armor classes for the entities I search for with a string
 		(comparisonEntity.armorClass[1] == true) || // Building
-		(comparisonEntity.entityName == "Fire_Ship") ||
-		(comparisonEntity.entityName == "Galley") || 
+		(comparisonEntity.armorClass[23] == true) || // Fire Ship
+		(comparisonEntity.armorClass[22] == true) || // Galley
 		(comparisonEntity.entityName == "Longboat_(Viking)") ||
 		(comparisonEntity.armorClass[11] != true) // Non-Ship (Land unit)
 	)){
@@ -357,30 +364,30 @@ Entity modifiersCalculator::applyRockPaperScissorsEffects(Entity inputBattlePart
 
 	// Galley line
 	if(
-	(applyRockPaperScissorsModifiers.entityName == "Galley") && (
+	(applyRockPaperScissorsModifiers.armorClass[22] == true) && ( // Galley
 		// Yet to add the armor classes for the entities I search for with a string
 		(comparisonEntity.armorClass[1] == true) || // Building
-		(comparisonEntity.entityName == "Galley") ||
+		(comparisonEntity.armorClass[22] == true) || // Galley
 		(comparisonEntity.entityName == "Longboat_(Viking)") ||
 		(comparisonEntity.armorClass[11] != true) // Non-Ship (Land unit)
 	)){
 		applyRockPaperScissorsModifiers.standardDamage = 30;
 	}
 	else if(
-	(applyRockPaperScissorsModifiers.entityName == "War_Galley") && (
+	(applyRockPaperScissorsModifiers.armorClass[35] == true) && ( // War Galley
 		// Yet to add the armor classes for the entities I search for with a string
 		(comparisonEntity.armorClass[1] == true) || // Building
-		(comparisonEntity.entityName == "Galley") ||
+		(comparisonEntity.armorClass[22] == true) || // Galley
 		(comparisonEntity.entityName == "Longboat_(Viking)") ||
 		(comparisonEntity.armorClass[11] != true) // Non-Ship (Land unit)
 	)){
 		applyRockPaperScissorsModifiers.standardDamage = 40;
 	}
 	else if(
-	(applyRockPaperScissorsModifiers.entityName == "Galleon") && (
+	(applyRockPaperScissorsModifiers.armorClass[36] == true) && ( // Galleon
 		// Yet to add the armor classes for the entities I search for with a string
 		(comparisonEntity.armorClass[1] == true) || // Building
-		(comparisonEntity.entityName == "Galley") ||
+		(comparisonEntity.armorClass[22] == true) || // Galley
 		(comparisonEntity.entityName == "Longboat_(Viking)") ||
 		(comparisonEntity.armorClass[11] != true) // Non-Ship (Land unit)
 	)){
@@ -392,7 +399,7 @@ Entity modifiersCalculator::applyRockPaperScissorsEffects(Entity inputBattlePart
 	(applyRockPaperScissorsModifiers.entityName == "Galley_(Saracen)") && (
 		// Yet to add the armor classes for the entities I search for with a string
 		(comparisonEntity.armorClass[1] == true) || // Building
-		(comparisonEntity.entityName == "Galley") ||
+		(comparisonEntity.armorClass[22] == true) || // Galley
 		(comparisonEntity.entityName == "Longboat_(Viking)") ||
 		(comparisonEntity.armorClass[11] != true) // Non-Ship (Land unit)
 	)){
@@ -402,7 +409,7 @@ Entity modifiersCalculator::applyRockPaperScissorsEffects(Entity inputBattlePart
 	(applyRockPaperScissorsModifiers.entityName == "War_Galley_(Saracen)") && (
 		// Yet to add the armor classes for the entities I search for with a string
 		(comparisonEntity.armorClass[1] == true) || // Building
-		(comparisonEntity.entityName == "Galley") ||
+		(comparisonEntity.armorClass[22] == true) || // Galley
 		(comparisonEntity.entityName == "Longboat_(Viking)") ||
 		(comparisonEntity.armorClass[11] != true) // Non-Ship (Land unit)
 	)){
@@ -412,7 +419,7 @@ Entity modifiersCalculator::applyRockPaperScissorsEffects(Entity inputBattlePart
 	(applyRockPaperScissorsModifiers.entityName == "Galleon_(Saracen)") && (
 		// Yet to add the armor classes for the entities I search for with a string
 		(comparisonEntity.armorClass[1] == true) || // Building
-		(comparisonEntity.entityName == "Galley") ||
+		(comparisonEntity.armorClass[22] == true) || // Galley
 		(comparisonEntity.entityName == "Longboat_(Viking)") ||
 		(comparisonEntity.armorClass[11] != true) // Non-Ship (Land unit)
 	)){
@@ -421,19 +428,19 @@ Entity modifiersCalculator::applyRockPaperScissorsEffects(Entity inputBattlePart
 
 	// Mangonel line
 	if(
-	(applyRockPaperScissorsModifiers.entityName == "Mangonel") && 
+	(applyRockPaperScissorsModifiers.armorClass[37] == true) && // Mangonel 
 	(comparisonEntity.armorClass[1] == true) // Building
 	){
 		applyRockPaperScissorsModifiers.standardDamage = 80;
 	}
 	else if(
-	(applyRockPaperScissorsModifiers.entityName == "Onager") && 
+	(applyRockPaperScissorsModifiers.armorClass[38] == true) && // Onager 
 	(comparisonEntity.armorClass[1] == true) // Building
 	){
 		applyRockPaperScissorsModifiers.standardDamage = 120;
 	}
 	else if(
-	(applyRockPaperScissorsModifiers.entityName == "Siege_Onager") && 
+	(applyRockPaperScissorsModifiers.armorClass[39] == true) && // Siege Onager 
 	(comparisonEntity.armorClass[1] == true) // Building
 	){
 		applyRockPaperScissorsModifiers.standardDamage = 180;
@@ -461,13 +468,13 @@ Entity modifiersCalculator::applyRockPaperScissorsEffects(Entity inputBattlePart
 
 	// Spearman line
 	if(
-	(applyRockPaperScissorsModifiers.entityName == "Spearman") &&
+	(applyRockPaperScissorsModifiers.armorClass[40] == true) && // Spearman
 	(comparisonEntity.armorClass[4] == true) // Cavalry
 	){
 		applyRockPaperScissorsModifiers.standardDamage = 25;
 	}
 	else if(
-	(applyRockPaperScissorsModifiers.entityName == "Pikeman") &&
+	(applyRockPaperScissorsModifiers.armorClass[41] == true) && // Pikeman
 	(comparisonEntity.armorClass[4] == true) // Cavalry
 	){
 		applyRockPaperScissorsModifiers.standardDamage = 40;
@@ -479,10 +486,7 @@ Entity modifiersCalculator::applyRockPaperScissorsEffects(Entity inputBattlePart
 		(comparisonEntity.armorClass[4] == true) || // Cavalry
 		(comparisonEntity.armorClass[1] == true) // Building
 	)){
-		if(comparisonEntity.armorClass[4] == true){
-			applyRockPaperScissorsModifiers.standardDamage = 25;
-		}
-		else if(comparisonEntity.armorClass[1] == true){
+		if(comparisonEntity.armorClass[1] == true){
 			applyRockPaperScissorsModifiers.standardDamage += 2;
 		}
 	}
@@ -491,10 +495,7 @@ Entity modifiersCalculator::applyRockPaperScissorsEffects(Entity inputBattlePart
 		(comparisonEntity.armorClass[4] == true) || // Cavalry
 		(comparisonEntity.armorClass[1] == true) // Building
 	)){
-		if(comparisonEntity.armorClass[4] == true){
-			applyRockPaperScissorsModifiers.standardDamage = 40;
-		}
-		else if(comparisonEntity.armorClass[1] == true){
+		if(comparisonEntity.armorClass[1] == true){
 			applyRockPaperScissorsModifiers.standardDamage += 2;
 		}
 	}
@@ -509,7 +510,7 @@ Entity modifiersCalculator::applyRockPaperScissorsEffects(Entity inputBattlePart
 
 	// Trebuchet line
 	if(
-	(applyRockPaperScissorsModifiers.entityName == "Trebuchet") && 
+	(applyRockPaperScissorsModifiers.armorClass[42] == true) && // Trebuchet 
 	(comparisonEntity.armorClass[1] == true) // Building
 	){
 		applyRockPaperScissorsModifiers.standardDamage = 450;
@@ -520,6 +521,7 @@ Entity modifiersCalculator::applyRockPaperScissorsEffects(Entity inputBattlePart
 
 // Function: Apply the effects of just the technologies
 Entity modifiersCalculator::applyTechnologyEffects(Entity inputBattleParticipant, int* inputTechnologies){
+	// Object: Declare an entity to make what is happening clearer
 	Entity applyTechnologyModifiers = inputBattleParticipant;
 
 	if(inputTechnologies[0] == 1){
@@ -537,10 +539,10 @@ Entity modifiersCalculator::applyTechnologyEffects(Entity inputBattleParticipant
 		if( 
 		(applyTechnologyModifiers.armorClass[0] == true) || // Archer
 		(applyTechnologyModifiers.armorClass[5] == true) || // Cavalry Archer
-		(applyTechnologyModifiers.entityName == "Watch_Tower") || // Tower example
+		(applyTechnologyModifiers.armorClass[24] == true) || // Watch Tower
 		(applyTechnologyModifiers.armorClass[3] == true) || // Castle
-		(applyTechnologyModifiers.entityName == "Town_Center") || // Town Center example
-		(applyTechnologyModifiers.entityName == "Galley") || // Galley example
+		(applyTechnologyModifiers.armorClass[25] == true) || // Town Center
+		(applyTechnologyModifiers.armorClass[22] == true) || // Galley
 		(applyTechnologyModifiers.entityName == "Longboat_(Viking)") // Longboat example
 		){
 			applyTechnologyModifiers.standardDamage +=4;
@@ -554,10 +556,10 @@ Entity modifiersCalculator::applyTechnologyEffects(Entity inputBattleParticipant
 		if( 
 		(applyTechnologyModifiers.armorClass[0] == true) || // Archer
 		(applyTechnologyModifiers.armorClass[5] == true) || // Cavalry Archer
-		(applyTechnologyModifiers.entityName == "Watch_Tower") || // Tower example
+		(applyTechnologyModifiers.armorClass[24] == true) || // Watch Tower
 		(applyTechnologyModifiers.armorClass[3] == true) || // Castle
-		(applyTechnologyModifiers.entityName == "Town_Center") || // Town Center example
-		(applyTechnologyModifiers.entityName == "Galley") || // Galley example
+		(applyTechnologyModifiers.armorClass[25] == true) || // Town Center
+		(applyTechnologyModifiers.armorClass[22] == true) || // Galley
 		(applyTechnologyModifiers.entityName == "Longboat_(Viking)") // Longboat example
 		){
 			applyTechnologyModifiers.standardDamage +=6;
@@ -583,10 +585,10 @@ Entity modifiersCalculator::applyTechnologyEffects(Entity inputBattleParticipant
 		if( 
 		(applyTechnologyModifiers.armorClass[0] == true) || // Archer
 		(applyTechnologyModifiers.armorClass[5] == true) || // Cavalry Archer
-		(applyTechnologyModifiers.entityName == "Watch_Tower") || // Tower example
+		(applyTechnologyModifiers.armorClass[24] == true) || // Watch Tower
 		(applyTechnologyModifiers.armorClass[3] == true) || // Castle
-		(applyTechnologyModifiers.entityName == "Town_Center") || // Town Center example
-		(applyTechnologyModifiers.entityName == "Galley") || // Galley example
+		(applyTechnologyModifiers.armorClass[25] == true) || // Town Center
+		(applyTechnologyModifiers.armorClass[22] == true) || // Galley
 		(applyTechnologyModifiers.entityName == "Longboat_(Viking)") // Longboat example
 		){
 			applyTechnologyModifiers.standardDamage +=2;
@@ -626,7 +628,7 @@ Entity modifiersCalculator::applyTechnologyEffects(Entity inputBattleParticipant
 	}
 	if(inputTechnologies[10] == 1){
 		// Loom - +2 HP for Villagers
-		if(applyTechnologyModifiers.entityName == "Villager"){ // Villager example
+		if(applyTechnologyModifiers.armorClass[26] == true){ // Villager 
 			applyTechnologyModifiers.entityHealth += 2;
 		}
 	}
@@ -676,29 +678,50 @@ Entity modifiersCalculator::applyTechnologyEffects(Entity inputBattleParticipant
 	return applyTechnologyModifiers;
 }
 
-Entity modifiersCalculator::applyEventCardEffects(Entity inputBattleParticipant, int* inputEvents){
+Entity modifiersCalculator::applyEventCardEffects(Entity inputBattleParticipant, int* inputEvents, int inputAttackingPlayerNumber, int inputAge){
 	Entity applyEventCardModifiers = inputBattleParticipant;
+
+	// String: Store the result from certain event card questions
+	std::string isThisRelevant = "";
 
 	if(inputEvents[0] == 1){
 		// A Just Case 
 		applyEventCardModifiers.standardDamage +=1;
 	}
 	// [1] Bad Omen - Target unit takes 5 damage for each monk attached (skip for now)
-	// [2] Barrel of Grog - If target unit is Celt, they get +2 HP (ought to calculate now)
+	if(inputEvents[2] == 1){
+		// [2] Barrel of Grog - If target unit is Celt, they get +2 HP (ought to calculate now)
+		std::cout << "Is " << applyEventCardModifiers.entityName << " Celt?" << "\n";
+		std::cin >> isThisRelevant;
+
+		if(isThisRelevant == "1"){
+			applyEventCardModifiers.entityHealth +=2;
+		}
+	}
 	if(inputEvents[3] == 1){
 		// [3] Bone_Shaft_Arrows_(Mongol)
 		if(applyEventCardModifiers.armorClass[5] == true){ // Cavalry Archer
 			applyEventCardModifiers.standardDamage +=4;
 		} 
 	}
-	// [4] Caught from the Crow's Nest - Target Galley or Fire Ship may deal a bombardment attack begings. This in addition to their one normal bombardment (skip for now)
+	// [4] Caught from the Crow's Nest - Target Galley or Fire Ship may deal a bombardment attack before the normal combat begins. This in addition to their one normal bombardment (skip for now)
 	if(inputEvents[5] == 1){
 		// [5] Celtic_Battle_Cry_(Celt)
 		if(applyEventCardModifiers.armorClass[8] == true){ // Infantry
 			applyEventCardModifiers.standardDamage +=2;
 		} 
 	}
-	// [6] Dangerous_Times - Attach to a military building. The building has +5 garrison until destroyed (ought to calculate now)
+	if(inputEvents[6] == 1){
+		// [6] Dangerous_Times - Attach to a military building. The building has +5 garrison until destroyed (ought to calculate now)
+		if(applyEventCardModifiers.armorClass[1] == true){ // Building
+			std::cout << "Is Dangerous_Times attached to " << applyEventCardModifiers.entityName << "? Enter 1 if so" << "\n";
+			std::cin >> isThisRelevant;
+
+			if(isThisRelevant == "1"){
+				applyEventCardModifiers.garrisonValue +=5;
+			}
+		} 
+	}
 	// [7] Fat Friars Tavern O'Spirits - Monks on target unit may not have any Conversion or Healling attempts this turn (skip for now)
 	if(inputEvents[8] == 1){
 		// [8] Field Testing
@@ -708,57 +731,117 @@ Entity modifiersCalculator::applyEventCardEffects(Entity inputBattleParticipant,
 		} 
 	}
 	// [9] First Battle Jitter - Two tokens on target unit have 0 standardAttack for this battle. Target unit must have five tokens on it (skip for now)
-	// [10] Flaming_Arrows - Attach to an Archer unit. This unit now gets +2 standardAttack vs Buildings (ought to calculate now) 
-	// [11] Fortune_Favors_The_Foolish - Affects standardAttack of attacker/defender entities (ought to calculate now)
-	// [13] Fresh_Bow_String_(Briton) - After attacks are declared, switch target Archer with any defending unit (skip for now)
+	if(inputEvents[10] == 1){
+		// [10] Flaming_Arrows - Attach to an Archer unit. This unit now gets +2 standardAttack vs Buildings (ought to calculate now) 
+		if(applyEventCardModifiers.armorClass[0] == true){ // Archer
+			std::cout << "Is Flaming_Arrows attached to " << applyEventCardModifiers.entityName << "? Enter 1 if so" << "\n";
+			std::cin >> isThisRelevant;
+
+			if(isThisRelevant == "1"){
+				applyEventCardModifiers.standardDamage +=2;
+			}
+		}
+	}
+	// [11] Fortune_Favors_The_Foolish - Affects standardAttack of attacker/defender entities (skip for now)
 	if(inputEvents[13] == 1){
-		// [13] Gatherin' A Rowdy Bunch
+		// [12] Gatherin' A Rowdy Bunch
 		applyEventCardModifiers.standardDamage -=1;
 	}
-	// [14] Gladitorial_Games - You and a target player must move one unit to No-Man's-Land. The units will fight until one is destroyed (no retreat).  Target player chooses unit first (skip for now).
-	// [15] Good_Wind - +1 bombardment for all siege units (ought to calculate now)
-	// [16] Hard to Starboard - Reduce damage dealt to target ship by 10 points per round of combat this turn (skip for now)
-	// [17] Heavy Tree Cover - Negate range combat round in target battle involving one of your units (skip for now)
-	// [18] High Ground - Target Archer gains range bonus for this battle. Age II-+1. Age III+2. Age IV+3 (ought to calculate now)
-	// [19] Husbandry - Attach to a Cavalry Unit. That unit gains +2 HP (ought to calculate now)
-	// [20] It's A Miracle - A successful Healing attempt saves us up three tokens, instead of one. Play this card before an attempt is made (skip for now)
-	// [21] Listen To A Story - Attempt 1-3 conversions this battle. Pay per conversion (skip for now)
-	// [22] Medieval Trappings - Attach to one of your buildings. Every turn an enemy non-siege, non-unique unit resides on attached building, they must lose one token (skip for now)
-	// [23] Muddy Battlefield - Target infantry gets double standardAttack versus Cavalry this turn (ought to calculate now)
-	// [24] Non-Compos Mentis - Roll a 1d6 when in combat. On a: 1: take 10 extra damage per round, 2: draw 2 cards, 3: no effect, 4: deal 10 extra damage per round, 5: discard 2 cards, 6: deal 15 extra damage per round. Play anytime. (skip for now)
-	// [25] Opportunity Knocks - If you have two adjacent attacking units, they may target the same defending unit. There is no retreat allowed this battle. Or you may draw three cards (skip for now)
-	// [26] Piety - If you have one monk attached to a unit, your conversion rate is 4. If the attempt fails, the monk dies (skip for now)
-	// [27] Poor Morale - Play when a target unit loses at least 1 token in battle. That unit must retreat. Can be played after archer range round (skip for now)
-	if(inputEvents[28] == 1){
-		// [28] Rally The Workers
+	// [13] Gladitorial_Games - You and a target player must move one unit to No-Man's-Land. The units will fight until one is destroyed (no retreat).  Target player chooses unit first (skip for now).
+	// [14] Good_Wind - +1 bombardment for all siege units (ought to calculate now)
+	// [15] Hard to Starboard - Reduce damage dealt to target ship by 10 points per round of combat this turn (skip for now)
+	// [16] Heavy Tree Cover - Negate range combat round in target battle involving one of your units (skip for now)
+	if(inputEvents[17] == 1){
+		// [17] High Ground - Target Archer gains range bonus for this battle. Age II-+1. Age III+2. Age IV+3 (ought to calculate now)
+		if(applyEventCardModifiers.armorClass[0] == true){ // Archer
+			std::cout << "Is High_Ground attached to " << applyEventCardModifiers.entityName << "? Enter 1 if so" << "\n";
+			std::cin >> isThisRelevant;
+
+			if(isThisRelevant == "1"){
+				// Yet to scale by age
+				switch(inputAge){
+					case 1:
+					break;
+					case 2:
+					applyEventCardModifiers.rangedDamage +=1;
+					break;
+					case 3:
+					applyEventCardModifiers.rangedDamage +=2;
+					break;
+					case 4:
+					applyEventCardModifiers.rangedDamage +=3;
+					break;
+				}
+			}
+		}
+	}
+
+	if(inputEvents[18] == 1){
+		// [18] Husbandry - Attach to a Cavalry Unit. That unit gains +2 HP (ought to calculate now)
+		if(applyEventCardModifiers.armorClass[4] == true){ // Cavalry
+			std::cout << "Is Husbandry attached to " << applyEventCardModifiers.entityName << "? Enter 1 if so" << "\n";
+			std::cin >> isThisRelevant;
+
+			if(isThisRelevant == "1"){
+				applyEventCardModifiers.entityHealth +=2;
+			}
+		}
+	}
+	// [19] It's A Miracle - A successful Healing attempt saves us up three tokens, instead of one. Play this card before an attempt is made (skip for now)
+	// [20] Listen To A Story - Attempt 1-3 conversions this battle. Pay per conversion (skip for now)
+	// [21] Medieval Trappings - Attach to one of your buildings. Every turn an enemy non-siege, non-unique unit resides on attached building, they must lose one token (skip for now)
+	// [22] Muddy Battlefield - Target infantry gets double standardAttack versus Cavalry this turn (ought to calculate now)
+	// [23] Non-Compos Mentis - Roll a 1d6 when in combat. On a: 1: take 10 extra damage per round, 2: draw 2 cards, 3: no effect, 4: deal 10 extra damage per round, 5: discard 2 cards, 6: deal 15 extra damage per round. Play anytime. (skip for now)
+	// [24] Opportunity Knocks - If you have two adjacent attacking units, they may target the same defending unit. There is no retreat allowed this battle. Or you may draw three cards (skip for now)
+	// [25] Piety - If you have one monk attached to a unit, your conversion rate is 4. If the attempt fails, the monk dies (skip for now)
+	// [26] Poor Morale - Play when a target unit loses at least 1 token in battle. That unit must retreat. Can be played after archer range round (skip for now)
+	if(inputEvents[27] == 1){
+		// [27] Rally The Workers
 		if(applyEventCardModifiers.entityName == "Villager"){
 			applyEventCardModifiers.standardDamage += 3;
 		}
 	}
-	// [29] Relentless Attack - This battle, any damage remaining in a round after casualties have been taken carries over into the next round. Remaining damage at the end of this battle is lost (skip for now)
-	// [30] Retreat - Target unit must retreat before the first round of combat. The ranged round does not count as the first round of combat (skip for now)
-	// [31] Rough Waters - Target ship may not defend this turn (skip for now)
-	// [32] Shots In The Back (Briton) - If a unit in combat with your Archer retreats, your Archer deals an additional round of range damage without taking any damage (skip for now)
-	// [33] Soak The Timbers - All enemy Fire Ships get an automatic result of 1 for their die roll when calculating damage this turn (skip for now)
-	// [34] Spirits of the Ancestors - Target imit may not attack or move this turn. For unit owner's next turn, the unit get +3 standardAttack (skip for now)
-	// [35] Squires - Attach to an Infantry Unit. That unit gets +2 HP (ought to calculate now)
-	// [36] Steady Hand - Target Archer unit may do ranged damage to a Cavalry unit this turn (skip for now)
-	// [37] Stealth Attack - Do 20 damage to a building (skip for now)
-	// [38] The Hammer's Cavalry (Franks) - Play when one of your Cavalry units is reduced to 1 token. Add two tokens to the unit at no cost (skip for now)
-	// [39] The Jester Is Dead, Let's Get Em (Celt) = Sacrifice 1 of your villagers. +4 standardAttack to all defending units this turn (skip for now)
-	// [40] Uji (Japanese) - Before any damage is dealt, switch any one of your units being attacked with another one of your units. Must be played in your village (skip for now)
-	// [41] Urgent Need (Goth) - Play when your unoccupied Building is being attacked. This card is a full militia card defending the Building until the end of the battle (skip for now)
-	// [42] Vengeance Is Mine! - Target unit gets +3 HP +3 AP this turn, when defending in your village. Play anytime.(ought to calculate now)
-	// [43] While They're Sleeping - Target attacking Infantry unit takes no damage for the first round of combat. The ranged round does not count as the first round of combat (skip for now)
-	// [44] You Will Die! (Saracen) - This battle goes for four rounds of normal combat, instead of 2 rounds. No retreat is allowed without event card effect. Play anytime.(skip for now)
-	// [45] Zealous Monks - Target Monk unit gets 1 conversion roll at a 3 or less rate for each monk attached (skip for now)
+	// [28] Relentless Attack - This battle, any damage remaining in a round after casualties have been taken carries over into the next round. Remaining damage at the end of this battle is lost (skip for now)
+	// [29] Retreat - Target unit must retreat before the first round of combat. The ranged round does not count as the first round of combat (skip for now)
+	// [30] Rough Waters - Target ship may not defend this turn (skip for now)
+	// [31] Shots In The Back (Briton) - If a unit in combat with your Archer retreats, your Archer deals an additional round of range damage without taking any damage (skip for now)
+	// [32] Soak The Timbers - All enemy Fire Ships get an automatic result of 1 for their die roll when calculating damage this turn (skip for now)
+	// [33] Spirits of the Ancestors - Target imit may not attack or move this turn. For unit owner's next turn, the unit get +3 standardAttack (skip for now)
+	if(inputEvents[34] == 1){
+		// [34] Squires - Attach to an Infantry Unit. That unit gets +2 HP (ought to calculate now)
+		if(applyEventCardModifiers.armorClass[8] == true){ // Infantry
+			std::cout << "Is Squires attached to " << applyEventCardModifiers.entityName << "? Enter 1 if so" << "\n";
+			std::cin >> isThisRelevant;
+
+			if(isThisRelevant == "1"){
+				applyEventCardModifiers.entityHealth +=2;
+			}
+		}
+	}
+	// [35] Steady Hand - Target Archer unit may do ranged damage to a Cavalry unit this turn (skip for now)
+	// [36] The Hammer's Cavalry (Franks) - Play when one of your Cavalry units is reduced to 1 token. Add two tokens to the unit at no cost (skip for now)
+	// [37] The Jester Is Dead, Let's Get Em (Celt) = Sacrifice 1 of your villagers. +4 standardAttack to all defending units this turn (skip for now)
+	// [38] Uji (Japanese) - Before any damage is dealt, switch any one of your units being attacked with another one of your units. Must be played in your village (skip for now)
+	// [39] Urgent Need (Goth) - Play when your unoccupied Building is being attacked. This card is a full militia card defending the Building until the end of the battle (skip for now)
+	if(inputEvents[40] == 1){
+		// [40] Vengeance Is Mine! - Target unit gets +3 HP +3 AP this turn, when defending in your village. Play anytime.(ought to calculate now)
+		std::cout << "Is Vengeance_Is_Mine! attached to " << applyEventCardModifiers.entityName << "? Enter 1 if so" << "\n";
+		std::cin >> isThisRelevant;
+
+		if(isThisRelevant == "1"){
+			applyEventCardModifiers.standardDamage +=2;
+			applyEventCardModifiers.entityHealth += 3;
+		}
+	}
+	// [41] While They're Sleeping - Target attacking Infantry unit takes no damage for the first round of combat. The ranged round does not count as the first round of combat (skip for now)
+	// [43] Zealous Monks - Target Monk unit gets 1 conversion roll at a 3 or less rate for each monk attached (skip for now)
 
 	return applyEventCardModifiers;
 }
 
 
 // Function: Apply the effects of 1) attack bonuses, 2) technologies, 3) the relevant event cards, and 4) quantity for player 1's battle participant
-Entity modifiersCalculator::applyAllModifiersP1(const int inputP1PlayerNumber, Entity inputP1BattleParticipant, int* inputP1Technologies, int* inputP1Events, Entity inputP2BattleParticipant){
+Entity modifiersCalculator::applyAllModifiersP1(const int inputP1PlayerNumber, Entity inputP1BattleParticipant, int* inputP1Technologies, int* inputP1Events, Entity inputP2BattleParticipant, int inputAttackingPlayerNumber, int inputPlayer1Age){
 	// Struct: The modified battle participant to return
 	Entity p1BattleParticipantModified = inputP1BattleParticipant;
 
@@ -769,7 +852,7 @@ Entity modifiersCalculator::applyAllModifiersP1(const int inputP1PlayerNumber, E
 	p1BattleParticipantModified = applyTechnologyEffects(p1BattleParticipantModified, inputP1Technologies);
 
 	//3) The relevant event card effects (where easy to implement)
-	p1BattleParticipantModified = applyEventCardEffects(p1BattleParticipantModified, inputP1Events);
+	p1BattleParticipantModified = applyEventCardEffects(p1BattleParticipantModified, inputP1Events, inputAttackingPlayerNumber, inputPlayer1Age);
 
 	//4) Quantity effects
 	p1BattleParticipantModified.standardDamage *= p1BattleParticipantModified.entityQuantity;
@@ -780,7 +863,7 @@ Entity modifiersCalculator::applyAllModifiersP1(const int inputP1PlayerNumber, E
 }
 
 // Function: Apply the effects of 1) attack bonuses, 2) technologies, 3) the relevant event cards, and 4) quantity for player 2's battle participant
-Entity modifiersCalculator::applyAllModifiersP2(const int inputP2PlayerNumber, Entity inputP2BattleParticipant, int* inputP2Technologies, int* inputP2Events, Entity inputP1BattleParticipant){
+Entity modifiersCalculator::applyAllModifiersP2(const int inputP2PlayerNumber, Entity inputP2BattleParticipant, int* inputP2Technologies, int* inputP2Events, Entity inputP1BattleParticipant, int inputAttackingPlayerNumber, int inputPlayer2Age){
 	// Struct: The modified battle participant to return
 	Entity p2BattleParticipantModified = inputP2BattleParticipant;
 
@@ -791,7 +874,7 @@ Entity modifiersCalculator::applyAllModifiersP2(const int inputP2PlayerNumber, E
 	p2BattleParticipantModified = applyTechnologyEffects(p2BattleParticipantModified, inputP2Technologies);
 
 	//3) The relevant event card effects (where easy to implement)
-	p2BattleParticipantModified = applyEventCardEffects(p2BattleParticipantModified, inputP2Events);
+	p2BattleParticipantModified = applyEventCardEffects(p2BattleParticipantModified, inputP2Events, inputAttackingPlayerNumber, inputPlayer2Age);
 
 	//4) Quantity effects
 	p2BattleParticipantModified.standardDamage *= p2BattleParticipantModified.entityQuantity;
@@ -803,13 +886,14 @@ Entity modifiersCalculator::applyAllModifiersP2(const int inputP2PlayerNumber, E
 
 // Function: The constructor/deconstructor
 combatCalculator::combatCalculator(){
+	// Behaviour: Declare the initial values
 	healingEffectP1 = false;
 	startingQuantityP1 = 0;
 	healingEffectP2 = false;
 	startingQuantityP2 = 0;
-	dieRoll = 0;
-	dieRollInput = "";
+	d6DieRoll = 0;
 	aDeathHasOccured = false;
+	isRetreating = "";
 }
 combatCalculator::~combatCalculator(){}
 
@@ -819,320 +903,528 @@ void combatCalculator::setCombatParticipants(Entity inputP1CombatParticipant, En
 	combatParticipantP2 = inputP2CombatParticipant;
 }
 
-void combatCalculator::checkD6DieInput(std::string inputdieRollString){
+int combatCalculator::generateD6DieInput(){
+	// Int: Declare a variable to store the generated integer value
+	int d6Value = 0;
+
+	// Behaviour: Use an integer value as a random seed for pseudo random number generation
+	srand(time(0));
+
+	// Behaviour: Store a random number between 1 and 6
+	d6Value = rand() % 6 + 1; 
+
+	// Behaviour: Check that the random function worked
 	if(
-		(inputdieRollString != "1") &&
-		(inputdieRollString != "2") &&
-		(inputdieRollString != "3") &&
-		(inputdieRollString != "4") &&
-		(inputdieRollString != "5") &&
-		(inputdieRollString != "6")
+		(d6Value != 1) &&
+		(d6Value != 2) &&
+		(d6Value != 3) &&
+		(d6Value != 4) &&
+		(d6Value != 5) &&
+		(d6Value != 6)
 	){
 		std::cout << "Error: A d6 die only reads the numbers 1-6" << "\n";
 		exit(EXIT_FAILURE);
 	}
 	else{
-		// The input is fine}
+		return d6Value;
+	}
+}
+
+// Function: Return the modified battle participants based on the input player number
+Entity combatCalculator::returnModifiedBattleParticipants(const int inputPlayerNumber){
+	// Behaviour: Return the entities with the combat results applied
+	if(inputPlayerNumber == 1){
+		return combatParticipantP1;
+	}
+	else if(inputPlayerNumber == 2){
+		return combatParticipantP2;
+	}
+	else{
+		std::cout << "Error: Input player number not recognized" << "\n";
+		exit(EXIT_FAILURE);
+	}
+}
+
+// Function: Check if any of the entities have died before proceeding to the next round of combat
+void combatCalculator::checkIfDead(){
+	if(combatParticipantP1.entityQuantity <=0){
+		aDeathHasOccured = true;
+	}
+	else if(combatParticipantP2.entityQuantity <=0){
+		aDeathHasOccured = true;
+	}
+}
+
+// Function: Check if the attacking ranged archer is retreating
+void combatCalculator::checkIfRetreating(){
+	// Behaviour: Ask the attacker if they want to retreat with their archer if they are not versing cavalry or an archer
+	std::cout << "For entities that can retreat: Enter 1 if retreating or 0 if fighting in the next round" << "\n";
+	std::cin >> isRetreating;
+
+	if( (isRetreating != "1") && (isRetreating != "0") ){
+		std::cout << "Error: The retreating value can only be a 0 or 1" << "\n";
+		exit(EXIT_FAILURE);
+	}
+}
+
+/** Function: Output the entity information with a message **/
+void combatCalculator::outputEntityInformation(std::string inputMessage){
+	// Behaviour: Only display the message if there is a message to be displayed
+	std::cout << "\n";
+
+	if(inputMessage != ""){
+		std::cout << inputMessage << "\n";
+	}
+
+	// Behaviour: Run a function to output the entity inforamtion
+	combatParticipantP1.outputEntity(1);
+	combatParticipantP2.outputEntity(2);	
+}
+
+// Function: Make some final checks (after the end of the rounds of combat)
+void combatCalculator::finalChecks(){
+	// Behaviour: Check if the extra unit from the monk healing power ought to die
+	if(combatParticipantP1.entityQuantity >= startingQuantityP1){
+		combatParticipantP1.entityQuantity --;
+	}
+	if(combatParticipantP2.entityQuantity >= startingQuantityP2){
+		combatParticipantP2.entityQuantity --;
 	}
 }
 
 // Function: The constructor / deconstructor
-round1::round1(){
-	monkPowersActivated = false;
-}
-round1::~round1(){}
+monkRounds::monkRounds(){}
+monkRounds::~monkRounds(){}
 
-// Function: Calculate the outcome of a battle
-Entity round1::roundOutcome(const int inputPlayerNumber, int inputRunTimes){
-	// Make sure that the results are not calculated twice and that there have been no deaths
-	if ( (inputRunTimes == 0) && (aDeathHasOccured == false) ){
-		// Bool: See if the monk powers are activated for player 1 and 2
-		bool monkPowersActivatedP1 = false;
-		bool monkPowersActivatedP2 = false;
+// Function: Calculate the outcome of a monk battle
+void monkRounds::roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber){
+	// Bool: Track if a monk from either players did something
+	bool monkPowersActivated = false, monkPowersActivatedP1 = false, monkPowersActivatedP2 = false;
 
-		// Behaviour: See if player 1 has a monk
-		if(combatParticipantP1.armorClass[9] == true){
-			// Behaviour: Make sure that the quantity of monks is correct
-			if( (combatParticipantP1.entityQuantity < 0) && (combatParticipantP1.entityQuantity > 5) ){
-				std::cout << "Error: The first player's battle participant must have between 0-5 monks" << "\n";
-				exit(EXIT_FAILURE);
+	// Behaviour: Check that no deaths have occured
+	checkIfDead();
+
+	// Behaviour: Run the monk battle round for X times
+	for(int i = 0; i < inputRunTimes; i ++){
+		// Behaviour: Make sure that no deaths have occured and that the attacking archer is not retreating before proceeding
+		if(aDeathHasOccured == false) {
+
+			// Behaviour: See if player 1 has a monk
+			if(combatParticipantP1.armorClass[9] == true){
+				// Behaviour: Make sure that the quantity of monks is correct
+				if( (combatParticipantP1.entityQuantity < 0) && (combatParticipantP1.entityQuantity > 5) ){
+					std::cout << "Error: The first player's monk must have between 0-5 monks" << "\n";
+					exit(EXIT_FAILURE);
+				}
+
+				// Behaviour: Ask the user if they are performing a conversion or healing attempt and store the answer
+				std::string calculationModeP1 = "0";
+				std::cout << "Is player 1's monk performing a conversion (enter 0) or healing attempt (enter 1)?" << "\n";
+				std::cin >> calculationModeP1;
+
+				// Behaviour: Validate the input before proceeding
+				if( (calculationModeP1 != "0") && (calculationModeP1 != "1") ){
+					std::cout << "Error: Player 1 entered non-zero and non-one for the monk" << "\n";
+					exit(EXIT_FAILURE);
+				}
+
+				// Behaviour: Generate, validate, and return d6 dice input before proceeding
+				d6DieRoll = generateD6DieInput(); 
+
+				// Behaviour: See if the monk powers are activated
+				if(combatParticipantP1.entityQuantity >= d6DieRoll){
+					monkPowersActivatedP1 = true;
+				}
+				
+				// Behaviour: Act on the success odds
+				if( (monkPowersActivatedP1 == true) && (calculationModeP1 == "0") ){
+					// Behaviour: Act on the conversion attempt being successful
+					std::cout << "The conversion attempt by player 1's monk was successful" << "\n";
+					combatParticipantP2.entityQuantity --;
+					monkPowersActivated = true;
+				}
+				else if ( (monkPowersActivatedP1 == true) && (calculationModeP1 == "1") ){
+					// Behaviour: Act on the healing attempt being successful
+					std::cout << "The healing attempt by player 1's monk was successful" << "\n";
+					healingEffectP1 = true;
+					startingQuantityP1 = combatParticipantP1.entityQuantity;
+					combatParticipantP1.entityQuantity ++;
+					monkPowersActivated = true;
+				}
+				else{
+					// Behaviour: Return the fact that the attempt was unsuccessful
+					std::cout << "Player 1's monk powers failed to activate" << "\n";
+				}
 			}
 
-			// Behaviour: Ask the user if they are performing a conversion or healing attempt and store the answer
-			std::string calculationModeP1 = "0";
-			std::cout << "Is player 1's monk performing a conversion (enter 0) or healing attempt (enter 1)?" << "\n";
-			std::cin >> calculationModeP1;
+			// Behaviour: See if player 2 has a monk
+			if(combatParticipantP2.armorClass[9] == true){
+				// Behaviour: Make sure that the quantity of monks is correct
+				if( (combatParticipantP2.entityQuantity < 0) && (combatParticipantP2.entityQuantity > 5) ){
+					std::cout << "Error: The second player's battle participant must have between 0-5 monks" << "\n";
+					exit(EXIT_FAILURE);
+				}
 
-			// Behaviour: Validate the input before proceeding
-			if( (calculationModeP1 != "0") && (calculationModeP1 != "1") ){
-				std::cout << "Error: Player 1 entered non-zero and non-one for the monk" << "\n";
-				exit(EXIT_FAILURE);
+				// Behaviour: Ask the user if they are performing a conversion or healing attempt and store the answer
+				std::string calculationModeP2 = "0";
+				std::cout << "Is player 2's monk performing a conversion (enter 0) or healing attempt (enter 1)?" << "\n";
+				std::cin >> calculationModeP2;
+
+				// Behaviour: Validate the input before proceeding
+				if( (calculationModeP2 != "0") && (calculationModeP2 != "1") ){
+					std::cout << "Error: Player 2 entered non-zero and non-one for the monk" << "\n";
+					exit(EXIT_FAILURE);
+				}
+
+				// Behaviour: Generate, validate, and return d6 dice input before proceeding
+				d6DieRoll = generateD6DieInput(); 
+
+				// Behaviour: See if the monk powers are activated
+				if(combatParticipantP2.entityQuantity >= d6DieRoll){
+					monkPowersActivatedP2 = true;
+				}
+				// Behaviour: Act on the success odds
+				if( (monkPowersActivatedP2 == true) && (calculationModeP2 == "0") ){
+					// Behaviour: Act on the conversion attempt being successful
+					std::cout << "The conversion attempt by player 2's monk was successful" << "\n";
+					combatParticipantP2.entityQuantity --;
+					monkPowersActivated = true;
+				}
+				else if ( (monkPowersActivatedP2 == true) && (calculationModeP2 == "1") ){
+					// Behaviour: Act on the healing attempt being successful
+					std::cout << "The healing attempt by player 2's monk was successful" << "\n";
+					healingEffectP2 = true;
+					startingQuantityP2 = combatParticipantP2.entityQuantity;
+					combatParticipantP2.entityQuantity ++;
+					monkPowersActivated = true;
+				}
+				else{
+					// Behaviour: Return the fact that the attempt was unsuccessful
+					std::cout << "Player 2's monk powers failed to activate" << "\n";
+				}
 			}
 
-			// Reference: Generating a random number between 0 and 6 is not random enough so I get dice input
-			// Behaviour: Ask the user to roll a dice and enter the results of the dice roll
-			std::cout << "Get player 1 to roll a d6 dice and enter the result" << "\n";
-			std::cin >> dieRollInput;
-
-			// Behaviour: Validate the input before proceeding
-			checkD6DieInput(dieRollInput);
-
-			// Conver the dice roll input string into an integer
-			dieRoll = atoi(dieRollInput.c_str());
-
-			// Behaviour: See if the monk powers are activated
-			if(combatParticipantP1.entityQuantity >= dieRoll){
-				monkPowersActivatedP1 = true;
-			}
-			
-			// Behaviour: Act on the success odds
-			if( (monkPowersActivatedP1 == true) && (calculationModeP1 == "0") ){
-				// Behaviour: Act on the conversion attempt being successful
-				std::cout << "The conversion attempt by player 1's monk was successful" << "\n";
-				combatParticipantP2.entityQuantity --;
+			// Behaviour: Check if either monk did something (for output purposes) and reset the values
+			if ( (monkPowersActivatedP1 == true) || (monkPowersActivatedP2 == true) ){
 				monkPowersActivated = true;
-			}
-			else if ( (monkPowersActivatedP1 == true) && (calculationModeP1 == "1") ){
-				// Behaviour: Act on the healing attempt being successful
-				std::cout << "The healing attempt by player 1's monk was successful" << "\n";
-				healingEffectP1 = true;
-				combatParticipantP1.entityQuantity ++;
-				startingQuantityP1 = combatParticipantP1.entityQuantity;
-				monkPowersActivated = true;
+				monkPowersActivatedP1 = false;
+				monkPowersActivatedP2 = false;
 			}
 			else{
-				// Behaviour: Return the fact that the attempt was unsuccessful
-				std::cout << "Player 1's monk powers failed to activate" << "\n";
-			}
-		}
-
-		// Behaviour: See if player 2 has a monk
-		if(combatParticipantP2.armorClass[9] == true){
-			// Behaviour: Make sure that the quantity of monks is correct
-			if( (combatParticipantP2.entityQuantity < 0) && (combatParticipantP2.entityQuantity > 5) ){
-				std::cout << "Error: The second player's battle participant must have between 0-5 monks" << "\n";
-				exit(EXIT_FAILURE);
+				std::cout << "\n" << "Skipping Phase 1) Monk round "+std::to_string(i+1)+" calculations..." << "\n";
 			}
 
-			// Behaviour: Ask the user if they are performing a conversion or healing attempt and store the answer
-			std::string calculationModeP2 = "0";
-			std::cout << "Is player 2's monk performing a conversion (enter 0) or healing attempt (enter 1)?" << "\n";
-			std::cin >> calculationModeP2;
-
-			// Behaviour: Validate the input before proceeding
-			if( (calculationModeP2 != "0") && (calculationModeP2 != "1") ){
-				std::cout << "Error: Player 2 entered non-zero and non-one for the monk" << "\n";
-				exit(EXIT_FAILURE);
+			// Behaviour: Display the outcome of the monk combat round only if changes occured 
+			if(monkPowersActivated == true){
+				std::string outputString = "Phase 1) Monk round "+std::to_string(i+1)+" calculations...";
+				outputEntityInformation(outputString);
+				monkPowersActivated = false;
 			}
 
-			// Reference: Generating a random number between 0 and 6 is not random enough so I get dice input
-			// Behaviour: Ask the user to roll a dice and enter the results of the dice roll
-			std::cout << "Get player 2 to roll a d6 dice and enter the result" << "\n";
-			std::cin >> dieRollInput;
-
-			// Behaviour: Validate the input before proceeding
-			checkD6DieInput(dieRollInput);
-
-			// Conver the dice roll input string into an integer
-			dieRoll = atoi(dieRollInput.c_str());
-
-			// Behaviour: See if the monk powers are activated
-			if(combatParticipantP2.entityQuantity >= dieRoll){
-				monkPowersActivatedP2 = true;
-			}
-			// Behaviour: Act on the success odds
-			if( (monkPowersActivatedP2 == true) && (calculationModeP2 == "0") ){
-				// Behaviour: Act on the conversion attempt being successful
-				std::cout << "The conversion attempt by player 2's monk was successful" << "\n";
-				combatParticipantP2.entityQuantity --;
-				monkPowersActivated = true;
-			}
-			else if ( (monkPowersActivatedP2 == true) && (calculationModeP2 == "1") ){
-				// Behaviour: Act on the healing attempt being successful
-				std::cout << "The healing attempt by player 2's monk was successful" << "\n";
-				healingEffectP2 = true;
-				combatParticipantP2.entityQuantity ++;
-				startingQuantityP2 = combatParticipantP2.entityQuantity;
-				monkPowersActivated = true;
-			}
-			else{
-				// Behaviour: Return the fact that the attempt was unsuccessful
-				std::cout << "Player 2's monk powers failed to activate" << "\n";
-			}
-		}
-
-		// Behaviour: Check if either monk did something (for output purposes)
-		if ( (monkPowersActivatedP1 == true) || (monkPowersActivatedP2 == true) ){
-			monkPowersActivated = true;
+			// Behaviour: Check if a death has occured
+			checkIfDead();
 		}
 	}
-
-	// Behaviour: Check if a death has occured
-	if( (combatParticipantP1.entityQuantity == 0) || (combatParticipantP2.entityQuantity == 0) ){
-		aDeathHasOccured = true;
-	}
-	else{
-		aDeathHasOccured = false;
-	}
-
-	// Behaviour: Return the entities with the combat results applied
-	if(inputPlayerNumber == 1){
-		return combatParticipantP1;
-	}
-	else if(inputPlayerNumber == 2){
-		return combatParticipantP2;
-	}
-	else{}
 }
 
 // Functions: The constructor and deconstructor
-round2::round2(){
-	// Behaviour: Initialize the default values
-	rangedAttackActivated = false;
+archerRounds::archerRounds(){}
+
+archerRounds::~archerRounds(){}
+
+// Function: Calculate the outcome of a ranged battle
+void archerRounds::roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber){
+	// Bool: Track if a ranged unit from either players did something
+	bool rangedAttackActivated = false;
+
+	// Integer: Declare the number of units killed in this round
+	int p1EntityDeaths = 0, p2EntityDeaths = 0;
+
+	// Integer: Declare the amount of damage dealt to buildings in this round
+	int p1BuildingDamage = 0, p2BuildingDamage = 0, roundDownMultiple = 10;
+
+	// Integer: Get whether the archer entity is fighting a building
+	bool isP1FightingBuilding = false, isP2FightingBuilding = false;
+
+	// Integer: Declare the amount of damage die to place onto buildings
+	int p1DamageDie = 0, p2DamageDie = 0;
+
+	// Behaviour: Check that no deaths have occured
+	checkIfDead();
+
+	// Behaviour: Run the ranged battle round for X times
+	for(int i = 0; i < inputRunTimes; i ++){
+		// Behaviour: Make sure that no deaths have occured and that the attacking entity is not retreating before proceeding
+		if( (aDeathHasOccured == false) && (isRetreating != "1") ) {
+				// Behaviour: Check if player 1 or player 2 has an archer and if they are not fighting cavalry
+				if( (((combatParticipantP1.armorClass[0] == true) || (combatParticipantP1.armorClass[5] == true)) && (combatParticipantP2.armorClass[4] != true))
+					|| (((combatParticipantP2.armorClass[0] == true) || (combatParticipantP2.armorClass[5] == true)) && (combatParticipantP1.armorClass[4] != true))
+				){
+
+					// Behaviour: Check if player 1 is fighting a building
+					if(combatParticipantP2.armorClass[1] == true){ // Building p2
+							isP1FightingBuilding = true;
+					}
+
+					// Behaviour: Check if player 2 is fighting a building
+					if(combatParticipantP1.armorClass[1] == true){ // Building p1
+							isP2FightingBuilding = true;
+					}
+
+					// Behaviour: Determine the amount of damage dealt simultaneously if either player is fighting a building or non-building
+					if(isP1FightingBuilding == true){
+						p2BuildingDamage = ((combatParticipantP1.rangedDamage) - ((combatParticipantP1.rangedDamage) % roundDownMultiple));
+						p2DamageDie = p2BuildingDamage/10;
+					}
+					else{
+						p2EntityDeaths = std::floor( (combatParticipantP1.rangedDamage) / (combatParticipantP2.entityHealth) ); 
+					}
+
+					if(isP2FightingBuilding == true){
+						p1BuildingDamage = ((combatParticipantP2.rangedDamage) - ((combatParticipantP2.rangedDamage) % roundDownMultiple));
+						p1DamageDie = p1BuildingDamage/10;
+					}
+					else{
+						p1EntityDeaths = std::floor( (combatParticipantP2.rangedDamage) / (combatParticipantP1.entityHealth) ); 
+					}
+
+
+					// Behaviour: Track that ranged damage occured
+					rangedAttackActivated = true;
+				}
+
+				// Behaviour: Apply the results if ranged damage occured
+				if(rangedAttackActivated == true){
+					// Behaviour: Apply the results to buildings or non-buildings
+					if(isP1FightingBuilding == true){
+						// Behaviour: Decrease the building HP
+						if(p2BuildingDamage != 0){
+							combatParticipantP2.entityHealth -= p2BuildingDamage;
+						}
+					}
+					else{
+						// Behaviour: Divide the standardDamage / pointValue by the current quantity to get the values by 1
+						combatParticipantP2.rangedDamage /= combatParticipantP2.entityQuantity;
+						combatParticipantP2.pointValue /= combatParticipantP2.entityQuantity;
+
+						// Behaviour: Now decrease the quantity
+						combatParticipantP2.entityQuantity -= p2EntityDeaths;
+
+						// Behaviour: Now multiply the standardDamage, rangedDamage, and pointValue by the new quantity
+						combatParticipantP2.rangedDamage *= combatParticipantP2.entityQuantity;
+						combatParticipantP2.pointValue *= combatParticipantP2.entityQuantity;
+					}
+
+					// Behaviour: Apply the results to buildings or non-buildings
+					if(isP2FightingBuilding == true){
+						// Behaviour: Decrease the building HP
+						if(p1BuildingDamage != 0){
+							combatParticipantP1.entityHealth -= p1BuildingDamage;
+						}
+					}
+					else{
+						// Behaviour: Divide the standardDamage / pointValue by the current quantity to get the values by 1
+						combatParticipantP1.rangedDamage /= combatParticipantP1.entityQuantity;
+						combatParticipantP1.pointValue /= combatParticipantP1.entityQuantity;
+
+
+						// Behaviour: Now decrease the quantity
+						combatParticipantP1.entityQuantity -= p1EntityDeaths;
+
+
+						// Behaviour: Now multiply the standardDamage, rangedDamage, and pointValue by the new quantity
+						combatParticipantP1.rangedDamage *= combatParticipantP1.entityQuantity;
+						combatParticipantP1.pointValue *= combatParticipantP1.entityQuantity;
+					}
+				}
+
+
+			// Behaviour: Display the outcome of the archer combat round only if changes occured 
+			if(rangedAttackActivated == true){
+				std::string outputString = "Phase 2) Archer round "+std::to_string(i+1)+" calculations...";
+				outputEntityInformation(outputString);
+
+				// Behaviour: Display how many damage die to place if appropriate
+				if(isP1FightingBuilding == true){
+					std::cout << ">> Place " << p2DamageDie << " damage die onto player 2's " << combatParticipantP2.entityName << "\n";
+					isP1FightingBuilding = false;
+				}
+				else if(isP2FightingBuilding == true){
+					std::cout << ">> Place " << p1DamageDie << " damage die onto player 1's " << combatParticipantP1.entityName << "\n";
+					isP2FightingBuilding = false;
+				}
+
+				std::cout << "\n";
+
+				rangedAttackActivated = false;
+			}
+			else{
+				std::cout << "\n" << "Skipping Phase 2) Archer round "+std::to_string(i+1)+" calculations..." << "\n";
+			}
+
+			// Behaviour: Check if a death has occured
+			checkIfDead();
+
+			// Behaviour: Check if player 1 or player 2 has an archer and if they do that they are not fighting cavalry
+			if( (((combatParticipantP1.armorClass[0] == true) || (combatParticipantP1.armorClass[5] == true)) && (combatParticipantP2.armorClass[4] != true))
+				|| (((combatParticipantP2.armorClass[0] == true) || (combatParticipantP2.armorClass[5] == true)) && (combatParticipantP1.armorClass[4] != true))
+			){
+				// Behaviour: Check if the attacking archer is retreating
+				if(aDeathHasOccured == false){
+					checkIfRetreating();
+				}
+			}
+		}
+	}
 }
 
-round2::~round2(){
+// Functions: The constructor and deconstructor
+standardRounds::standardRounds(){}
 
-}
+standardRounds::~standardRounds(){}
 
-// Function: Calculate the outcome of a battle
-Entity round2::roundOutcome(const int inputPlayerNumber, int inputRunTimes){
-	// Make sure that the results are not calculated twice and that there have been no deaths
-	if ( (inputRunTimes == 0) && (aDeathHasOccured == false) ){
-		// Integer: Declare the number of units killed in this round
-		int p1EntityDeaths = 0;
-		int p2EntityDeaths = 0;
+// Function: Calculate the outcome of a standard round of battle
+void standardRounds::roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber){
+	// Bool: See if an entity from either players did something for the first round of standard combat
+	bool standardAttackActivated = false;
 
-		// Behaviour: Check if player 1 or player 2 has an archer and if they do that they are not fighting cavalry
-		if( (((combatParticipantP1.armorClass[0] == true) || (combatParticipantP1.armorClass[5] == true)) && (combatParticipantP2.armorClass[4] != true))
-			|| (((combatParticipantP2.armorClass[0] == true) || (combatParticipantP2.armorClass[5] == true)) && (combatParticipantP1.armorClass[4] != true))
-		){
-			// Behaviour: Determine the amount of damage dealt (simultaneously dealt)
-			// Behaviour: Calculate the number of units P2 killed
-			p1EntityDeaths = std::floor( (combatParticipantP2.rangedDamage) / (combatParticipantP1.entityHealth) ); 
+	// Integer: Declare the number of units killed in this round
+	int p1EntityDeaths = 0, p2EntityDeaths = 0;
 
-			// Behaviour: Calculate the number of units P1 killed
-			p2EntityDeaths = std::floor( (combatParticipantP1.rangedDamage) / (combatParticipantP2.entityHealth) ); 
+	// Integer: Declare the amount of damage dealt to buildings in this round
+	int p1BuildingDamage = 0, p2BuildingDamage = 0, roundDownMultiple = 10;
+
+	// Integer: Get whether the archer entity is fighting a building
+	bool isP1FightingBuilding = false, isP2FightingBuilding = false;
+
+	// Integer: Declare the amount of damage die to place onto buildings
+	int p1DamageDie = 0, p2DamageDie = 0;
+
+	// Behaviour: Check that no deaths have occured
+	checkIfDead();
+
+	// Behaviour: Run the standard battle round for X times
+	for(int i = 0; i < inputRunTimes; i ++){
+		// Behaviour: Check if player 1 is fighting a building
+		if(combatParticipantP2.armorClass[1] == true){ // Building p2
+				isP1FightingBuilding = true;
+		}
+
+		// Behaviour: Check if player 2 is fighting a building
+		if(combatParticipantP1.armorClass[1] == true){ // Building p1
+				isP2FightingBuilding = true;
+		}
+
+
+		// Behaviour: Make sure that no deaths have occured and that the attacking entity is not retreating before proceeding
+		if( (aDeathHasOccured == false) && (isRetreating != "1") ) {
+
+			// Behaviour: Determine the amount of damage dealt simultaneously if either player is fighting a building or non-building
+			if(isP1FightingBuilding == true){
+				p2BuildingDamage = ((combatParticipantP1.standardDamage) - ((combatParticipantP1.standardDamage) % roundDownMultiple));
+				p2DamageDie = p2BuildingDamage/10;
+			}
+			else{
+				p2EntityDeaths = std::floor( (combatParticipantP1.standardDamage) / (combatParticipantP2.entityHealth) ); 
+			}
+				
+			if(isP2FightingBuilding == true){
+				p1BuildingDamage = ((combatParticipantP2.standardDamage) - ((combatParticipantP2.standardDamage) % roundDownMultiple));
+				p1DamageDie = p1BuildingDamage/10;
+			}
+			else{
+				p1EntityDeaths = std::floor( (combatParticipantP2.standardDamage) / (combatParticipantP1.entityHealth) ); 
+			}
+
 
 			// Behaviour: Track that ranged damage occured
-			rangedAttackActivated = true;
-		}
+			standardAttackActivated = true;
+				
 
-		// Behaviour: Update the quantity based on the results
-		if(rangedAttackActivated == true){
-			// Behaviour: Divide the standardDamage / pointValue by the current quantity to get the values by 1
-			combatParticipantP1.rangedDamage /= combatParticipantP1.entityQuantity;
-			combatParticipantP2.rangedDamage /= combatParticipantP2.entityQuantity;
-			combatParticipantP1.pointValue /= combatParticipantP1.entityQuantity;
-			combatParticipantP2.pointValue /= combatParticipantP2.entityQuantity;
+			// Behaviour: Apply the results if ranged damage occured
+			if(standardAttackActivated == true){
+				// Behaviour: Apply the results to buildings or non-buildings
+				if(isP1FightingBuilding == true){
+					// Behaviour: Decrease the building HP
+					if(p2BuildingDamage != 0){
+						combatParticipantP2.entityHealth -= p2BuildingDamage;
+					}
+				}
+				else{
+					// Behaviour: Divide the standardDamage / pointValue by the current quantity to get the values by 1
+					combatParticipantP2.standardDamage /= combatParticipantP2.entityQuantity;
+					combatParticipantP2.pointValue /= combatParticipantP2.entityQuantity;
 
-			// Behaviour: Now decrease the quantity
-			combatParticipantP1.entityQuantity -= p1EntityDeaths;
-			combatParticipantP2.entityQuantity -= p2EntityDeaths;
+					// Behaviour: Now decrease the quantity
+					combatParticipantP2.entityQuantity -= p2EntityDeaths;
 
-			// Behaviour: Now multiply the standardDamage, rangedDamage, and pointValue by the new quantity
-			combatParticipantP1.rangedDamage *= combatParticipantP1.entityQuantity;
-			combatParticipantP2.rangedDamage *= combatParticipantP2.entityQuantity;
-			combatParticipantP1.pointValue *= combatParticipantP1.entityQuantity;
-			combatParticipantP2.pointValue *= combatParticipantP2.entityQuantity;
-		}
-	}
+					// Behaviour: Now multiply the standardDamage and pointValue by the new quantity
+					combatParticipantP2.standardDamage *= combatParticipantP2.entityQuantity;
+					combatParticipantP2.pointValue *= combatParticipantP2.entityQuantity;
+				}
 
-	// Behaviour: Check if a death has occured
-	if( (combatParticipantP1.entityQuantity == 0) || (combatParticipantP2.entityQuantity == 0) ){
-		aDeathHasOccured = true;
-	}
-	else{
-		aDeathHasOccured = false;
-	}
-		
-	// Behaviour: Return the entities with the combat results applied
-	if(inputPlayerNumber == 1){
-		return combatParticipantP1;
-	}
-	else if(inputPlayerNumber == 2){
-		return combatParticipantP2;
-	}
-	else{}
-}
+				// Behaviour: Apply the results to buildings or non-buildings
+				if(isP2FightingBuilding == true){
+					// Behaviour: Decrease the building HP
+					if(p1BuildingDamage != 0){
+						combatParticipantP1.entityHealth -= p1BuildingDamage;
+					}
+				}
+				else{
+					// Behaviour: Divide the standardDamage / pointValue by the current quantity to get the values by 1
+					combatParticipantP1.standardDamage /= combatParticipantP1.entityQuantity;
+					combatParticipantP1.pointValue /= combatParticipantP1.entityQuantity;
 
-// Functions: The constructor and deconstructor
-round3::round3(){
-	// Bool: See if an entity from either players did something for the first round of standard combat
-	bool standardAttack1Activated = false;
-}
 
-round3::~round3(){
-}
+					// Behaviour: Now decrease the quantity
+					combatParticipantP1.entityQuantity -= p1EntityDeaths;
 
-// Function: Calculate the outcome of a battle
-Entity round3::roundOutcome(const int inputPlayerNumber, int inputRunTimes){
-	// Integer: Declare the number of units killed in this round
-	int p1EntityDeaths = 0;
-	int p2EntityDeaths = 0;
 
-	// Make sure that the results are not calculated twice and that there have been no deaths
-	if ( (inputRunTimes == 0) && (aDeathHasOccured == false) ){
-		// Behaviour: Determine the amount of damage dealt (simultaneously dealt)
-		// Behaviour: Calculate the number of units P2 killed
-		p1EntityDeaths = std::floor( (combatParticipantP2.standardDamage) / (combatParticipantP1.entityHealth) ); 
+					// Behaviour: Now multiply the standardDamage and pointValue by the new quantity
+					combatParticipantP1.standardDamage *= combatParticipantP1.entityQuantity;
+					combatParticipantP1.pointValue *= combatParticipantP1.entityQuantity;
+				}
+			}
 
-		// Behaviour: Calculate the number of units P1 killed
-		p2EntityDeaths = std::floor( (combatParticipantP1.standardDamage) / (combatParticipantP2.entityHealth) ); 
 
-		// Behaviour: Track that ranged damage occured
-		standardAttack1Activated = true;
+			// Behaviour: Display the outcome of the standard combat round only if changes occured 
+			if(standardAttackActivated == true){
+				std::string outputString = "Phase 3) Standard round "+std::to_string(i+1)+" calculations...";
+				outputEntityInformation(outputString);
 
-		// Behaviour: Update the quantity based on the results
-		if(standardAttack1Activated == true){
-		// Behaviour: Divide the standardDamage / pointValue by the current quantity to get the values by 1
-		combatParticipantP1.standardDamage /= combatParticipantP1.entityQuantity;
-		combatParticipantP2.standardDamage /= combatParticipantP2.entityQuantity;
-		combatParticipantP1.pointValue /= combatParticipantP1.entityQuantity;
-		combatParticipantP2.pointValue /= combatParticipantP2.entityQuantity;
+				// Behaviour: Display how many damage die to place if appropriate
+				if(isP1FightingBuilding == true){
+					std::cout << ">> Place " << p2DamageDie << " damage die onto player 2's " << combatParticipantP2.entityName << "\n";
+					isP1FightingBuilding = false;
+				}
+				else if(isP2FightingBuilding == true){
+					std::cout << ">> Place " << p1DamageDie << " damage die onto player 1's " << combatParticipantP1.entityName << "\n";
+					isP2FightingBuilding = false;
+				}
 
-		// Behaviour: Now decrease the quantity
-		combatParticipantP1.entityQuantity -= p1EntityDeaths;
-		combatParticipantP2.entityQuantity -= p2EntityDeaths;
+				std::cout << "\n";
 
-		std::cout << "p1 deaths " << p1EntityDeaths << "\n";
-		std::cout << "p1 quantity A) " << combatParticipantP1.entityQuantity << "\n";
+				standardAttackActivated = false;
+			}
+			else{
+				std::cout << "\n" << "Skipping Phase 3) Standard round "+std::to_string(i+1)+" calculations..." << "\n";
+			}
 
-		// Behaviour: Now multiply the standardDamage, rangedDamage, and pointValue by the new quantity
-		combatParticipantP1.standardDamage *= combatParticipantP1.entityQuantity;
-		combatParticipantP2.standardDamage *= combatParticipantP2.entityQuantity;
-		combatParticipantP1.pointValue *= combatParticipantP1.entityQuantity;
-		combatParticipantP2.pointValue *= combatParticipantP2.entityQuantity;
-		
+			// Behaviour: Check if a death has occured
+			checkIfDead();
+
+			// Behaviour: Check if the attacking entity is retreating
+			if(aDeathHasOccured == false){
+				// Behaviour: Make sure that we are not at the last round (there are no phases after this to retreat from
+				if(i != inputRunTimes-1){
+					checkIfRetreating();
+				}
+			}
+
+			// Behaviour: Run some final checks if this is the end
+			if(i == inputRunTimes){
+				finalChecks();
+			}
 		}
 	}
-
-	// Behaviour: Check if a death has occured
-	if( (combatParticipantP1.entityQuantity == 0) || (combatParticipantP2.entityQuantity == 0) ){
-		aDeathHasOccured = true;
-	}
-	else{
-		aDeathHasOccured = false;
-	}
-		
-	// Behaviour: Return the entities with the combat results applied
-	if(inputPlayerNumber == 1){
-		std::cout << "p1 quantity B) " << combatParticipantP1.entityQuantity << "\n";
-		return combatParticipantP1;
-	}
-	else if(inputPlayerNumber == 2){
-		return combatParticipantP2;
-	}
-}
-
-// Functions: The constructor and deconstructor
-round4::round4(){
-}
-
-round4::~round4(){
-}
-
-// Function: Calculate the outcome of a battle
-Entity round4::roundOutcome(const int inputPlayerNumber, int inputRunTimes){
-	std::cout << "Round 4 calculations" << "\n";
 }

@@ -15,7 +15,7 @@ Entity::Entity(){
 	rangedDamage = 0; 
 	garrisonValue = 0; 
 	pointValue = 0; 
-	for(int i = 0; i < 20; i ++){
+	for(int i = 0; i < 42; i ++){
 		armorClass[i] = false;
 	}
 	entitiesArmorClasses = 0;
@@ -111,6 +111,7 @@ Battering_Ram::Battering_Ram(){
 	pointValue = 11; // 7 wood, 4 gold
 	armorClass[10] = true; // Ram armor class
 	armorClass[12] = true; // Siege weapon armor class
+	armorClass[27] = true; // Battering ram armor class
 	// 60 standard damage vs Building (implemented)
 	// There is a rule that Archers and Villagers cannot attack Rams.
 	// There is a rule that this unit can only attack buildings
@@ -139,6 +140,12 @@ Blacksmith::~Blacksmith(){}
 
 Camel::Camel(){
 	entityName = "Camel";
+	entityAge = 3;
+	entityHealth = 26;
+	standardDamage = 5;
+	pointValue = 4;
+	armorClass[30] = true; // Camel armor class
+	// 20 standardAttack bonus against cavalry (I)
 }
 
 Camel::~Camel(){}
@@ -147,6 +154,7 @@ Capped_Ram::Capped_Ram(){
 	entityName = "Capped_Ram";
 	entityAge = 4;
 	entityHealth = 46; 
+	armorClass[28] = true; // Capped ram armor class
 	// 110 standard damage vs Building (implemented)
 	// There is a rule that Archers and Villagers cannot attack Rams. 
 	// There is a rule that this is unit can only attack buildings
@@ -293,6 +301,7 @@ Demolition_Ship::Demolition_Ship(){
 	standardDamage = 110; 
 	pointValue = 6;  // 3 wood, 3 gold
 	armorClass[11] = true; // Ship armor class
+	armorClass[21] = true; // Demolition ship armor class
 	// Only attacks in the second round of combat
 	// Units cannot retreat against the Demolition Ship
 	// Destroyed if it attacks
@@ -413,7 +422,8 @@ Elite_Skirmisher::Elite_Skirmisher(){
 	entityAge = 3;
 	entityHealth = 8; 
 	standardDamage = 3; 
-	rangedDamage = 5; 
+	rangedDamage = 5;
+	armorClass[33] = true; // Elite_Skirmisher armor class 
 	// 16 standardDamage against Archers (implemented)
 }
 
@@ -467,6 +477,7 @@ Fast_Fire_Ship::Fast_Fire_Ship(){
 	entityAge = 4;
 	entityHealth = 30; 
 	standardDamage = 6;
+	armorClass[34] = true; // Fast Fire Ship armor class
 	// Roll a 1d6. Multiply the result by standardDamage to determine damage per round
 	// 12 AP vs. Galley, Longboat, Building, Land Units & Fire Ship (implemented)
 	// Bombardment 2
@@ -481,6 +492,7 @@ Fire_Ship::Fire_Ship(){
 	standardDamage = 4;
 	pointValue = 6;  // 3 wood, 3 gold
 	armorClass[11] = true; // Ship armor class
+	armorClass[23] = true; // Fire_Ship armor class
 	// Roll a 1d6. Multiply the result by standardDamage to determine damage per round
 	// 10 AP vs. Galley, Longboat, Building, Land Units & Fire Ship (implemented)
 }
@@ -523,6 +535,7 @@ Galleon::Galleon(){
 	entityAge = 4;
 	entityHealth = 40;
 	standardDamage = 18;
+	armorClass[36] = true; // Galleon armor class
 	// 50 standardDamage versus Longboat, Land Unit, Buildings, and Galley (implemented)
 	// Bombardment 2
 }
@@ -561,6 +574,7 @@ Galley::Galley(){
 	standardDamage = 14;
 	pointValue = 6;  // 4 wood, 2 gold
 	armorClass[11] = true; // Ship armor class
+	armorClass[22] = true; // Galley armor class
 	// 30 standardAttack vs Longboat, land unit, building, and galley (implemented)
 	// Bombardment 0 (only eligible to attack in the 1st round of combat)
 }
@@ -641,6 +655,7 @@ Heavy_Camel::Heavy_Camel(){
 	entityAge = 3;
 	entityHealth = 30; 
 	standardDamage = 7; 
+	armorClass[31] = true; // Heavy Camel armor class
 	// 30 standardDamage against Cavalry (I)
 }
 
@@ -914,6 +929,7 @@ Mangonel::Mangonel(){
 	standardDamage = 40; 
 	pointValue = 12;  // 7 wood, 5 gold
 	armorClass[12] = true; // Siege weapon armor class
+	armorClass[37] = true; // Mangonel armor class
 	// 80 standardDamage vs Building (I)
 	// Bombardment 1 (only attacks in first round of normal combat)
 }
@@ -1031,6 +1047,7 @@ Onager::Onager(){
 	entityAge = 4;
 	entityHealth = 16; 
 	standardDamage = 50; 
+	armorClass[38] = true; // Onager armor class
 	// 120 standardAttack vs Building (I)
 	// Bombardment 2 (only attacks in the first round)
 }
@@ -1097,6 +1114,7 @@ Pikeman::Pikeman(){
 	entityAge = 3;
 	entityHealth = 14; 
 	standardDamage = 4; 
+	armorClass[41] = true; // Pikeman armor class
 	// 40 standardDamage versus Cavalry (I)
 }
 
@@ -1180,6 +1198,7 @@ Siege_Onager::Siege_Onager(){
 	entityAge = 4;
 	entityHealth = 20; 
 	standardDamage = 75; 
+	armorClass[39] = true; // Siege Onager armor class
 	// 180 standardAttack vs Building (I)
 	// Bombardment 2 (only attacks in the first round)
 }
@@ -1197,6 +1216,7 @@ Siege_Ram::Siege_Ram(){
 	entityName = "Siege_Ram";
 	entityAge = 4;
 	entityHealth = 60; 
+	armorClass[29] = true; // Siege_Ram armor class
 	// 220 standardAttack vs Building (I)
 	// Only attacks buildings
 }
@@ -1230,6 +1250,7 @@ Skirmisher::Skirmisher(){
 	rangedDamage = 3; 
 	pointValue = 2;  // 1 food, 1 wood
 	armorClass[0] = true; // Archer armor class
+	armorClass[32] = true; // Skirmisher armor class
 	// 12 standardDamage vs Archers (I)
 	// 13 rangedDamage vs Archers (I)
 }
@@ -1244,6 +1265,7 @@ Spearman::Spearman(){
 	pointValue = 2;  // 1 food, 1 wood
 	armorClass[8] = true; // Infantry armor class
 	armorClass[13] = true; // Spearman armor class
+	armorClass[40] = true; // Spearman armor class
 	// 25 standardDamage vs Cavalry (I)
 }
 
@@ -1327,6 +1349,7 @@ Town_Center::Town_Center(){
 	pointValue = 17;  // 9 wood, 8 bodies
 	armorClass[1] = true; // Building armor class
 	armorClass[14] = true; // Standard building armor class
+	armorClass[25] = true; // Town Center armor class
 }
 
 Town_Center::~Town_Center(){}
@@ -1353,6 +1376,7 @@ Trebuchet::Trebuchet(){
 	standardDamage = 200; 
 	pointValue = 17;  // 7 wood, 5 gold, 5 bodies
 	armorClass[12] = true; // Siege weapon armor class
+	armorClass[42] = true; // Trebuchet armor class
 	// 450 standardAttack vs Buildings (I)
 	// Bombardment 3 (only attacks in first round)
 }
@@ -1402,6 +1426,7 @@ Villager::Villager(){
 	entityHealth = 4; 
 	standardDamage = 3; 
 	pointValue = 1;  // 1 food
+	armorClass[26] = true; // Villager armor class
 	// No armor class
 }
 
@@ -1426,6 +1451,7 @@ War_Galley::War_Galley(){
 	entityAge = 3;
 	entityHealth = 34; 
 	standardDamage = 16; 
+	armorClass[35] = true; // War Galley armor class
 	// Bombardment 1 (only attacks in the first round of normal combat)
 	// 40 standardDamage versus Longboat, Land unit, Building, and Galley (I)
 }
@@ -1462,6 +1488,7 @@ Watch_Tower::Watch_Tower(){
 	armorClass[1] = true; // Building armor class
 	armorClass[14] = true; // Standard building armor class
 	armorClass[15] = true; // Stone defence armor class
+	armorClass[24] = true; // Watch tower armor class
 	// Bombardment 1 (only attacks in the first round of normal combat)
 }
 
@@ -1776,6 +1803,7 @@ void Entity::outputEntity(const int inputPlayerNumber){
 		bool displayedArmorClass[20] = {false};
 
 		// Behaviour: Only display each armor class once and add a space after each armor class except for the last class
+		// Reference: Only the armor classes recognized by the AoE II wikipedia are displayed (the first 20)
 		for(int i = 0; i != entitiesArmorClasses; i ++){
 			if( (armorClass[0] == true) && (displayedArmorClass[0] == false) ) {
 				displayColorfulText("bold","white","blue", "Archer", false);

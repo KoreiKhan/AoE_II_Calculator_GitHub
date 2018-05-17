@@ -293,6 +293,10 @@ Entity fileImporter::conductASearch(std::string inputEntityName, int inputEntity
 		Gold_Mine_Japanese returnGoldMineJapanese;
 		returnEntity = returnGoldMineJapanese;
 	}
+	else if(inputEntityName == "CAMEL"){
+		Camel returnCamel;
+		returnEntity = returnCamel;
+	}
 	else if(inputEntityName == "HEAVY_CAMEL"){
 		Heavy_Camel returnHeavyCamel;
 		returnEntity = returnHeavyCamel;
@@ -840,8 +844,8 @@ Entity fileImporter::entitiesFile(std::string inputEntityFilename, int inputPlay
 	}
 }
 
-// Function: Get the active technologies from '[p1/p2]_technologies.csv' or the active events from '[p1/p2]_events.csv'
-int* fileImporter::aTechnologyOrEventFile(std::string inputTechnologyOrEventsFilename, int numberOfRows){
+// Function: Get the active technologies from '[p1/p2]_technologies.csv', the active events from '[p1/p2]_events.csv', or player details from 'players.csv'
+int* fileImporter::aSplitColumnFile(std::string inputTechnologyOrEventsFilename, int numberOfRows){
 	// Behaviour: Open "[p1/p2]_technologies.csv" or "[p1/p2]_events.csv" for player 1 or 2 (not both)
 	inputFile.open(inputTechnologyOrEventsFilename);
 
@@ -850,9 +854,10 @@ int* fileImporter::aTechnologyOrEventFile(std::string inputTechnologyOrEventsFil
 		(inputTechnologyOrEventsFilename!="import/technologies_p1.csv") &&
 		(inputTechnologyOrEventsFilename!="import/technologies_p2.csv") &&
 		(inputTechnologyOrEventsFilename!="import/events_p1.csv") &&
-		(inputTechnologyOrEventsFilename!="import/events_p2.csv")
+		(inputTechnologyOrEventsFilename!="import/events_p2.csv") &&
+		(inputTechnologyOrEventsFilename!="import/players.csv")
 		){
-		std::cout << "Error: Input filename supposed to be called 'import/[p1/p2]_technologies.csv' or 'import/[p1/p2]_events.csv'" << "\n";
+		std::cout << "Error: Input filename supposed to be called 'import/[p1/p2]_technologies.csv', 'import/[p1/p2]_events.csv', or 'import/players.csv'" << "\n";
 		exit(EXIT_FAILURE);
 	}
 	
