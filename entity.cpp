@@ -15,10 +15,14 @@ Entity::Entity(){
 	rangedDamage = 0; 
 	garrisonValue = 0; 
 	pointValue = 0; 
-	for(int i = 0; i < 42; i ++){
+	for(int i = 0; i < 43; i ++){
 		armorClass[i] = false;
 	}
 	entitiesArmorClasses = 0;
+	onlyAttacksInTheSecondRoundOfStandardCombat = false;
+	dealsAreaEffectDamage = false;
+	onlyAttacksOnce = false;
+	isKamikaze = false;
 }
 
 Entity::~Entity(){}
@@ -302,6 +306,8 @@ Demolition_Ship::Demolition_Ship(){
 	pointValue = 6;  // 3 wood, 3 gold
 	armorClass[11] = true; // Ship armor class
 	armorClass[21] = true; // Demolition ship armor class
+	onlyAttacksInTheSecondRoundOfStandardCombat = true;
+	isKamikaze = true;
 	// Only attacks in the second round of combat
 	// Units cannot retreat against the Demolition Ship
 	// Destroyed if it attacks
@@ -359,6 +365,7 @@ Elite_Huskarl_Goth::Elite_Huskarl_Goth(){
 	entityHealth = 20; 
 	standardDamage = 12; 
 	// 15 standardDamage vs building (implemented)
+	// 16 standardDamage vs Archer
 }
 
 Elite_Huskarl_Goth::~Elite_Huskarl_Goth(){}
@@ -575,6 +582,7 @@ Galley::Galley(){
 	pointValue = 6;  // 4 wood, 2 gold
 	armorClass[11] = true; // Ship armor class
 	armorClass[22] = true; // Galley armor class
+	onlyAttacksOnce = true;
 	// 30 standardAttack vs Longboat, land unit, building, and galley (implemented)
 	// Bombardment 0 (only eligible to attack in the 1st round of combat)
 }
@@ -650,9 +658,21 @@ Gold_Mine_Japanese::Gold_Mine_Japanese(){
 
 Gold_Mine_Japanese::~Gold_Mine_Japanese(){}
 
+// Inherited entity functions: The constructor and deconstructor
+Hero::Hero(){
+	entityName = "Hero";
+	entityAge = 1;
+	entityHealth = 12;
+	standardDamage = 6;
+	pointValue = 3; // 3 gold
+	armorClass[42] = true; // The hero armor class
+}
+
+Hero::~Hero(){}
+
 Heavy_Camel::Heavy_Camel(){
 	entityName = "Heavy_Camel";
-	entityAge = 3;
+	entityAge = 4;
 	entityHealth = 30; 
 	standardDamage = 7; 
 	armorClass[31] = true; // Heavy Camel armor class
@@ -766,7 +786,7 @@ Knight_Frank::~Knight_Frank(){}
 
 Knight_Persian::Knight_Persian(){
 	entityName += "_(Persian)";
-	pointValue = 2;  // 1 food, 1 gold
+	pointValue = 5;  // 3 food, 2 gold
 	// +2 standardDamage vs Archers (I)
 }
 
@@ -796,6 +816,7 @@ Longboat_Viking::Longboat_Viking(){
 	pointValue = 6;  // 3 wood, 3 gold
 	armorClass[11] = true; // Ship armor class
 	armorClass[17] = true; // Unique unit armor class
+	onlyAttacksOnce = true;
 	// 40 standardAttack vs Demolition Ship, Galley, Longboat, Building, and Land units
 	// Bombardment 1 (only attacks in the first round of combat)
 }
@@ -930,6 +951,7 @@ Mangonel::Mangonel(){
 	pointValue = 12;  // 7 wood, 5 gold
 	armorClass[12] = true; // Siege weapon armor class
 	armorClass[37] = true; // Mangonel armor class
+	onlyAttacksOnce = true;
 	// 80 standardDamage vs Building (I)
 	// Bombardment 1 (only attacks in first round of normal combat)
 }
@@ -1037,7 +1059,6 @@ Monk::Monk(){
 	entityHealth = 3;  
 	pointValue = 3;  // 3 food
 	armorClass[9] = true; // Monk armor class
-
 }
 
 Monk::~Monk(){}
@@ -1168,6 +1189,8 @@ Scorpion::Scorpion(){
 	standardDamage = 12; 
 	pointValue = 8;  // 4 wood, 4 gold 
 	armorClass[12] = true; // Siege weapon armor class
+	onlyAttacksOnce = true;
+	dealsAreaEffectDamage = true;
 	// Area Effect
 	// Bombardment 1 (only attacks in the first round)
 }
@@ -1377,6 +1400,7 @@ Trebuchet::Trebuchet(){
 	pointValue = 17;  // 7 wood, 5 gold, 5 bodies
 	armorClass[12] = true; // Siege weapon armor class
 	armorClass[42] = true; // Trebuchet armor class
+	onlyAttacksOnce = true;
 	// 450 standardAttack vs Buildings (I)
 	// Bombardment 3 (only attacks in first round)
 }
@@ -1489,6 +1513,7 @@ Watch_Tower::Watch_Tower(){
 	armorClass[14] = true; // Standard building armor class
 	armorClass[15] = true; // Stone defence armor class
 	armorClass[24] = true; // Watch tower armor class
+	onlyAttacksOnce = true;
 	// Bombardment 1 (only attacks in the first round of normal combat)
 }
 
@@ -1563,7 +1588,7 @@ int Entity::returnNumberOfArmorClasses(){
 	entitiesArmorClasses = 0;
 
 	// Behaviour: Increment entitiesArmorClasses for each present armorClass
-	for(int i = 0; i < 20; i ++){
+	for(int i = 0; i < 44; i ++){
 		if (armorClass[i] == true){
 			entitiesArmorClasses++;
 		} 

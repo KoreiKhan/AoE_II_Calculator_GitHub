@@ -265,6 +265,16 @@ Entity fileImporter::conductASearch(std::string inputEntityName, int inputEntity
 		Galley_Viking returnGalleyViking;
 		returnEntity = returnGalleyViking;
 	}
+	else if( inputEntityName == "HERO"){
+		Hero returnHero;
+		returnEntity = returnHero;
+
+		// Behaviour: The current entity is limited to 1 token per card 
+		if(inputEntityQuantity !=1){
+			std::cout << "Error: " << returnEntity.entityName << " can only be of 1 quantity" << "\n";
+			exit(EXIT_FAILURE);
+		}
+	}
 	else if(inputEntityName == "STONE_GATE"){
 		Stone_Gate returnStoneGate;
 		returnEntity = returnStoneGate;
@@ -464,6 +474,12 @@ Entity fileImporter::conductASearch(std::string inputEntityName, int inputEntity
 	else if(inputEntityName == "MONK"){
 		Monk returnMonk;
 		returnEntity = returnMonk;
+
+		// Behaviour: The current entity is limited to < 5 tokens 
+		if(inputEntityQuantity > 5){
+			std::cout << "Error: " << returnEntity.entityName << " can only be of 1-5 quantity" << "\n";
+			exit(EXIT_FAILURE);
+		}
 	}
 	else if(inputEntityName == "ONAGER"){
 		Onager returnOnager;
@@ -615,7 +631,7 @@ Entity fileImporter::conductASearch(std::string inputEntityName, int inputEntity
 		returnTrebuchet.updateTrebuchetArmorClass();
 		returnEntity = returnTrebuchet;
 	}
-	else if(inputEntityName == "TWO-HANDED_SWORDSMAN"){
+	else if( (inputEntityName == "TWO-HANDED_SWORDSMAN") || (inputEntityName == "TWO_HANDED_SWORDSMAN") ){
 		Two_Handed_Swordsman returnTwoHandedSwordsman;
 		returnEntity = returnTwoHandedSwordsman;
 	}

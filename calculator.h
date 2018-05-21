@@ -78,7 +78,7 @@ class combatCalculator{
 	void finalChecks();
 
 	// Function: Calculate the outcome of a battle
-	virtual void roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber) = 0; // Abstract class with no implementation (overrided by the subclasses)
+	virtual void roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber, int* inputP1Events, int* inputP2Events) = 0; // Abstract class with no implementation (overrided by the subclasses)
 };
 #endif // COMBAT_CALCULATOR_H
 
@@ -91,7 +91,7 @@ class monkRounds: public combatCalculator{
 	~monkRounds();
 
 	// Function: Calculate the outcome of a monk battle
-	void roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber);
+	void roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber, int* inputP1Events, int* inputP2Events);
 };
 #endif // COMBAT_CALCULATOR_MONK_ROUNDS_H
 
@@ -104,7 +104,7 @@ class archerRounds: public combatCalculator{
 	~archerRounds();
 
 	// Function: Calculate the outcome of a ranged battle
-	void roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber);
+	void roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber, int* inputP1Events, int* inputP2Events);
 };
 #endif // COMBAT_CALCULATOR_ARCHER_ROUNDS_H
 
@@ -117,6 +117,6 @@ class standardRounds: public combatCalculator{
 	~standardRounds();
 
 	// Function: Calculate the outcome of a standard battle
-	void roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber);
+	void roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber, int* inputP1Events, int* inputP2Events);
 };
 #endif // COMBAT_CALCULATOR_STANDARD_ROUNDS_H

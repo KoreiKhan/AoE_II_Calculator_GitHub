@@ -16,7 +16,7 @@ int main(){
 	const int player1 = 1, player2 = 2;
 
 	// Constant int: The number of technology, event, and player detail rows
-	const int technologiesNumber = 17, eventsNumber = 44, playerDetails = 3;
+	const int technologiesNumber = 17, eventsNumber = 40, playerDetails = 3;
 
 	/** Part 1: Getting information about the input entities **/
 	// Object: Declare the file importing object
@@ -81,7 +81,7 @@ int main(){
 	theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant);
 
 	// Behaviour: Calculate the damage dealt for X rounds of monk combat
-	monkRounds.roundOutcome(1, attackingPlayerNumber); 
+	monkRounds.roundOutcome(1, attackingPlayerNumber, p1_events_array, p2_events_array); 
 
 	// Behaviour: Get the results after X rounds of monk combat
 	p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);
@@ -94,7 +94,7 @@ int main(){
 	theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant);
 	
 	// Behaviour: Calculate the damage dealt for X rounds of archer combat
-	rangedRounds.roundOutcome(1, attackingPlayerNumber);
+	rangedRounds.roundOutcome(1, attackingPlayerNumber, p1_events_array, p2_events_array);
 
 	// Behaviour: Get the results after X rounds of ranged combat
 	p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);
@@ -103,12 +103,16 @@ int main(){
 	// Integer: Declare the rounds of normal combat
 	int normalCombatRounds = 2;
 
-	if( (p1_events_array[42] == 1) || (p2_events_array[42] == 1) ){
-		// [42] You Will Die! (Saracen) - This battle goes for four rounds of normal combat, instead of 2 rounds. No retreat is allowed without event card effect. Play anytime.(skip for now)
+	// Behaviour: Apply the effects of event 41
+	if( (p1_events_array[38] == 1) || (p2_events_array[38] == 1) ){
+		// [38] You Will Die! (Saracen) - This battle goes for four rounds of normal combat, instead of 2 rounds. No retreat is allowed without event card effect. Play anytime.
 		normalCombatRounds = 4;
 	}
-	else{
-		normalCombatRounds = 2;
+
+	// Behaviour: Apply the effects of event 13
+	if( (p1_events_array[13] == 1) || (p2_events_array[13] == 1) ){
+		// [13] Gladitorial_Games - You and a target player must move one unit to No-Man's-Land. The units will fight until one is destroyed
+		normalCombatRounds = 10;
 	}
 
 	// Behaviour: Set the combat calculator to the third round
@@ -118,7 +122,7 @@ int main(){
 	theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant);
 
 	// Behaviour: Calculate the damage dealt for X rounds of standard combat and display the results
-	standardRounds.roundOutcome(normalCombatRounds, attackingPlayerNumber);
+	standardRounds.roundOutcome(normalCombatRounds, attackingPlayerNumber, p1_events_array, p2_events_array);
 
 	// Behaviour: Get the results after X = two rounds of standard combat
 	p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);

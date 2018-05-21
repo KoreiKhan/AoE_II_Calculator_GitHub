@@ -15,7 +15,11 @@ struct Entity{
 	int rangedDamage; 
 	int garrisonValue; 
 	int pointValue; 
-	bool armorClass[42]; 
+	bool armorClass[43];
+	bool onlyAttacksInTheSecondRoundOfStandardCombat;
+	bool onlyAttacksOnce;
+	bool dealsAreaEffectDamage;
+	bool isKamikaze;
 	int entitiesArmorClasses;
 
 	// Functions: The constructor and deconstructor
@@ -43,6 +47,16 @@ struct Barracks: Entity{
 	~Barracks();
 };
 #endif // BARRACKS_H
+
+/** Inherited class from Entity: Hero **/
+#ifndef HERO_H
+#define HERO_H
+struct Hero: Entity{ 
+	// Functions: The constructor and deconstructor
+	Hero();
+	~Hero();
+};
+#endif // HERO_H
 
 /** Inherited class from Entity: Dock **/
 #ifndef DOCK_H
