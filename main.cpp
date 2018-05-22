@@ -15,32 +15,38 @@ int main(){
 	// Constant int: The player numbers
 	const int player1 = 1, player2 = 2;
 
+	// Constant Int: The number of entity words
+	const int entitiesWords = 8;;
+
 	// Constant int: The number of technology, event, and player detail rows
-	const int technologiesNumber = 17, eventsNumber = 40, playerDetails = 3;
+	const int technologiesRows = 18, eventsRows = 40, playerDetailsRows = 4;
 
 	/** Part 1: Getting information about the input entities **/
 	// Object: Declare the file importing object
 	fileImporter importFile;
 
 	// Behaviour: Load "entities.csv" and store the information about the input entities
-	Entity p1BattleParticipant = importFile.entitiesFile("import/entities.csv", player1); // Declare and get the entity that is participating in the battle for player 1
-	Entity p2BattleParticipant = importFile.entitiesFile("import/entities.csv", player2); // Declare and get the entity that is participating in the battle for player 2
+	Entity p1BattleParticipant = importFile.entitiesFile("import/entities.csv", entitiesWords, player1, 0); // Declare and get the entity that is participating in the battle for player 1
+	Entity p1MonkParticipant = importFile.entitiesFile("import/entities.csv", entitiesWords, player1, 1); // Declare the monk entity for player 1 if there are any
+	Entity p2BattleParticipant = importFile.entitiesFile("import/entities.csv", entitiesWords, player2, 0); // Declare and get the entity that is participating in the battle for player 2
+	Entity p2MonkParticipant = importFile.entitiesFile("import/entities.csv", entitiesWords, player2, 1); // Declare the monk entity for player if there are any
 
 	// Behaviour: Load "technologies_[p1/p2].csv" and store the information about the active technologies for player 1 and 2
-	int* p1_technologies_array = importFile.aSplitColumnFile("import/technologies_p1.csv", technologiesNumber);
-	int* p2_technologies_array = importFile.aSplitColumnFile("import/technologies_p2.csv", technologiesNumber);
+	int* p1_technologies_array = importFile.aSplitColumnFile("import/technologies_p1.csv", technologiesRows);
+	int* p2_technologies_array = importFile.aSplitColumnFile("import/technologies_p2.csv", technologiesRows);
 
 	// Behaviour: Load "events_[p1/p2].csv" and store the information about the active events for player 1 and 2
-	int* p1_events_array = importFile.aSplitColumnFile("import/events_p1.csv", eventsNumber);
-	int* p2_events_array = importFile.aSplitColumnFile("import/events_p2.csv", eventsNumber);
+	int* p1_events_array = importFile.aSplitColumnFile("import/events_p1.csv", eventsRows);
+	int* p2_events_array = importFile.aSplitColumnFile("import/events_p2.csv", eventsRows);
 
 	// Behaviour: Load "players.csv"and store information about the player details
-	int* player_details_array = importFile.aSplitColumnFile("import/players.csv", playerDetails);
+	int* player_details_array = importFile.aSplitColumnFile("import/players.csv", playerDetailsRows);
 
 	// Behaviour: Store the details of the player_details_array
 	int attackingPlayerNumber = player_details_array[0];
 	int player1Age = player_details_array[1];
 	int player2Age = player_details_array[2];
+	int preferToRollDice = player_details_array[3];
 
 	// Validate the input of the player_details_array
 	if( (attackingPlayerNumber !=1) && (attackingPlayerNumber !=2) ){
@@ -55,18 +61,33 @@ int main(){
 		std::cout << "Error: player 2's age should be between 1 and 4" << "\n";
 		exit(EXIT_FAILURE);
 	}
+	if( (preferToRollDice !=0) && (preferToRollDice !=1) ){
+		std::cout << "Error: The setting to roll/not roll dice should be 0 or 1" << "\n";
+		exit(EXIT_FAILURE);
+	}
 
 	// Object: Declare the modifiers calculator object
 	modifiersCalculator theModifiersCalculator;
 
 	// Behaviour: Apply a range of modifiers to both player's battle participants
-	p1BattleParticipant = theModifiersCalculator.applyAllModifiersP1(player1, p1BattleParticipant, p1_technologies_array, p1_events_array, p2BattleParticipant, attackingPlayerNumber, player1Age);
-	p2BattleParticipant = theModifiersCalculator.applyAllModifiersP2(player2, p2BattleParticipant, p2_technologies_array, p2_events_array, p1BattleParticipant, attackingPlayerNumber, player2Age);
+	p1BattleParticipant = theModifiersCalculator.applyAllModifiersP1(player1, p1BattleParticipant, p1MonkParticipant, 0, p1_technologies_array, p1_events_array, p2BattleParticipant, attackingPlayerNumber, player1Age);
+	p2BattleParticipant = theModifiersCalculator.applyAllModifiersP2(player2, p2BattleParticipant, p2MonkParticipant, 0, p2_technologies_array, p2_events_array, p1BattleParticipant, attackingPlayerNumber, player2Age);
+
+	p1MonkParticipant = theModifiersCalculator.applyAllModifiersP1(player1, p1BattleParticipant, p1MonkParticipant, 1, p1_technologies_array, p1_events_array, p2BattleParticipant, attackingPlayerNumber, player1Age);
+	p2MonkParticipant = theModifiersCalculator.applyAllModifiersP2(player2, p2BattleParticipant, p2MonkParticipant, 1, p2_technologies_array, p2_events_array, p1BattleParticipant, attackingPlayerNumber, player2Age);
 
 	// Behaviour: Return information about the input entities 
 	std::cout << "You entered..." << "\n";
 	p1BattleParticipant.outputEntity(player1);
+	if(p1MonkParticipant.entityQuantity > 0){
+		std::cout << "(Assisting) ";
+		p1MonkParticipant.outputEntity(player1);
+	}
 	p2BattleParticipant.outputEntity(player2);
+	if(p2MonkParticipant.entityQuantity > 0){
+		std::cout << "(Assisting) ";
+		p2MonkParticipant.outputEntity(player2);
+	}
 
 	/** Part 2: Returning the outcome of each round of combat for the input entities **/
 	// Behaviour: Declare the round subclasses
@@ -74,27 +95,33 @@ int main(){
 	archerRounds rangedRounds;
 	standardRounds standardRounds;
 
+	// Integer: Declare the rounds of monk combat
+	int monkCombatRounds = 1;
+
 	// Object: Declare the combat calculator superclass and set the superclass to the first round
 	combatCalculator *theCombatCalculator = &monkRounds;
 
 	// Behaviour: Set the battle participants
-	theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant);
+	theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant, p1MonkParticipant, p2MonkParticipant);
 
 	// Behaviour: Calculate the damage dealt for X rounds of monk combat
-	monkRounds.roundOutcome(1, attackingPlayerNumber, p1_events_array, p2_events_array); 
+	monkRounds.roundOutcome(monkCombatRounds, preferToRollDice, attackingPlayerNumber, p1_events_array, p2_events_array); 
 
 	// Behaviour: Get the results after X rounds of monk combat
 	p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);
 	p2BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player2);
 
+	// Integer: Declare the rounds of ranged combat
+	int archerCombatRounds = 1;
+
 	// Behaviour: Set the combat calculator to the second round
 	theCombatCalculator = &rangedRounds;
 
 	// Behaviour: Set the battle participants
-	theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant);
+	theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant, p1MonkParticipant, p2MonkParticipant);
 	
 	// Behaviour: Calculate the damage dealt for X rounds of archer combat
-	rangedRounds.roundOutcome(1, attackingPlayerNumber, p1_events_array, p2_events_array);
+	rangedRounds.roundOutcome(archerCombatRounds, preferToRollDice, attackingPlayerNumber, p1_events_array, p2_events_array);
 
 	// Behaviour: Get the results after X rounds of ranged combat
 	p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);
@@ -112,17 +139,17 @@ int main(){
 	// Behaviour: Apply the effects of event 13
 	if( (p1_events_array[13] == 1) || (p2_events_array[13] == 1) ){
 		// [13] Gladitorial_Games - You and a target player must move one unit to No-Man's-Land. The units will fight until one is destroyed
-		normalCombatRounds = 10;
+		normalCombatRounds = 10; 
 	}
 
 	// Behaviour: Set the combat calculator to the third round
 	theCombatCalculator = &standardRounds;
 
 	// Behaviour: Set the protected values
-	theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant);
+	theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant, p1MonkParticipant, p2MonkParticipant);
 
 	// Behaviour: Calculate the damage dealt for X rounds of standard combat and display the results
-	standardRounds.roundOutcome(normalCombatRounds, attackingPlayerNumber, p1_events_array, p2_events_array);
+	standardRounds.roundOutcome(normalCombatRounds, preferToRollDice, attackingPlayerNumber, p1_events_array, p2_events_array);
 
 	// Behaviour: Get the results after X = two rounds of standard combat
 	p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);

@@ -21,10 +21,10 @@ class modifiersCalculator{
 	Entity applyEventCardEffects(Entity inputBattleParticipant, int* inputEvents, int inputAttackingPlayerNumber, int inputAge);
 
 	// Function: Apply the effects of 1) attack bonuses, 2) technologies, 3) the relevant event cards, and 4) quantity for player 1's battle participant
-	Entity applyAllModifiersP1(const int inputP1PlayerNumber, Entity inputP1BattleParticipant, int* inputP1Technologies, int* inputP1Events, Entity inputP2BattleParticipant, int inputAttackingPlayerNumber, int inputPlayer1Age);
+	Entity applyAllModifiersP1(const int inputP1PlayerNumber, Entity inputP1BattleParticipant, Entity inputP1MonkBattleParticipant, int inputReturnMode, int* inputP1Technologies, int* inputP1Events, Entity inputP2BattleParticipant, int inputAttackingPlayerNumber, int inputPlayer1Age);
 
 	// Function: Apply the effects of 1) attack bonuses, 2) technologies, 3) the relevant event cards, and 4) quantity for player 2's battle participant
-	Entity applyAllModifiersP2(const int inputP2PlayerNumber, Entity inputP2BattleParticipant, int* inputP2Technologies, int* inputP2Events, Entity inputP1BattleParticipant, int inputAttackingPlayerNumber, int inputPlayer2Age);
+	Entity applyAllModifiersP2(const int inputP2PlayerNumber, Entity inputP2BattleParticipant, Entity inputP2MonkBattleParticipant, int inputReturnMode, int* inputP2Technologies, int* inputP2Events, Entity inputP1BattleParticipant, int inputAttackingPlayerNumber, int inputPlayer2Age);
 };
 #endif // MODIFIERS_CALCULATOR_H
 
@@ -50,17 +50,20 @@ class combatCalculator{
 
 	public:
 	// Struct: Declare the entities participating in the battle
-	Entity combatParticipantP1, combatParticipantP2;
+	Entity combatParticipantP1, combatParticipantP2, monkParticipantP1, monkParticipantP2;
 
 	// Functions: The constructor and deconstructor 
 	combatCalculator();
 	~combatCalculator();
 
 	// Function: Generate d6 die input
-	int generateD6DieInput();
+	int generateD6DieInput(int inputPreferToRollDice);
+
+	// Function: Check the randomness of the d6 dice roller
+	void checkD6DiceSimulator();
 
 	// Function: Set the battle participants
-	void setCombatParticipants(Entity inputP1CombatParticipant, Entity inputP2CombatParticipant);
+	void setCombatParticipants(Entity inputP1CombatParticipant, Entity inputP2CombatParticipant, Entity inputP1MonkBattleParticipant, Entity inputP2MonkBattleParticipant);
 
 	// Function: Return the modified battle participants based on the input player number
 	Entity returnModifiedBattleParticipants(const int inputPlayerNumber);
@@ -77,8 +80,14 @@ class combatCalculator{
 	// Function: Make some final checks (after the end of the rounds of combat)
 	void finalChecks();
 
+	// Function: Divide the values by the quantity (to get the individual values)
+	void getIndividualValues();
+
+	// Function: Times the values by the quantity (to get the total values)
+	void getTotalValues();
+
 	// Function: Calculate the outcome of a battle
-	virtual void roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber, int* inputP1Events, int* inputP2Events) = 0; // Abstract class with no implementation (overrided by the subclasses)
+	virtual void roundOutcome(int inputRunTimes, int inputPreferToRollDice, int inputAttackingPlayerNumber, int* inputP1Events, int* inputP2Events) = 0; // Abstract class with no implementation (overrided by the subclasses)
 };
 #endif // COMBAT_CALCULATOR_H
 
@@ -91,7 +100,7 @@ class monkRounds: public combatCalculator{
 	~monkRounds();
 
 	// Function: Calculate the outcome of a monk battle
-	void roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber, int* inputP1Events, int* inputP2Events);
+	void roundOutcome(int inputRunTimes, int inputPreferToRollDice, int inputAttackingPlayerNumber, int* inputP1Events, int* inputP2Events);
 };
 #endif // COMBAT_CALCULATOR_MONK_ROUNDS_H
 
@@ -104,7 +113,7 @@ class archerRounds: public combatCalculator{
 	~archerRounds();
 
 	// Function: Calculate the outcome of a ranged battle
-	void roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber, int* inputP1Events, int* inputP2Events);
+	void roundOutcome(int inputRunTimes, int inputPreferToRollDice, int inputAttackingPlayerNumber, int* inputP1Events, int* inputP2Events);
 };
 #endif // COMBAT_CALCULATOR_ARCHER_ROUNDS_H
 
@@ -117,6 +126,6 @@ class standardRounds: public combatCalculator{
 	~standardRounds();
 
 	// Function: Calculate the outcome of a standard battle
-	void roundOutcome(int inputRunTimes, int inputAttackingPlayerNumber, int* inputP1Events, int* inputP2Events);
+	void roundOutcome(int inputRunTimes, int inputPreferToRollDice, int inputAttackingPlayerNumber, int* inputP1Events, int* inputP2Events);
 };
 #endif // COMBAT_CALCULATOR_STANDARD_ROUNDS_H

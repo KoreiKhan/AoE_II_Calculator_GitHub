@@ -477,7 +477,8 @@ Entity fileImporter::conductASearch(std::string inputEntityName, int inputEntity
 
 		// Behaviour: The current entity is limited to < 5 tokens 
 		if(inputEntityQuantity > 5){
-			std::cout << "Error: " << returnEntity.entityName << " can only be of 1-5 quantity" << "\n";
+			std::cout << "Error: " << returnEntity.entityName << " cannot be > 5 quantity" << "\n";
+			std::cout << "Checks for a non-0 quantity of the primary monk already occured" << "\n";
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -695,6 +696,12 @@ Entity fileImporter::conductASearch(std::string inputEntityName, int inputEntity
 		exit(EXIT_FAILURE);
 	}
 
+	// Behaviour: Make sure that the quantity is > 0 for non-Monks
+	if( (inputEntityName != "MONK") && (inputEntityQuantity <=0) ){
+		std::cout << "Error: All entities (except assisting monks) must have a quantity of at least 1" << "\n";
+		exit(EXIT_FAILURE);
+	}
+
 	// Behaviour: Make sure that an Age within the range of 1-4 was entered
 	if(returnEntity.entityAge <1 || returnEntity.entityAge > 5){
 		// Error: Age not recognized
@@ -765,17 +772,20 @@ int fileImporter::checkIsInteger(std::string inputWord){
 			exit(EXIT_FAILURE);
 		}
 		else{
-			std::cout << "Error: A quantity of < 1 is still unacceptable" << "\n";
-			exit(EXIT_FAILURE);
+			// A quantity of < 1 is acceptable for the non-monk values
+			// I'll check for the appropriate quantity based on entity types later
 		}
 	}
-	else{}
+	else if(anInteger > 99){
+		std::cout << "Error: A limit of 100 units is more than reasonable" << "\n";
+		exit(EXIT_FAILURE);
+	}
 
 	return anInteger;
 }
 
 // Function: Get the entity name and quantity
-Entity fileImporter::entitiesFile(std::string inputEntityFilename, int inputPlayerNumber){
+Entity fileImporter::entitiesFile(std::string inputEntityFilename, int inputNumberOfWords, int inputPlayerNumber, int inputMonkReturnSetting){
 	// Struct: Declare an entity to store the return values
 	Entity returnEntityCSV;
 
@@ -795,7 +805,10 @@ Entity fileImporter::entitiesFile(std::string inputEntityFilename, int inputPlay
 	}
 	else{
 		// Array: Hold up to four words to represent the four words inside of 'entites.csv'
-		std::string words[4] = {"","","",""};
+		std::string words[inputNumberOfWords];
+		for(int i = 0; i < inputNumberOfWords; i ++){
+			words[i] = "";
+		}
 
 		// Variable: A counter used to increment the words array
 		int count = 0;
@@ -806,9 +819,11 @@ Entity fileImporter::entitiesFile(std::string inputEntityFilename, int inputPlay
 		// Behaviour: While we aren't at the end of the file keep running. Similar to .good() and .eof() 
 		while(inputFile>>word){
 			// Behaviour: Ensure that the user does not exceed the array bounds of words[4]
-			if(count == 4){
+			if(count == inputNumberOfWords){
 				std::cout << "Error: Too much input. Only enter the values for up to two players" << "\n";
-				std::cout << "The input is supposed to be: [P1_Entity_Name] [P1_Entity_Quantity] [P2_Entity_Name] [P2_Entity_Quantity]" << "\n";
+				std::cout << "The input is supposed to be:" << "\n";
+				std::cout << "[P1_Non-Monk_Entity_Name] [P1_Entity_Quantity] Monk [P1_Monk_Quantity]" << "\n";
+				std::cout << "[P2_Non-Monk_Entity_Name] [P2_Entity_Quantity] Monk [P2_Monk_Quantity]" << "\n";
 				exit(EXIT_FAILURE);
 			}
 			else{
@@ -819,36 +834,113 @@ Entity fileImporter::entitiesFile(std::string inputEntityFilename, int inputPlay
 		}
 
 		// Behaviour: Ensure that there are at least four words inside of the words array
-		if(count <3){
+		if(count < (inputNumberOfWords - 1) ){
 			std::cout << "Error: Too little input. You must enter the values for up to two players" << "\n";
-			std::cout << "The input is supposed to be: [P1_Entity_Name] [P1_Entity_Quantity] [P2_Entity_Name] [P2_Entity_Quantity]" << "\n";
+			std::cout << "The input is supposed to be:" << "\n";
+			std::cout << "[P1_Non-Monk_Entity_Name] [P1_Entity_Quantity] Monk [P1_Monk_Quantity]" << "\n";
+			std::cout << "[P2_Non-Monk_Entity_Name] [P2_Entity_Quantity] Monk [P2_Monk_Quantity]" << "\n";
 			exit(EXIT_FAILURE);
 		}
 
+		// Behaviour: Make sure that the second words are both monks
+		if(words[2] != "Monk"){
+			std::cout << "Error: Non-Monk entity name for player 1's 'assisting monks' data field" << "\n";
+			exit(EXIT_FAILURE);
+		}
+		else if(words[6] != "Monk"){
+			std::cout << "Error: Non-Monk entity name for player 2's 'assisting monks' data field" << "\n";
+			exit(EXIT_FAILURE);
+		}
 		
-		// Behaviour: Check what player's values ought to be returned
+		// Behaviour: Check what player's values ought to be returned and if the monk or non-monk values ought to be returned
 		if(inputPlayerNumber == 1){
-			// Behaviour: Ensure that the integer elements are of the correct data type (i.e. they are integers)
-			int p1Quantity = checkIsInteger(words[1]);
+			int p1Quantity = 0;
 
-			// Behaviour: Convert words[0] into all caps
-			std::transform(words[0].begin(), words[0].end(), words[0].begin(), ::toupper);
+			// Behaviour: Return the non-monk entity
+			if(inputMonkReturnSetting == 0){
+				// Behaviour: Ensure that the integer elements are of the correct data type (i.e. they are integers)
+				p1Quantity = checkIsInteger(words[1]);
 
-			// Behaviour: Put the input entity name and quantity for player 1 inside of the returnEntityCSV object.
-			returnEntityCSV.entityQuantity = p1Quantity;
-			returnEntityCSV.entityName = words[0];
+				// Behaviour: Convert words[0] into all caps
+				std::transform(words[0].begin(), words[0].end(), words[0].begin(), ::toupper);
+
+				// Behaviour: Put the input entity name and quantity for player 1 inside of the returnEntityCSV object.
+				returnEntityCSV.entityQuantity = p1Quantity;
+				returnEntityCSV.entityName = words[0];
+			}
+			// Behaviour: Return the monk entity
+			else if(inputMonkReturnSetting == 1){
+				// Behaviour: Ensure that the integer elements are of the correct data type (i.e. they are integers)
+				p1Quantity = checkIsInteger(words[3]);
+
+				// Behaviour: Convert words[2] into all caps
+				std::transform(words[2].begin(), words[2].end(), words[2].begin(), ::toupper);
+
+				// Behaviour: Put the input entity name and quantity for player 1 inside of the returnEntityCSV object.
+				returnEntityCSV.entityQuantity = p1Quantity;
+				returnEntityCSV.entityName = words[2];
+			}
 		}
 		else if(inputPlayerNumber == 2){
-			// Behaviour: Ensure that the integer elements are of the correct data type (i.e. they are integers)
-			int p2Quantity = checkIsInteger(words[3]);
+			int p2Quantity = 0;
 
-			// Behaviour: Convert words[2] into all caps
-			std::transform(words[2].begin(), words[2].end(), words[2].begin(), ::toupper);
+			// Behaviour: Return the non-monk entity
+			if(inputMonkReturnSetting == 0){
+				// Behaviour: Ensure that the integer elements are of the correct data type (i.e. they are integers)
+				p2Quantity = checkIsInteger(words[5]);
 
-			// Behaviour: Put the input entity name and quantity for player 12 inside of the returnEntityCSV object.
-			returnEntityCSV.entityQuantity = p2Quantity;
-			returnEntityCSV.entityName = words[2];
+				// Behaviour: Convert words[0] into all caps
+				std::transform(words[4].begin(), words[4].end(), words[4].begin(), ::toupper);
+
+				// Behaviour: Put the input entity name and quantity for player 1 inside of the returnEntityCSV object.
+				returnEntityCSV.entityQuantity = p2Quantity;
+				returnEntityCSV.entityName = words[4];
+			}
+			// Behaviour: Return the monk entity
+			else if(inputMonkReturnSetting == 1){
+				// Behaviour: Ensure that the integer elements are of the correct data type (i.e. they are integers)
+				p2Quantity = checkIsInteger(words[7]);
+
+				// Behaviour: Convert words[2] into all caps
+				std::transform(words[6].begin(), words[6].end(), words[6].begin(), ::toupper);
+
+				// Behaviour: Put the input entity name and quantity for player 1 inside of the returnEntityCSV object.
+				returnEntityCSV.entityQuantity = p2Quantity;
+				returnEntityCSV.entityName = words[6];
+			}
 		}
+
+		// Behaviour: Resolve conflicts for double monk quantities
+		if( (words[0] == "Monk") && (words[2] == "Monk") ){
+			int p1Quantity1 = checkIsInteger(words[1]);
+			int p1Quantity2 = checkIsInteger(words[3]);
+
+			if(p1Quantity1 <=0){
+				std::cout << "Error: Player 1's first monk must be of > 1 quantity" << "\n";
+				exit(EXIT_FAILURE);
+			}
+			else if(p1Quantity2 >= 1){
+				std::cout << "Error: Player 1 cannot have the second monk 'assisting' the first monk in combat" << "\n";
+				std::cout << "The second monk must have a quantity of 0" << "\n";
+				exit(EXIT_FAILURE);
+			}
+		}
+
+		if( (words[4] == "Monk") && (words[6] == "Monk") ){
+			int p2Quantity1 = checkIsInteger(words[5]);
+			int p2Quantity2 = checkIsInteger(words[7]);
+
+			if(p2Quantity1 <=0){
+				std::cout << "Error: Player 2's first monk must be of > 1 quantity" << "\n";
+				exit(EXIT_FAILURE);
+			}
+			else if(p2Quantity2 >= 1){
+				std::cout << "Error: Player 2 cannot have the second monk 'assisting' the first monk in combat" << "\n";
+				std::cout << "The second monk must have a quantity of 0" << "\n";
+				exit(EXIT_FAILURE);
+			}
+		}
+
 		// Behaviour: Get the rest of the information about the input entity (without user input)
 		returnEntityCSV = conductASearch(returnEntityCSV.entityName, returnEntityCSV.entityQuantity);
 
@@ -861,7 +953,7 @@ Entity fileImporter::entitiesFile(std::string inputEntityFilename, int inputPlay
 }
 
 // Function: Get the active technologies from '[p1/p2]_technologies.csv', the active events from '[p1/p2]_events.csv', or player details from 'players.csv'
-int* fileImporter::aSplitColumnFile(std::string inputTechnologyOrEventsFilename, int numberOfRows){
+int* fileImporter::aSplitColumnFile(std::string inputTechnologyOrEventsFilename, int inputNumberOfRows){
 	// Behaviour: Open "[p1/p2]_technologies.csv" or "[p1/p2]_events.csv" for player 1 or 2 (not both)
 	inputFile.open(inputTechnologyOrEventsFilename);
 
@@ -884,7 +976,7 @@ int* fileImporter::aSplitColumnFile(std::string inputTechnologyOrEventsFilename,
 	}
 	else{
 		// Variable: Declare the number of technologies (17) or events (?)
-		int rows = numberOfRows;
+		int rows = inputNumberOfRows;
 
 		// Variable: Declare the layout (an active column and the name column)
 		int columns = 2; 

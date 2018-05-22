@@ -1795,7 +1795,7 @@ void Entity::outputEntity(const int inputPlayerNumber){
 		displayColorfulText("bold","white","dark_gray", medievalAge, false);
 		std::cout << " ";
 		displayColorfulText("bold","white","light_blue", entityName, false);
-		std::cout << " have a total of ";
+		std::cout << " has a total of ";
 		displayColorfulText("bold", "red", "default", std::to_string(entityHealth), false);
 		std::cout << "HP"; 
 
