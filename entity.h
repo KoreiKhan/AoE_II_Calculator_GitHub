@@ -37,6 +37,17 @@ struct Entity{
 };
 #endif // ENTITY_H
 
+////////////////////////////////// Reference: I could have just used functions or tried to import this information but inheritance works well enough //////////////////////////////////
+/**
+	void Militia(std:: string civilizationDesignator){
+		// Default Militia values for entity
+
+		if(civilizationDesignator == "Goth"){
+			entityName += "_(Goth)";
+		}
+	}
+**/
+
 ////////////////////////////////// Inherited from Entity Classes //////////////////////////////////
 /** Inherited class from Entity: Barracks **/
 #ifndef BARRACKS_H
