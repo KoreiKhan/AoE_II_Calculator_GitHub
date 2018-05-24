@@ -12,100 +12,149 @@
 /** The main function **/
 int main(){
 	/** Simple declarations **/
-	// Constant int: The player numbers
+	// Integer: The player numbers
 	int player1 = 1, player2 = 2;
 
-	// Constant Int: The number of entity words
-	const int entitiesWords = 8;;
+	// String: Store player responses
+	std::string getResponse = "";
 
-	// Constant int: The number of technology, event, and player detail rows
+	// Constant integer: The number of words inside the 'entities.csv' file
+	const int entitiesWords = 8;
+
+	// Constant integer: The number of rows inside of the technology, event, and player details files
 	const int technologiesRows = 18, eventsRows = 40, playerDetailsRows = 2;
 
-	/** Part 1: Getting basic information about the input entities **/
-	// Object: Declare the file importing object
+	// Integer: The rounds of combat
+	int monkCombatRounds = 1;
+	int archerCombatRounds = 1;
+	int bombardmentCombatRounds = 1;
+	int normalCombatRounds = 2;
+
+	// Integer: Modifiers to the attack dealt in each round of combat for p1/p2
+	int modifyRoundAttackP1 = 0, modifyRoundAttackP2 = 0;
+
+	// Integer: The remaining damage within each round (the non-rounded down value)
+	float p1RemainingDamage = 0, p2RemainingDamage = 0;
+
+	// Boolean: Whether event 4 is active
+	bool isEvent4Active = false;
+
+	// Integer array: The technologies
+	int* p1_technologies_array;
+	int* p2_technologies_array;
+
+	// Integer array: The events
+	int* p1_events_array;
+	int* p2_events_array;
+
+	// Integer array: The player details
+	int* player_details_array;
+
+	/** Complex declarations **/
+	// Structure: The entities
+	Entity p1BattleParticipant;
+	Entity p1AssistingMonkBattleParticipant;
+	Entity p2BattleParticipant;
+	Entity p2AssistingMonkBattleParticipant; 
+
+	// Object: The file importing object
 	fileImporter importFile;
 
-	// Behaviour: Load "entities.csv" and store the information about the input entities
-	Entity p1BattleParticipant = importFile.entitiesFile("import/entities.csv", entitiesWords, player1, 0); // Declare and get the entity that is participating in the battle for player 1
-	Entity p1MonkParticipant = importFile.entitiesFile("import/entities.csv", entitiesWords, player1, 1); // Declare and get the monk entity for player 1 if there are any
-	Entity p2BattleParticipant = importFile.entitiesFile("import/entities.csv", entitiesWords, player2, 0); // Declare and get the entity that is participating in the battle for player 2
-	Entity p2MonkParticipant = importFile.entitiesFile("import/entities.csv", entitiesWords, player2, 1); // Declare and get the monk entity for player if there are any
-
-	// Behaviour: Load "technologies_[p1/p2].csv" and store the information about the active technologies for player 1 and 2
-	int* p1_technologies_array = importFile.aSplitColumnFile("import/technologies_p1.csv", technologiesRows);
-	int* p2_technologies_array = importFile.aSplitColumnFile("import/technologies_p2.csv", technologiesRows);
-
-	// Behaviour: Load "events_[p1/p2].csv" and store the information about the active events for player 1 and 2
-	int* p1_events_array = importFile.aSplitColumnFile("import/events_p1.csv", eventsRows);
-	int* p2_events_array = importFile.aSplitColumnFile("import/events_p2.csv", eventsRows);
-
-	// Behaviour: Load "players.csv"and store information about the player details
-	int* player_details_array = importFile.aSplitColumnFile("import/playerDetails.csv", playerDetailsRows);
-
-	/** Part 2: Applying modifiers to the input entities **/
-	// Object: Declare the modifiers calculator object
+	// Object: The modifiers calculator object
 	modifiersCalculator theModifiersCalculator;
 
+	// Object: The combat calculator superclass and the combat rounds subclasses
+	combatCalculator *theCombatCalculator;
+	monkRounds monkRounds;
+	archerRounds rangedRounds;
+	bombardmentRounds bombardmentRounds;
+	standardRounds standardRounds;
+
+	/** Part 1: Getting basic information about the input entities **/
+	// Behaviour: Load "entities.csv" and get information about the input entities
+		// Player 1
+		p1BattleParticipant = importFile.entitiesFile("import/entities.csv", entitiesWords, player1, 0); 
+		p1AssistingMonkBattleParticipant = importFile.entitiesFile("import/entities.csv", entitiesWords, player1, 1); 
+	
+		// Player 2
+		p2BattleParticipant = importFile.entitiesFile("import/entities.csv", entitiesWords, player2, 0); 
+		p2AssistingMonkBattleParticipant = importFile.entitiesFile("import/entities.csv", entitiesWords, player2, 1); 
+
+	// Behaviour: Load "technologies_[p1/p2].csv" and get information about the active technologies
+		// Player 1
+		p1_technologies_array = importFile.aSplitColumnFile("import/technologies_p1.csv", technologiesRows);
+	
+		// Player 2
+		p2_technologies_array = importFile.aSplitColumnFile("import/technologies_p2.csv", technologiesRows);
+
+	// Behaviour: Load "events_[p1/p2].csv" and get information about the active events
+		// Player 1
+		p1_events_array = importFile.aSplitColumnFile("import/events_p1.csv", eventsRows);
+	
+		// Player 2
+		p2_events_array = importFile.aSplitColumnFile("import/events_p2.csv", eventsRows);
+
+	// Behaviour: Load "players.csv"and store information about the player details for all players
+	player_details_array = importFile.aSplitColumnFile("import/playerDetails.csv", playerDetailsRows);
+
+	/** Part 2: Applying modifiers to the input entities **/
 	// Behaviour: Set the battle participants
-	theModifiersCalculator.setEntities(p1BattleParticipant, p2BattleParticipant, p1MonkParticipant, p2MonkParticipant);
+	theModifiersCalculator.setEntities(p1BattleParticipant, p2BattleParticipant, p1AssistingMonkBattleParticipant, p2AssistingMonkBattleParticipant);
 
 	// Behaviour: Set the values for player 1
 	theModifiersCalculator.setAdditionalValues(player1, player_details_array[1], p1_technologies_array, p1_events_array);
 
 	// Behaviour: Run a function to apply all of the modifiers for player 1
 	p1BattleParticipant = theModifiersCalculator.applyAllModifiers(0);
-	p1MonkParticipant = theModifiersCalculator.applyAllModifiers(1);
+	p1AssistingMonkBattleParticipant = theModifiersCalculator.applyAllModifiers(1);
 
 	// Set the values for player 2
 	theModifiersCalculator.setAdditionalValues(player2, player_details_array[2], p2_technologies_array, p2_events_array);
 
 	// Behaviour: Run a function to apply all of the modifiers for player 2
 	p2BattleParticipant = theModifiersCalculator.applyAllModifiers(0);
-	p2MonkParticipant = theModifiersCalculator.applyAllModifiers(1);
+	p2AssistingMonkBattleParticipant = theModifiersCalculator.applyAllModifiers(1);
 
-	// Behaviour: Return information about the input entities 
+	// Behaviour: Return information about the input entities once they have been modified (before further calculations occur)
 	std::cout << "You entered..." << "\n";
 	p1BattleParticipant.outputEntity(player1);
-	if(p1MonkParticipant.entityQuantity > 0){
+	if(p1AssistingMonkBattleParticipant.entityQuantity > 0){
 		std::cout << "(Assisting) ";
-		p1MonkParticipant.outputEntity(player1);
+		p1AssistingMonkBattleParticipant.outputEntity(player1);
 	}
 	p2BattleParticipant.outputEntity(player2);
-	if(p2MonkParticipant.entityQuantity > 0){
+	if(p2AssistingMonkBattleParticipant.entityQuantity > 0){
 		std::cout << "(Assisting) ";
-		p2MonkParticipant.outputEntity(player2);
+		p2AssistingMonkBattleParticipant.outputEntity(player2);
 	}
 
-	/** Part 3: Returning the outcome of each round of combat for the input entities **/
-	// Integer: Declare the pointers to the remainingDamage
-	float p1Remainder = 0;
-	float p2Remainder = 0;
 
-	// Integer: Declare modifiers to the attack dealt in each round of combat for p1/p2
-	int modifyRoundAttackP1 = 0, modifyRoundAttackP2 = 0;
-
+	/** Part 3: Applying further modifiers **/
+	// Event [14] Hard to Starboard - Reduce damage dealt to target ship by 10 points per round of combat this turn
 	if(p1_events_array[14] == 1){
-		// [14] Hard to Starboard - Reduce damage dealt to target ship by 10 points per round of combat this turn	
+			
 		if(p1BattleParticipant.armorClass[11] == true){
 			modifyRoundAttackP2 -= 10;
 		}
-
 	}
 
-	if(p2_events_array[14] == 1){
-		// [14] Hard to Starboard - Reduce damage dealt to target ship by 10 points per round of combat this turn	
+	if(p2_events_array[14] == 1){	
 		if(p2BattleParticipant.armorClass[11] == true){
 			modifyRoundAttackP1 -= 10;
 		}
 	}
 
-	// String: Store the response for Non-Compos Mentis
-	std::string getResponse = "";
-
+	// Event [21] Non-Compos Mentis - Roll a 1d6 when in combat
+	// On a: 1: take 10 extra damage per round.
+	// 		 2: draw 2 cards
+	//		 3: no effect
+	//		 4: deal 10 extra damage per round
+	//		 5: discard 2 cards
+	//		 6: deal 15 extra damage per round. 
 	if(p1_events_array[21] == 1){
-		// [21] Non-Compos Mentis - Roll a 1d6 when in combat. On a: 1: take 10 extra damage per round, 2: draw 2 cards, 3: no effect, 4: deal 10 extra damage per round, 5: discard 2 cards, 6: deal 15 extra damage per round. Play anytime. 
+		
 		// Behaviour: Just ask the user what got rolled
-		std::cout << "Enter 1 if a 1 got rolled. Enter 4 if a 4 got rolled. Enter 6 if a 6 got rolled." << "\n";
+		std::cout << "Enter 1 if a one got rolled. Enter 4 if a four got rolled. Enter 6 if a six got rolled. Otherwise enter zero." << "\n";
 		std::cin >> getResponse;
 
 		// Behaviour: Apply the results
@@ -118,12 +167,14 @@ int main(){
 		else if(getResponse == "6"){
 			modifyRoundAttackP1 += 15;
 		}
+		else{
+			// No effect
+		}
 	}
 
 	if(p2_events_array[21] == 1){
-		// [21] Non-Compos Mentis - Roll a 1d6 when in combat. On a: 1: take 10 extra damage per round, 2: draw 2 cards, 3: no effect, 4: deal 10 extra damage per round, 5: discard 2 cards, 6: deal 15 extra damage per round. Play anytime. 
-		// Behaviour: Just ask the user what got rolled
-		std::cout << "Enter 1 if a 1 got rolled. Enter 4 if a 4 got rolled. Enter 6 if a 6 got rolled." << "\n";
+	// Behaviour: Just ask the user what got rolled
+		std::cout << "Enter 1 if a one got rolled. Enter 4 if a four got rolled. Enter 6 if a six got rolled. Otherwise enter zero." << "\n";
 		std::cin >> getResponse;
 
 		// Behaviour: Apply the results
@@ -136,120 +187,134 @@ int main(){
 		else if(getResponse == "6"){
 			modifyRoundAttackP2 += 15;
 		}
+		else{
+			// No effect
+		}
 	}
 
-	// Object: Declare the round subclass for the monk round
-	monkRounds monkRounds;
+	// Event [4] Caught from the Crow's Nest - One extra bombardment round if there is a Galley or Fire Ship
+	if( (p1_events_array[4] == 1) || (p2_events_array[4] == 1) ) {
+		if( 
+			( (p1BattleParticipant.armorClass[22] == true) || (p2BattleParticipant.armorClass[22] == true) ) ||
+			( (p1BattleParticipant.armorClass[23] == true) || (p2BattleParticipant.armorClass[23] == true) )
+		  ) 
+		{
+			// Behaviour: Set event 4 to active
+			isEvent4Active = true;
+		}
+		else{
+			isEvent4Active = false;
+		}
+	}
+	else{
+		isEvent4Active = false;
+	}
 
-	// Integer: Declare the rounds of monk combat
-	int monkCombatRounds = 1;
+	// Event [38] You Will Die! (Saracen) - This battle goes for four rounds of normal combat, instead of 2 rounds. No retreat is allowed without event card effect.
+	if( (p1_events_array[38] == 1) || (p2_events_array[38] == 1) ){
+		normalCombatRounds = 4;
+	}
 
-	// Object: Declare the combat calculator superclass
-	combatCalculator *theCombatCalculator;
+	// Event [13] Gladitorial Games - You and a target player must move one unit to No-Man's-Land. The units will fight until one is destroyed
+	if( (p1_events_array[13] == 1) || (p2_events_array[13] == 1) ){
+		normalCombatRounds = 10; 
+	}
 
-	// Behaviour: Set the Entity values for the combat calculator
-	// theCombatCalculator->setEntities(p1BattleParticipant, p2BattleParticipant, p1MonkParticipant, p2MonkParticipant);
-
-	// Behaviour: Set additional values for the 
-
-
-	// theCombatCalculator(p1Remainder, p2Remainder);
-
-	// Behaviour: Set the superclass to the first round
+	/** Part 4: Return the outcome of each round of combat for the input entities **/
+	/** Part 4.1: Round 1 **/
+	// Behaviour: Set the superclass to the monk rounds
 	theCombatCalculator = &monkRounds;
 
 	// Behaviour: Set the battle participants
-	theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant, p1MonkParticipant, p2MonkParticipant, modifyRoundAttackP1, modifyRoundAttackP2);
+	theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant, p1AssistingMonkBattleParticipant, p2AssistingMonkBattleParticipant, modifyRoundAttackP1, modifyRoundAttackP2);
 
-	// Behaviour: Calculate the damage dealt for X rounds of monk combat
+	// Behaviour: Set the remaining damage values for the combat calculator
+	theCombatCalculator->setAdditionalValues(p1RemainingDamage, p2RemainingDamage);
+
+	// Behaviour: Calculate the damage dealt for monkCombatRounds rounds of monk combat
 	monkRounds.roundOutcome(monkCombatRounds, p1_events_array, p2_events_array); 
 
-	// Behaviour: Get the results after X rounds of monk combat
-	p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);
-	p2BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player2);
+	// Behaviour: Get the results after monkCombatRounds rounds of monk combat
+		// Player 1
+		p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);
+		p1RemainingDamage = theCombatCalculator->returnRemaningDamage(player1);
 
-	// Object: Declare the archer subclass for the archer round
-	archerRounds rangedRounds;
+		// Player 2
+		p2BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player2);
+		p2RemainingDamage = theCombatCalculator->returnRemaningDamage(player2);
 
-	// Integer: Declare the rounds of ranged combat
-	int archerCombatRounds = 1;
-
-	// Behaviour: Set the combat calculator to the second round
+	/** Part 4.2: Round 2 **/
+	// Behaviour: Set the combat calculator to the archer rounds
 	theCombatCalculator = &rangedRounds;
 
 	// Behaviour: Get a pointer of a class
 	std::cout << &p1BattleParticipant << "\n";
 
 	// Behaviour: Set the battle participants
-	theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant, p1MonkParticipant, p2MonkParticipant, modifyRoundAttackP1, modifyRoundAttackP2);
+	theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant, p1AssistingMonkBattleParticipant, p2AssistingMonkBattleParticipant, modifyRoundAttackP1, modifyRoundAttackP2);
 
-	// Behaviour: Calculate the damage dealt for X rounds of archer combat
+	// Behaviour: Set the remaining damage values for the combat calculator
+	theCombatCalculator->setAdditionalValues(p1RemainingDamage, p2RemainingDamage);
+
+	// Behaviour: Calculate the damage dealt for archerCombatRounds rounds of archer combat
 	rangedRounds.roundOutcome(archerCombatRounds, p1_events_array, p2_events_array);
 
-	// Behaviour: Get the results after X rounds of ranged combat
-	p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);
-	p2BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player2);
+	// Behaviour: Get the results after archerCombatRounds rounds of ranged combat
+		// Player 1
+		p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);
+		p2BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player2);
+	
+		// Player 2
+		p1RemainingDamage = theCombatCalculator->returnRemaningDamage(player1);
+		p2RemainingDamage = theCombatCalculator->returnRemaningDamage(player2);
 
+	/** Part 4.3: Bonus round **/
 	// Behaviour: Check for the Caught from the Crow's Nest extra bombardment round
-	// Reference: I deal with a single bombardment round within the standardCombat subclass
-	if( (p1_events_array[4] == 1) || (p2_events_array[4] == 1) ) {
-		// Behaviour: Check for the pre-requisite Galley or Fire Ship units
-		if( 
-			( (p1BattleParticipant.armorClass[22] == true) || (p2BattleParticipant.armorClass[22] == true) ) ||
-			( (p1BattleParticipant.armorClass[23] == true) || (p2BattleParticipant.armorClass[23] == true) )
-		  ) 
-		{
-			// Behaviour: Declare the number of bombardment rounds
-			bombardmentRounds bombardmentRounds;
+	// Reference: I otherwise deal with a single bombardment round within the standardCombat subclass
+	if(isEvent4Active == true){
+		// Behaviour: Set the combat calculator to the bombardment rounds
+		theCombatCalculator = &bombardmentRounds;
 
-			// Integer: Declare the rounds of bombardment combat
-			int bombardmentCombatRounds = 1;
+		// Behaviour: Set the protected values
+		theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant, p1AssistingMonkBattleParticipant, p2AssistingMonkBattleParticipant, modifyRoundAttackP1, modifyRoundAttackP2);
 
-			// Behaviour: Set the combat calculator superclass to the bombardment round
-			theCombatCalculator = &bombardmentRounds;
+		// Behaviour: Set the remaining damage values for the combat calculator
+		theCombatCalculator->setAdditionalValues(p1RemainingDamage, p2RemainingDamage);
 
-			// Behaviour: Set the protected values
-			theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant, p1MonkParticipant, p2MonkParticipant, modifyRoundAttackP1, modifyRoundAttackP2);
+		// Behaviour: Calculate the damage dealt for bombardmentCombatRounds rounds of bombardment combat and display the results
+		bombardmentRounds.roundOutcome(bombardmentCombatRounds, p1_events_array, p2_events_array);
 
-			// Behaviour: Calculate the damage dealt for X rounds of bombardment combat and display the results
-			bombardmentRounds.roundOutcome(bombardmentCombatRounds, p1_events_array, p2_events_array);
-
-			// Behaviour: Get the results after X rounds of standard combat
+		// Behaviour: Get the results after bombardmentCombatRounds rounds of standard combat
+			// Player 1
 			p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);
+			p1RemainingDamage = theCombatCalculator->returnRemaningDamage(player1);
+
+			// Player 2		
 			p2BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player2);
-		}
+			p2RemainingDamage = theCombatCalculator->returnRemaningDamage(player2);
 	}
 
-	// Object: Declare the standard combat rounds subclass
-	standardRounds standardRounds;
-
-	// Integer: Declare the rounds of normal combat
-	int normalCombatRounds = 2;
-
-	// Behaviour: Apply the effects of event 41
-	if( (p1_events_array[38] == 1) || (p2_events_array[38] == 1) ){
-		// [38] You Will Die! (Saracen) - This battle goes for four rounds of normal combat, instead of 2 rounds. No retreat is allowed without event card effect. Play anytime.
-		normalCombatRounds = 4;
-	}
-
-	// Behaviour: Apply the effects of event 13
-	if( (p1_events_array[13] == 1) || (p2_events_array[13] == 1) ){
-		// [13] Gladitorial_Games - You and a target player must move one unit to No-Man's-Land. The units will fight until one is destroyed
-		normalCombatRounds = 10; 
-	}
-
-	// Behaviour: Set the combat calculator to the third round
+	/** Part 4.4: Round 3 & 4 **/
+	// Behaviour: Set the combat calculator to the standard rounds
 	theCombatCalculator = &standardRounds;
 
 	// Behaviour: Set the protected values
-	theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant, p1MonkParticipant, p2MonkParticipant, modifyRoundAttackP1, modifyRoundAttackP2);
+	theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant, p1AssistingMonkBattleParticipant, p2AssistingMonkBattleParticipant, modifyRoundAttackP1, modifyRoundAttackP2);
 
-	// Behaviour: Calculate the damage dealt for X rounds of standard combat and display the results
+	// Behaviour: Set the remaining damage values for the combat calculator
+	theCombatCalculator->setAdditionalValues(p1RemainingDamage, p2RemainingDamage);
+
+	// Behaviour: Calculate the damage dealt for normalCombatRounds rounds of standard combat and display the results
 	standardRounds.roundOutcome(normalCombatRounds, p1_events_array, p2_events_array);
 
-	// Behaviour: Get the results after X rounds of standard combat
-	p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);
-	p2BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player2);
+	// Behaviour: Get the results after normalCombatRounds rounds of standard combat
+		// Player 1
+		p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);
+		p1RemainingDamage = theCombatCalculator->returnRemaningDamage(player1);
+
+		// Player 2
+		p2BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player2);
+		p2RemainingDamage = theCombatCalculator->returnRemaningDamage(player2);
 
 	// Behaviour: A required return statement for the system in C++
 	return 0;

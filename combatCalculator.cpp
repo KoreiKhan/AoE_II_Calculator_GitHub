@@ -25,22 +25,43 @@ combatCalculator::combatCalculator(){
 }
 combatCalculator::~combatCalculator(){}
 
-// Function: The constructor with the pointer
-combatCalculator::combatCalculator(float* inputRemainingDamageP1, float *inputRemainingDamageP2){
-	remainingCombatDamageP1 = inputRemainingDamageP1;
-	remainingCombatDamageP2 = inputRemainingDamageP2;
+// Function: Set the battle participants
+void combatCalculator::setCombatParticipants(Entity &inputP1BattleParticipant, Entity &inputP2BattleParticipant, Entity &inputP1AssistingMonkBattleParticipant, Entity &inputP2AssistingMonkBattleParticipant, int &inputRoundAttackModifiersP1, int &inputRoundAttackModifiersP2){
+	std::cout << &inputP1BattleParticipant << "\n";
+
+	// Player 1
+	p1BattleParticipant = inputP1BattleParticipant;
+	p1AssistingMonkParticipant = inputP1AssistingMonkBattleParticipant;
+	roundAttackModifiersP1 = inputRoundAttackModifiersP1;
+
+	// Player 2
+	p2BattleParticipant = inputP2BattleParticipant;
+	p2AssistingMonkParticipant = inputP2AssistingMonkBattleParticipant;
+	
+	roundAttackModifiersP2 = inputRoundAttackModifiersP2;
 }
 
-// Function: Set the battle participants
-void combatCalculator::setCombatParticipants(Entity inputP1CombatParticipant, Entity inputP2CombatParticipant, Entity inputP1MonkBattleParticipant, Entity inputP2MonkBattleParticipant, int inputRoundAttackModifiersP1, int inputRoundAttackModifiersP2){
-	std::cout << &inputP1CombatParticipant << "\n";
+// Function: The constructor with the pointer
+void combatCalculator::setAdditionalValues(float &inputRemainingDamageP1, float &inputRemainingDamageP2){
+	// Player 1
+	remainingDamageP1 = inputRemainingDamageP1;
 
-	combatParticipantP1 = inputP1CombatParticipant;
-	combatParticipantP2 = inputP2CombatParticipant;
-	monkParticipantP1 = inputP1MonkBattleParticipant;
-	monkParticipantP2 = inputP2MonkBattleParticipant;
-	roundAttackModifiersP1 = inputRoundAttackModifiersP1;
-	roundAttackModifiersP2 = inputRoundAttackModifiersP2;
+	// Player 2
+	remainingDamageP2 = inputRemainingDamageP2;
+}
+
+// Function: Return the remaining damage
+float combatCalculator::returnRemaningDamage(int inputPlayerNumber){
+	if(inputPlayerNumber == 1){
+		return remainingDamageP1;
+	}
+	else if(inputPlayerNumber == 2){
+		return remainingDamageP2;
+	}
+	else{
+		std::cout << "Error: Input player number not recognized" << "\n";
+		exit(EXIT_FAILURE);
+	}
 }
 
 int combatCalculator::generateD6DieInput(){
@@ -83,13 +104,13 @@ void combatCalculator::checkD6DiceSimulator(){
 
 
 // Function: Return the modified battle participants based on the input player number
-Entity combatCalculator::returnModifiedBattleParticipants(const int inputPlayerNumber){
+Entity combatCalculator::returnModifiedBattleParticipants(int inputPlayerNumber){
 	// Behaviour: Return the entities with the combat results applied
 	if(inputPlayerNumber == 1){
-		return combatParticipantP1;
+		return p1BattleParticipant;
 	}
 	else if(inputPlayerNumber == 2){
-		return combatParticipantP2;
+		return p2BattleParticipant;
 	}
 	else{
 		std::cout << "Error: Input player number not recognized" << "\n";
@@ -99,10 +120,10 @@ Entity combatCalculator::returnModifiedBattleParticipants(const int inputPlayerN
 
 // Function: Check if any of the entities have died before proceeding to the next round of combat
 void combatCalculator::checkIfDead(){
-	if(combatParticipantP1.entityQuantity <=0){
+	if(p1BattleParticipant.entityQuantity <=0){
 		aDeathHasOccured = true;
 	}
-	else if(combatParticipantP2.entityQuantity <=0){
+	else if(p2BattleParticipant.entityQuantity <=0){
 		aDeathHasOccured = true;
 	}
 }
@@ -129,140 +150,140 @@ void combatCalculator::outputEntityInformation(std::string inputMessage){
 	}
 
 	// Behaviour: Run a function to output the entity information
-	combatParticipantP1.outputEntity(1);
-	if(monkParticipantP1.entityQuantity > 0){
+	p1BattleParticipant.outputEntity(1);
+	if(p1AssistingMonkParticipant.entityQuantity > 0){
 		std::cout << "(Assisting) ";
-		monkParticipantP1.outputEntity(1);
+		p1AssistingMonkParticipant.outputEntity(1);
 	}
-	combatParticipantP2.outputEntity(2);
-	if(monkParticipantP2.entityQuantity > 0){
+	p2BattleParticipant.outputEntity(2);
+	if(p2AssistingMonkParticipant.entityQuantity > 0){
 		std::cout << "(Assisting) ";
-		monkParticipantP2.outputEntity(2);
+		p2AssistingMonkParticipant.outputEntity(2);
 	}
 }
 
 // Function: Divide the values by the quantity (to get the individual values)
 void combatCalculator::getIndividualValues(){
 	// Behaviour: Get the individual values for player 1
-	if(combatParticipantP1.entityQuantity >= 1){
-		combatParticipantP1.rangedDamage /= combatParticipantP1.entityQuantity;
-		combatParticipantP1.standardDamage /= combatParticipantP1.entityQuantity;
-		combatParticipantP1.pointValue /= combatParticipantP1.entityQuantity;
+	if(p1BattleParticipant.entityQuantity >= 1){
+		p1BattleParticipant.rangedDamage /= p1BattleParticipant.entityQuantity;
+		p1BattleParticipant.standardDamage /= p1BattleParticipant.entityQuantity;
+		p1BattleParticipant.pointValue /= p1BattleParticipant.entityQuantity;
 	}
 	else{
-		combatParticipantP1.entityQuantity = 0;
-		combatParticipantP1.rangedDamage = 0;
-		combatParticipantP1.standardDamage = 0;
-		combatParticipantP1.pointValue = 0;
+		p1BattleParticipant.entityQuantity = 0;
+		p1BattleParticipant.rangedDamage = 0;
+		p1BattleParticipant.standardDamage = 0;
+		p1BattleParticipant.pointValue = 0;
 	}
 
-	if(monkParticipantP1.entityQuantity >= 1){
-		monkParticipantP1.pointValue /= monkParticipantP1.entityQuantity;
+	if(p1AssistingMonkParticipant.entityQuantity >= 1){
+		p1AssistingMonkParticipant.pointValue /= p1AssistingMonkParticipant.entityQuantity;
 	}
 	else{
-		monkParticipantP1.entityQuantity = 0;
-		monkParticipantP1.rangedDamage = 0;
-		monkParticipantP1.standardDamage = 0;
-		monkParticipantP1.pointValue = 0;
+		p1AssistingMonkParticipant.entityQuantity = 0;
+		p1AssistingMonkParticipant.rangedDamage = 0;
+		p1AssistingMonkParticipant.standardDamage = 0;
+		p1AssistingMonkParticipant.pointValue = 0;
 	}
 
 	// Behaviour: Get the individual values for player 2
-	if(combatParticipantP2.entityQuantity >= 1){
-		combatParticipantP2.rangedDamage /= combatParticipantP2.entityQuantity;
-		combatParticipantP2.standardDamage /= combatParticipantP2.entityQuantity;
-		combatParticipantP2.pointValue /= combatParticipantP2.entityQuantity;	
+	if(p2BattleParticipant.entityQuantity >= 1){
+		p2BattleParticipant.rangedDamage /= p2BattleParticipant.entityQuantity;
+		p2BattleParticipant.standardDamage /= p2BattleParticipant.entityQuantity;
+		p2BattleParticipant.pointValue /= p2BattleParticipant.entityQuantity;	
 	}
 	else{
-		combatParticipantP2.entityQuantity = 0;
-		combatParticipantP2.rangedDamage = 0;
-		combatParticipantP2.standardDamage = 0;
-		combatParticipantP2.pointValue = 0;	
+		p2BattleParticipant.entityQuantity = 0;
+		p2BattleParticipant.rangedDamage = 0;
+		p2BattleParticipant.standardDamage = 0;
+		p2BattleParticipant.pointValue = 0;	
 	}
 
-	if(monkParticipantP2.entityQuantity >= 1){
-		monkParticipantP2.pointValue /= monkParticipantP2.entityQuantity;
+	if(p2AssistingMonkParticipant.entityQuantity >= 1){
+		p2AssistingMonkParticipant.pointValue /= p2AssistingMonkParticipant.entityQuantity;
 	}
 	else{
-		monkParticipantP2.entityQuantity = 0;
-		monkParticipantP2.rangedDamage = 0;
-		monkParticipantP2.standardDamage = 0;
-		monkParticipantP2.pointValue = 0;	
+		p2AssistingMonkParticipant.entityQuantity = 0;
+		p2AssistingMonkParticipant.rangedDamage = 0;
+		p2AssistingMonkParticipant.standardDamage = 0;
+		p2AssistingMonkParticipant.pointValue = 0;	
 	}
 }
 
 // Function: Times the values by the quantity (to get the total values)
 void combatCalculator::getTotalValues(){
 	// Behaviour: Get the total values for player 1
-	if(combatParticipantP1.entityQuantity >= 1){
-		combatParticipantP1.rangedDamage *= combatParticipantP1.entityQuantity;
-		combatParticipantP1.standardDamage *= combatParticipantP1.entityQuantity;
-		combatParticipantP1.pointValue *= combatParticipantP1.entityQuantity;
+	if(p1BattleParticipant.entityQuantity >= 1){
+		p1BattleParticipant.rangedDamage *= p1BattleParticipant.entityQuantity;
+		p1BattleParticipant.standardDamage *= p1BattleParticipant.entityQuantity;
+		p1BattleParticipant.pointValue *= p1BattleParticipant.entityQuantity;
 	}
 	else{
-		combatParticipantP1.entityQuantity = 0;
-		combatParticipantP1.rangedDamage = 0;
-		combatParticipantP1.standardDamage = 0;
-		combatParticipantP1.pointValue = 0;
+		p1BattleParticipant.entityQuantity = 0;
+		p1BattleParticipant.rangedDamage = 0;
+		p1BattleParticipant.standardDamage = 0;
+		p1BattleParticipant.pointValue = 0;
 	}
 
-	if(monkParticipantP1.entityQuantity >= 1){
-		monkParticipantP1.pointValue *= monkParticipantP1.entityQuantity;
+	if(p1AssistingMonkParticipant.entityQuantity >= 1){
+		p1AssistingMonkParticipant.pointValue *= p1AssistingMonkParticipant.entityQuantity;
 	}
 	else{
-		monkParticipantP2.entityQuantity = 0;
-		monkParticipantP2.rangedDamage = 0;
-		monkParticipantP2.standardDamage = 0;
-		monkParticipantP2.pointValue = 0;	
+		p2AssistingMonkParticipant.entityQuantity = 0;
+		p2AssistingMonkParticipant.rangedDamage = 0;
+		p2AssistingMonkParticipant.standardDamage = 0;
+		p2AssistingMonkParticipant.pointValue = 0;	
 	}
 
 	// Behaviour: Get the total values for player 2
-	if(combatParticipantP2.entityQuantity >= 1){
-		combatParticipantP2.rangedDamage *= combatParticipantP2.entityQuantity;
-		combatParticipantP2.standardDamage *= combatParticipantP2.entityQuantity;
-		combatParticipantP2.pointValue *= combatParticipantP2.entityQuantity;
+	if(p2BattleParticipant.entityQuantity >= 1){
+		p2BattleParticipant.rangedDamage *= p2BattleParticipant.entityQuantity;
+		p2BattleParticipant.standardDamage *= p2BattleParticipant.entityQuantity;
+		p2BattleParticipant.pointValue *= p2BattleParticipant.entityQuantity;
 	}
 	else{
-		combatParticipantP2.entityQuantity = 0;
-		combatParticipantP2.rangedDamage = 0;
-		combatParticipantP2.standardDamage = 0;
-		combatParticipantP2.pointValue = 0;	
+		p2BattleParticipant.entityQuantity = 0;
+		p2BattleParticipant.rangedDamage = 0;
+		p2BattleParticipant.standardDamage = 0;
+		p2BattleParticipant.pointValue = 0;	
 	}
 
-	if(monkParticipantP2.entityQuantity >= 1){
-		monkParticipantP2.pointValue *= monkParticipantP2.entityQuantity;
+	if(p2AssistingMonkParticipant.entityQuantity >= 1){
+		p2AssistingMonkParticipant.pointValue *= p2AssistingMonkParticipant.entityQuantity;
 	}
 	else{
-		monkParticipantP2.entityQuantity = 0;
-		monkParticipantP2.rangedDamage = 0;
-		monkParticipantP2.standardDamage = 0;
-		monkParticipantP2.pointValue = 0;	
+		p2AssistingMonkParticipant.entityQuantity = 0;
+		p2AssistingMonkParticipant.rangedDamage = 0;
+		p2AssistingMonkParticipant.standardDamage = 0;
+		p2AssistingMonkParticipant.pointValue = 0;	
 	}
 }
 
 // Function: Make some final checks (after the end of the rounds of combat)
 void combatCalculator::finalChecks(){
 	// Behaviour: Check if the extra unit from the monk healing power ought to die
-	if(combatParticipantP1.entityQuantity == startingQuantityP1){
+	if(p1BattleParticipant.entityQuantity == startingQuantityP1){
 		if(healingEffectP1 == true){
-			combatParticipantP1.entityQuantity -= 1;
+			p1BattleParticipant.entityQuantity -= 1;
 		}
 	}
-	if(combatParticipantP2.entityQuantity == startingQuantityP2){
+	if(p2BattleParticipant.entityQuantity == startingQuantityP2){
 		if(healingEffectP2 == true){
-			combatParticipantP2.entityQuantity -= 1;
+			p2BattleParticipant.entityQuantity -= 1;
 		}
 	}
 }
 
 // Function: Calculate the non-rounded value (the decimal value)
-float combatCalculator::calculateRemainder(int roundedNumber, int inputAttackerDamage, int inputAttackerModifier, int inputDefenderHealth, int inputSetting){
-	// Float: Store the remainder
+float combatCalculator::calculateRemainingDamage(int roundedNumber, int inputAttackerDamage, int inputAttackerModifier, int inputDefenderHealth, int inputSetting){
+	// Float: Store the remaining damage value
 	float getTheDecimalValue = 0;
 
 	// Behaviour: Calculate the attack
 	getTheDecimalValue = ((inputAttackerDamage) + inputAttackerModifier);
 
-	// Behaviour: Get just the remainder value for units
+	// Behaviour: Get just the remaining damage value for units
 	if(inputSetting == 0){
 		getTheDecimalValue /= inputDefenderHealth;
 	}
@@ -273,11 +294,32 @@ float combatCalculator::calculateRemainder(int roundedNumber, int inputAttackerD
 	// Behaviour: Get the difference between the current number and the rounded number
 	getTheDecimalValue = (getTheDecimalValue - roundedNumber);
 
-
-	// Behaviour: Check the remainder value
-	std::cout << "remainder: " << getTheDecimalValue << "\n";
-
 	return getTheDecimalValue;
+}
+
+void combatCalculator::checkRemainingDamage(int* inputP1Events, int* inputP2Events){
+	// Event [26] Relentless Attack - his battle, any damage remaining in a round after casualties have been taken carries over into the next round. Remaining damage at the end of this battle is lost
+	if(remainingDamageP1 >= 1){
+		if(inputP1Events[26] == 1){
+			getIndividualValues();
+			p2BattleParticipant.entityQuantity--;
+			getTotalValues();
+			remainingDamageP1 --;
+		}
+	}
+
+	if(remainingDamageP2 >= 1){
+		if(inputP2Events[26] == 1){
+			getIndividualValues();
+			p1BattleParticipant.entityQuantity--;
+			getTotalValues();
+			remainingDamageP2 --;
+		}
+	}
+
+	// Behaviour: Check the remaining damage value
+	std::cout << "remaning damage value p1: " << remainingDamageP1 << "\n";
+	std::cout << "remaning damage value p2: " << remainingDamageP2 << "\n";
 }
 
 
@@ -326,21 +368,24 @@ void monkRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP
 		// Behaviour: Check that no deaths have occured
 		checkIfDead();
 
+		// Behaviour: Check if the remaining damage value triggers a death
+		checkRemainingDamage(inputP1Events, inputP2Events);
+
 		// Behaviour: Make sure that no deaths have occured before proceeding
 		if(aDeathHasOccured == false) {
 
 			// Behaviour: See if player 1 has a monk
-			if(	((monkParticipantP1.armorClass[9] == true) && (monkParticipantP1.entityQuantity > 0)) ||
-				(combatParticipantP1.armorClass[9] == true) )
+			if(	((p1AssistingMonkParticipant.armorClass[9] == true) && (p1AssistingMonkParticipant.entityQuantity > 0)) ||
+				(p1BattleParticipant.armorClass[9] == true) )
 			{
 				// Behaviour: See what monk is in the battle (a primary or assisting monk)
-				if(combatParticipantP1.entityQuantity > 0){
-					conversionRateP1 = combatParticipantP1.entityQuantity;
+				if(p1BattleParticipant.entityQuantity > 0){
+					conversionRateP1 = p1BattleParticipant.entityQuantity;
 					assistingMonksP1 = false;
 					justMonksP1 = true;
 				}
-				else if(monkParticipantP1.entityQuantity > 0){
-					conversionRateP1 = monkParticipantP1.entityQuantity;
+				else if(p1AssistingMonkParticipant.entityQuantity > 0){
+					conversionRateP1 = p1AssistingMonkParticipant.entityQuantity;
 					assistingMonksP1 = true;
 					justMonksP1 = false;
 				}
@@ -351,17 +396,17 @@ void monkRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP
 			}
 
 			// Behaviour: See if player 2 has a monk
-			if(	((monkParticipantP2.armorClass[9] == true) && (monkParticipantP2.entityQuantity > 0)) ||
-				(combatParticipantP2.armorClass[9] == true) )
+			if(	((p2AssistingMonkParticipant.armorClass[9] == true) && (p2AssistingMonkParticipant.entityQuantity > 0)) ||
+				(p2BattleParticipant.armorClass[9] == true) )
 			{
 				// Behaviour: See what monk is in the battle (a primary or assisting monk)
-				if(combatParticipantP2.entityQuantity > 0){
-					conversionRateP2 = combatParticipantP2.entityQuantity;
+				if(p2BattleParticipant.entityQuantity > 0){
+					conversionRateP2 = p2BattleParticipant.entityQuantity;
 					assistingMonksP2 = false;
 					justMonksP2 = true;
 				}
-				if(monkParticipantP2.entityQuantity > 0){
-					conversionRateP2 = monkParticipantP2.entityQuantity;
+				if(p2AssistingMonkParticipant.entityQuantity > 0){
+					conversionRateP2 = p2AssistingMonkParticipant.entityQuantity;
 					assistingMonksP2 = true;
 					justMonksP2 = false;
 				}
@@ -406,7 +451,7 @@ void monkRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP
 
 					// Behaviour: Check if the are 'assisting monks'
 					if(assistingMonksP1 == true){
-						for(int i = 0; i != monkParticipantP1.entityQuantity; i++){
+						for(int i = 0; i != p1AssistingMonkParticipant.entityQuantity; i++){
 							if(d6DieRoll <= 3){
 								d6DieRoll = generateD6DieInput();
 							}
@@ -415,7 +460,7 @@ void monkRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP
 
 					// Behaviour: Check if there are just monks
 					if(justMonksP1 == true){
-						for(int i = 0; i != combatParticipantP1.entityQuantity; i++){
+						for(int i = 0; i != p1BattleParticipant.entityQuantity; i++){
 							if(d6DieRoll <= 3){
 								d6DieRoll = generateD6DieInput();
 							}
@@ -435,7 +480,7 @@ void monkRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP
 						// Behaviour: Check if the conversion attempt failed
 						if(pietyConversionRate <= d6DieRoll){
 							getIndividualValues();
-							monkParticipantP1.entityQuantity -= 1;
+							p1AssistingMonkParticipant.entityQuantity -= 1;
 							getTotalValues();
 						}
 						else{
@@ -448,7 +493,7 @@ void monkRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP
 						// Behaviour: Check if the conversion attempt failed
 						if(pietyConversionRate <= d6DieRoll){
 							getIndividualValues();
-							combatParticipantP1.entityQuantity -= 1;
+							p1BattleParticipant.entityQuantity -= 1;
 							getTotalValues();
 						}
 						else{
@@ -523,23 +568,23 @@ void monkRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP
 					// Behaviour: Act on the success odds
 					if( (monkPowersActivatedP1 == true) && (calculationModeP1 == "0") ){
 						// Behaviour: Make sure that the conversion attempt is not being applied to siege units
-						if(combatParticipantP2.armorClass[12] == true){
+						if(p2BattleParticipant.armorClass[12] == true){
 							std::cout << "Error: Player 1's conversion attempt cannot be applied to player 2's siege unit" << "\n";
 							exit(EXIT_FAILURE);
 						}
 
 						// Behaviour: Act on the conversion attempt being successful
-						p2PointsLost = (combatParticipantP2.pointValue / combatParticipantP2.entityQuantity);
+						p2PointsLost = (p2BattleParticipant.pointValue / p2BattleParticipant.entityQuantity);
 						getIndividualValues();
-						combatParticipantP2.entityQuantity -= 1;
+						p2BattleParticipant.entityQuantity -= 1;
 						getTotalValues();
 					}
 					else if ( (monkPowersActivatedP1 == true) && (calculationModeP1 == "1") ){
 						// Behaviour: Act on the healing attempt being successful
 						healingEffectP1 = true;
-						startingQuantityP1 = combatParticipantP1.entityQuantity;
+						startingQuantityP1 = p1BattleParticipant.entityQuantity;
 						getIndividualValues();
-						combatParticipantP1.entityQuantity += p1EntitiesHealed;
+						p1BattleParticipant.entityQuantity += p1EntitiesHealed;
 						getTotalValues();
 					}
 				}
@@ -575,31 +620,31 @@ void monkRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP
 						// Behaviour: Act on the conversion attempt being successful based on the p1AssistingMonkTarget input
 						if(p1AssistingMonkTarget == "0"){
 							// Behaviour: Make sure that the conversion attempt is not being applied to siege units
-							if(combatParticipantP2.armorClass[12] == true){
+							if(p2BattleParticipant.armorClass[12] == true){
 								std::cout << "Error: Player 1's conversion attempt cannot be applied to player 2's siege unit" << "\n";
 								exit(EXIT_FAILURE);
 							}
 
 							// Behaviour: Convert the combat participant
-							p2PointsLost = (combatParticipantP2.pointValue / combatParticipantP2.entityQuantity);
+							p2PointsLost = (p2BattleParticipant.pointValue / p2BattleParticipant.entityQuantity);
 							getIndividualValues();
-							combatParticipantP2.entityQuantity -= 1;
+							p2BattleParticipant.entityQuantity -= 1;
 							getTotalValues();
 						}
 						else if(p1AssistingMonkTarget == "1"){
 							// Behaviour: Convert the monk participant
-							p2PointsLost = (monkParticipantP2.pointValue / monkParticipantP2.entityQuantity);
+							p2PointsLost = (p2AssistingMonkParticipant.pointValue / p2AssistingMonkParticipant.entityQuantity);
 							getIndividualValues();
-							monkParticipantP2.entityQuantity -= 1;
+							p2AssistingMonkParticipant.entityQuantity -= 1;
 							getTotalValues();
 						}
 					}
 					else if ( (monkPowersActivatedP1 == true) && (calculationModeP1 == "1") ){
 						// Behaviour: Act on the healing attempt being successful
 						healingEffectP1 = true;
-						startingQuantityP1 = combatParticipantP1.entityQuantity;
+						startingQuantityP1 = p1BattleParticipant.entityQuantity;
 						getIndividualValues();
-						combatParticipantP1.entityQuantity += p1EntitiesHealed;
+						p1BattleParticipant.entityQuantity += p1EntitiesHealed;
 						getTotalValues();
 					}
 				}
@@ -628,7 +673,7 @@ void monkRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP
 
 					// Behaviour: Check if the are 'assisting monks'
 					if(assistingMonksP2 == true){
-						for(int i = 0; i != monkParticipantP2.entityQuantity; i++){
+						for(int i = 0; i != p2AssistingMonkParticipant.entityQuantity; i++){
 							if(d6DieRoll <= 3){
 								d6DieRoll = generateD6DieInput();
 							}
@@ -637,7 +682,7 @@ void monkRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP
 
 					// Behaviour: Check if there are just monks
 					if(justMonksP2 == true){
-						for(int i = 0; i != combatParticipantP2.entityQuantity; i++){
+						for(int i = 0; i != p2BattleParticipant.entityQuantity; i++){
 							if(d6DieRoll <= 3){
 								d6DieRoll = generateD6DieInput();
 							}
@@ -656,7 +701,7 @@ void monkRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP
 						// Behaviour: Check if the conversion attempt failed
 						if(pietyConversionRateP2 <= d6DieRoll){
 							getIndividualValues();
-							monkParticipantP2.entityQuantity -= 1;
+							p2AssistingMonkParticipant.entityQuantity -= 1;
 							getTotalValues();
 						}
 						else{
@@ -669,7 +714,7 @@ void monkRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP
 						// Behaviour: Check if the conversion attempt failed
 						if(pietyConversionRateP2 <= d6DieRoll){
 							getIndividualValues();
-							combatParticipantP2.entityQuantity -= 1;
+							p2BattleParticipant.entityQuantity -= 1;
 							getTotalValues();
 						}
 						else{
@@ -743,23 +788,23 @@ void monkRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP
 					// Behaviour: Act on the success odds
 					if( (monkPowersActivatedP2 == true) && (calculationModeP2 == "0") ){
 						// Behaviour: Make sure that the conversion attempt is not being applied to siege units
-						if(combatParticipantP1.armorClass[12] == true){
+						if(p1BattleParticipant.armorClass[12] == true){
 							std::cout << "Error: Player 2's conversion attempt cannot be applied to player 1's siege unit" << "\n";
 							exit(EXIT_FAILURE);
 						}
 
 						// Behaviour: Act on the conversion attempt being successful
-						p1PointsLost = (combatParticipantP1.pointValue / combatParticipantP1.entityQuantity);
+						p1PointsLost = (p1BattleParticipant.pointValue / p1BattleParticipant.entityQuantity);
 						getIndividualValues();
-						combatParticipantP1.entityQuantity -= 1;
+						p1BattleParticipant.entityQuantity -= 1;
 						getTotalValues();
 					}
 					else if ( (monkPowersActivatedP2 == true) && (calculationModeP2 == "1") ){
 						// Behaviour: Act on the healing attempt being successful
 						healingEffectP2 = true;
-						startingQuantityP2 = combatParticipantP2.entityQuantity;
+						startingQuantityP2 = p2BattleParticipant.entityQuantity;
 						getIndividualValues();
-						combatParticipantP2.entityQuantity += p2EntitiesHealed;
+						p2BattleParticipant.entityQuantity += p2EntitiesHealed;
 						getTotalValues();
 					}
 				}
@@ -795,30 +840,30 @@ void monkRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP
 						// Behaviour: Act on the conversion attempt being successful based on the p2AssistingMonkTarget input
 						if(p2AssistingMonkTarget == "0"){
 							// Behaviour: Make sure that the conversion attempt is not being applied to siege units
-							if(combatParticipantP1.armorClass[12] == true){
+							if(p1BattleParticipant.armorClass[12] == true){
 								std::cout << "Error: Player 2's conversion attempt cannot be applied to player 1's siege unit" << "\n";
 								exit(EXIT_FAILURE);
 							}
 
 							// Behaviour: Convert the combat participant
-							p1PointsLost = (combatParticipantP1.pointValue / combatParticipantP1.entityQuantity);
+							p1PointsLost = (p1BattleParticipant.pointValue / p1BattleParticipant.entityQuantity);
 							getIndividualValues();
-							combatParticipantP1.entityQuantity -= 1;
+							p1BattleParticipant.entityQuantity -= 1;
 							getTotalValues();
 						}
 						else if(p2AssistingMonkTarget == "1"){
 							// Behaviour: Convert the monk participant
-							p1PointsLost = (monkParticipantP1.pointValue / monkParticipantP1.entityQuantity);
+							p1PointsLost = (p1AssistingMonkParticipant.pointValue / p1AssistingMonkParticipant.entityQuantity);
 							getIndividualValues();
-							monkParticipantP1.entityQuantity -= 1;
+							p1AssistingMonkParticipant.entityQuantity -= 1;
 							getTotalValues();
 						}
 					}
 					else if ( (monkPowersActivatedP2 == true) && (calculationModeP2 == "1") ){
 						// Behaviour: Act on the healing attempt being successful
 						healingEffectP2 = true;
-						startingQuantityP2 = combatParticipantP2.entityQuantity;
-						combatParticipantP2.entityQuantity += p2EntitiesHealed;
+						startingQuantityP2 = p2BattleParticipant.entityQuantity;
+						p2BattleParticipant.entityQuantity += p2EntitiesHealed;
 					}
 				}
 			}
@@ -897,14 +942,17 @@ void archerRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inpu
 		// Behaviour: Check that no deaths have occured
 		checkIfDead();
 
+		// Behaviour: Check if the remaining damage value triggers a death
+		checkRemainingDamage(inputP1Events, inputP2Events);
+
 		// Behaviour: Make sure that no deaths have occured and that the attacking entity is not retreating before proceeding
 		if( (aDeathHasOccured == false) && (isRetreating != "1") ) {
 			// Behaviour: Check if player 1 has an archer and if they are not fighting cavalry
-			if( (combatParticipantP1.armorClass[0] == true) && 
-				( (combatParticipantP2.armorClass[4] != true) || (rangedUnitAttacksCavalryP1 == true) )
+			if( (p1BattleParticipant.armorClass[0] == true) && 
+				( (p2BattleParticipant.armorClass[4] != true) || (rangedUnitAttacksCavalryP1 == true) )
 			  ){
 				// Behaviour: Check if player 1 is fighting a building
-				if(combatParticipantP2.armorClass[1] == true){ // Building p2
+				if(p2BattleParticipant.armorClass[1] == true){ // Building p2
 					isP1FightingBuilding = true;
 				}
 				else{
@@ -913,14 +961,14 @@ void archerRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inpu
 
 				// Behaviour: Calculate the damage against buildings if player 1 is fighting a building
 				if(isP1FightingBuilding == true){
-					p2BuildingDamage = ( ((combatParticipantP1.rangedDamage) + roundAttackModifiersP1) - ((combatParticipantP2.entityHealth) % roundDownMultiple));
+					p2BuildingDamage = ( ((p1BattleParticipant.rangedDamage) + roundAttackModifiersP1) - ((p2BattleParticipant.entityHealth) % roundDownMultiple));
 					p2DamageDie = p2BuildingDamage/10;
-					remainingDamageP1 += calculateRemainder(p2DamageDie, combatParticipantP1.rangedDamage, roundAttackModifiersP1, combatParticipantP2.entityHealth, 1);
+					remainingDamageP1 += calculateRemainingDamage(p2DamageDie, p1BattleParticipant.rangedDamage, roundAttackModifiersP1, p2BattleParticipant.entityHealth, 1);
 				}
 				// Behaviour: Calculate the damage against units if player 1 is fighting a unit
 				else{
-					p2EntityDeaths = std::floor( ((combatParticipantP1.rangedDamage) + roundAttackModifiersP1) / (combatParticipantP2.entityHealth) ); 
-					remainingDamageP1 += calculateRemainder(p2EntityDeaths, combatParticipantP1.rangedDamage, roundAttackModifiersP1, combatParticipantP2.entityHealth, 0);
+					p2EntityDeaths = std::floor( ((p1BattleParticipant.rangedDamage) + roundAttackModifiersP1) / (p2BattleParticipant.entityHealth) ); 
+					remainingDamageP1 += calculateRemainingDamage(p2EntityDeaths, p1BattleParticipant.rangedDamage, roundAttackModifiersP1, p2BattleParticipant.entityHealth, 0);
 				}
 
 				p1ArcherPresent = true;
@@ -931,11 +979,11 @@ void archerRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inpu
 
 
 			// Behaviour: Check if player 2 has an archer and if they are not fighting cavalry
-			if( (combatParticipantP2.armorClass[0] == true) && 
-				( (combatParticipantP1.armorClass[4] != true) || (rangedUnitAttacksCavalryP2 == true) )
+			if( (p2BattleParticipant.armorClass[0] == true) && 
+				( (p1BattleParticipant.armorClass[4] != true) || (rangedUnitAttacksCavalryP2 == true) )
 			  ){
 				// Behaviour: Check if player 2 is fighting a building
-				if(combatParticipantP1.armorClass[1] == true){ // Building p1
+				if(p1BattleParticipant.armorClass[1] == true){ // Building p1
 					isP2FightingBuilding = true;
 				}
 				else{
@@ -944,14 +992,14 @@ void archerRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inpu
 
 				// Behaviour: Calculate the damage against buildings if player 2 is fighting a building
 				if(isP2FightingBuilding == true){
-					p1BuildingDamage = ( ((combatParticipantP2.rangedDamage) + roundAttackModifiersP2) - ((combatParticipantP1.entityHealth) % roundDownMultiple));
+					p1BuildingDamage = ( ((p2BattleParticipant.rangedDamage) + roundAttackModifiersP2) - ((p1BattleParticipant.entityHealth) % roundDownMultiple));
 					p1DamageDie = p1BuildingDamage/10;
-					remainingDamageP2 += calculateRemainder(p1DamageDie, combatParticipantP2.rangedDamage, roundAttackModifiersP2, combatParticipantP1.entityHealth, 1);
+					remainingDamageP2 += calculateRemainingDamage(p1DamageDie, p2BattleParticipant.rangedDamage, roundAttackModifiersP2, p1BattleParticipant.entityHealth, 1);
 				}
 				// Behaviour: Calculate the damage against units if player 2 is fighting a unit
 				else{
-					p1EntityDeaths = std::floor( ((combatParticipantP2.rangedDamage) + roundAttackModifiersP2) / (combatParticipantP1.entityHealth) ); 
-					remainingDamageP2 += calculateRemainder(p1EntityDeaths, combatParticipantP2.rangedDamage, roundAttackModifiersP2, combatParticipantP1.entityHealth, 0);
+					p1EntityDeaths = std::floor( ((p2BattleParticipant.rangedDamage) + roundAttackModifiersP2) / (p1BattleParticipant.entityHealth) ); 
+					remainingDamageP2 += calculateRemainingDamage(p1EntityDeaths, p2BattleParticipant.rangedDamage, roundAttackModifiersP2, p1BattleParticipant.entityHealth, 0);
 				}
 
 				p2ArcherPresent = true;
@@ -983,38 +1031,38 @@ void archerRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inpu
 					// Behaviour: Decrease the building HP
 					if(p2BuildingDamage != 0){
 						// Behaviour: Set the point value to the buildings point
-						p2PointsLost = combatParticipantP2.pointValue;
+						p2PointsLost = p2BattleParticipant.pointValue;
 
-						combatParticipantP2.entityHealth -= p2BuildingDamage;
+						p2BattleParticipant.entityHealth -= p2BuildingDamage;
 
 						// Behaviour: if the HP of the building is > 0 then do not keep the set the point value
-						if(combatParticipantP2.entityHealth > 0){
+						if(p2BattleParticipant.entityHealth > 0){
 							p2PointsLost = 0;
 						}
 					}
 				}
 				else{
 					// Behavior: Store the starting quantity
-					p2StartingQuantity = combatParticipantP2.entityQuantity;
+					p2StartingQuantity = p2BattleParticipant.entityQuantity;
 
 					// Behaviour: Store how many points the entity is individually worth
-					p2PointsLost = (combatParticipantP2.pointValue / combatParticipantP2.entityQuantity);
+					p2PointsLost = (p2BattleParticipant.pointValue / p2BattleParticipant.entityQuantity);
 
 					// Behaviour: Divide the rangedDamagem SD and pointValue by the current quantity to get the values by 1
 					getIndividualValues();
 
 					// Behaviour: Now decrease the quantity
-					combatParticipantP2.entityQuantity -= p2EntityDeaths;
+					p2BattleParticipant.entityQuantity -= p2EntityDeaths;
 
 					// Behaviour: Now multiply the rangedDamage, SD and pointValue by the new quantity
 					getTotalValues();
 
 					// Behavior: Store the ending quantity and cap the ending quantity at 0
-					if(combatParticipantP2.entityQuantity < 0){
+					if(p2BattleParticipant.entityQuantity < 0){
 						p2EndingQuantity = 0;
 					}
 					else{
-						p2EndingQuantity = combatParticipantP2.entityQuantity;
+						p2EndingQuantity = p2BattleParticipant.entityQuantity;
 					}
 
 					// Behaviour: Calculate the difference between the two quantities
@@ -1038,38 +1086,38 @@ void archerRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inpu
 					// Behaviour: Decrease the building HP
 					if(p1BuildingDamage != 0){
 						// Behaviour: Set the point value to the buildings point
-						p1PointsLost = combatParticipantP1.pointValue;
+						p1PointsLost = p1BattleParticipant.pointValue;
 
-						combatParticipantP1.entityHealth -= p1BuildingDamage;
+						p1BattleParticipant.entityHealth -= p1BuildingDamage;
 
 						// Behaviour: if the HP of the building is > 0 then do not keep the set the point value
-						if(combatParticipantP1.entityHealth > 0){
+						if(p1BattleParticipant.entityHealth > 0){
 							p1PointsLost = 0;
 						}
 					}
 				}
 				else{
 					// Behavior: Store the starting quantity
-					p1StartingQuantity = combatParticipantP1.entityQuantity;
+					p1StartingQuantity = p1BattleParticipant.entityQuantity;
 
 					// Behaviour: Store how many points the entity is individually worth
-					p1PointsLost = (combatParticipantP1.pointValue / combatParticipantP1.entityQuantity);
+					p1PointsLost = (p1BattleParticipant.pointValue / p1BattleParticipant.entityQuantity);
 
 					// Behaviour: Divide the rangedDamage, SD and pointValue by the current quantity to get the values by 1
 					getIndividualValues();
 
 					// Behaviour: Now decrease the quantity
-					combatParticipantP1.entityQuantity -= p1EntityDeaths;
+					p1BattleParticipant.entityQuantity -= p1EntityDeaths;
 
 					// Behaviour: Now multiply the rangedDamage, SD and pointValue by the new quantity
 					getTotalValues();
 
 					// Behavior: Store the ending quantity and cap the ending quantity at 0
-					if(combatParticipantP1.entityQuantity < 0){
+					if(p1BattleParticipant.entityQuantity < 0){
 						p1EndingQuantity = 0;
 					}
 					else{
-						p1EndingQuantity = combatParticipantP1.entityQuantity;
+						p1EndingQuantity = p1BattleParticipant.entityQuantity;
 					}
 
 					// Behaviour: Calculate the difference between the two quantities
@@ -1093,10 +1141,10 @@ void archerRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inpu
 
 				// Behaviour: Display how many damage die to place if appropriate
 				if(isP1FightingBuilding == true){
-					std::cout << ">> Place " << p2DamageDie << " damage die onto player 2's " << combatParticipantP2.entityName << "\n";
+					std::cout << ">> Place " << p2DamageDie << " damage die onto player 2's " << p2BattleParticipant.entityName << "\n";
 				}
 				else if(isP2FightingBuilding == true){
-					std::cout << ">> Place " << p1DamageDie << " damage die onto player 1's " << combatParticipantP1.entityName << "\n";
+					std::cout << ">> Place " << p1DamageDie << " damage die onto player 1's " << p1BattleParticipant.entityName << "\n";
 				}
 
 				// Behaviour: Display how many points were added if appropriate
@@ -1171,10 +1219,13 @@ void bombardmentRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int*
 		// Behaviour: Check that no deaths have occured
 		checkIfDead();
 
+		// Behaviour: Check if the remaining damage value triggers a death
+		checkRemainingDamage(inputP1Events, inputP2Events);
+
 		// Behaviour: Make sure that no deaths have occured and that the attacking entity is not retreating before proceeding
 		if( (aDeathHasOccured == false) && (isRetreating != "1") ) {
 			// Behaviour: Check if player 1 is fighting a building
-			if(combatParticipantP2.armorClass[1] == true){ // Building p2
+			if(p2BattleParticipant.armorClass[1] == true){ // Building p2
 				isP1FightingBuilding = true;
 			}
 			else{
@@ -1183,21 +1234,21 @@ void bombardmentRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int*
 
 			// Behaviour: Calculate the damage against buildings if player 1 is fighting a building
 			if(isP1FightingBuilding == true){
-				p2BuildingDamage = ( ((combatParticipantP1.standardDamage) + roundAttackModifiersP1) - ((combatParticipantP1.standardDamage) % roundDownMultiple));
+				p2BuildingDamage = ( ((p1BattleParticipant.standardDamage) + roundAttackModifiersP1) - ((p1BattleParticipant.standardDamage) % roundDownMultiple));
 				p2DamageDie = p2BuildingDamage/10;
-				remainingDamageP1 += calculateRemainder(p2DamageDie, combatParticipantP1.standardDamage, roundAttackModifiersP1, combatParticipantP2.entityHealth, 1);
+				remainingDamageP1 += calculateRemainingDamage(p2DamageDie, p1BattleParticipant.standardDamage, roundAttackModifiersP1, p2BattleParticipant.entityHealth, 1);
 			}
 			// Behaviour: Calculate the damage against units if player 1 is fighting a unit
 			else{
 				// Behaviour: The damage only applies if p1 has a Galley or Fire Ship
-				if( (combatParticipantP1.armorClass[22] == true) || (combatParticipantP1.armorClass[22] == true) ){
-					p2EntityDeaths = std::floor( ((combatParticipantP1.standardDamage) + roundAttackModifiersP1) / (combatParticipantP2.entityHealth) ); 
-					remainingDamageP1 += calculateRemainder(p2EntityDeaths, combatParticipantP1.standardDamage, roundAttackModifiersP1, combatParticipantP2.entityHealth, 0);
+				if( (p1BattleParticipant.armorClass[22] == true) || (p1BattleParticipant.armorClass[22] == true) ){
+					p2EntityDeaths = std::floor( ((p1BattleParticipant.standardDamage) + roundAttackModifiersP1) / (p2BattleParticipant.entityHealth) ); 
+					remainingDamageP1 += calculateRemainingDamage(p2EntityDeaths, p1BattleParticipant.standardDamage, roundAttackModifiersP1, p2BattleParticipant.entityHealth, 0);
 				}	
 			}
 
 			// Behaviour: Check if player 1 is fighting a building
-			if(combatParticipantP1.armorClass[1] == true){ // Building p1
+			if(p1BattleParticipant.armorClass[1] == true){ // Building p1
 				isP2FightingBuilding = true;
 			}
 			else{
@@ -1206,17 +1257,17 @@ void bombardmentRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int*
 
 			// Behaviour: Calculate the damage against buildings if player 2 is fighting a building
 			if(isP2FightingBuilding == true){
-				p1BuildingDamage = ( ((combatParticipantP2.standardDamage) + roundAttackModifiersP2) - ((combatParticipantP2.standardDamage) % roundDownMultiple));
+				p1BuildingDamage = ( ((p2BattleParticipant.standardDamage) + roundAttackModifiersP2) - ((p2BattleParticipant.standardDamage) % roundDownMultiple));
 				p1DamageDie = p1BuildingDamage/10;
-				remainingDamageP2 += calculateRemainder(p1DamageDie, combatParticipantP2.standardDamage, roundAttackModifiersP2, combatParticipantP1.entityHealth, 1);
+				remainingDamageP2 += calculateRemainingDamage(p1DamageDie, p2BattleParticipant.standardDamage, roundAttackModifiersP2, p1BattleParticipant.entityHealth, 1);
 
 			}
 			// Behaviour: Calculate the damage against units if player 2 is fighting a unit
 			else{
 				// Behaviour: The damage only applies if p2 has a Galley or Fire Ship
-				if( (combatParticipantP2.armorClass[22] == true) || (combatParticipantP2.armorClass[22] == true) ){
-					p1EntityDeaths = std::floor( ((combatParticipantP2.standardDamage) + roundAttackModifiersP2) / (combatParticipantP1.entityHealth) ); 
-					remainingDamageP2 += calculateRemainder(p1EntityDeaths, combatParticipantP2.standardDamage, roundAttackModifiersP2, combatParticipantP1.entityHealth, 0);
+				if( (p2BattleParticipant.armorClass[22] == true) || (p2BattleParticipant.armorClass[22] == true) ){
+					p1EntityDeaths = std::floor( ((p2BattleParticipant.standardDamage) + roundAttackModifiersP2) / (p1BattleParticipant.entityHealth) ); 
+					remainingDamageP2 += calculateRemainingDamage(p1EntityDeaths, p2BattleParticipant.standardDamage, roundAttackModifiersP2, p1BattleParticipant.entityHealth, 0);
 				}
 			}
 
@@ -1233,38 +1284,38 @@ void bombardmentRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int*
 				// Behaviour: Decrease the building HP
 				if(p2BuildingDamage != 0){
 					// Behaviour: Set the point value to the buildings point
-					p2PointsLost = combatParticipantP2.pointValue;
+					p2PointsLost = p2BattleParticipant.pointValue;
 
-					combatParticipantP2.entityHealth -= p2BuildingDamage;
+					p2BattleParticipant.entityHealth -= p2BuildingDamage;
 
 					// Behaviour: if the HP of the building is > 0 then do not keep the set the point value
-					if(combatParticipantP2.entityHealth > 0){
+					if(p2BattleParticipant.entityHealth > 0){
 						p2PointsLost = 0;
 					}
 				}
 			}
 			else{
 				// Behavior: Store the starting quantity
-				p2StartingQuantity = combatParticipantP2.entityQuantity;
+				p2StartingQuantity = p2BattleParticipant.entityQuantity;
 
 				// Behaviour: Store how many points the entity is individually worth
-				p2PointsLost = (combatParticipantP2.pointValue / combatParticipantP2.entityQuantity);
+				p2PointsLost = (p2BattleParticipant.pointValue / p2BattleParticipant.entityQuantity);
 
 				// Behaviour: Divide the RD, standardDamage and pointValue by the current quantity to get the values for a quantity of 1
 				getIndividualValues();
 
 				// Behaviour: Now decrease the quantity
-				combatParticipantP2.entityQuantity -= p2EntityDeaths;
+				p2BattleParticipant.entityQuantity -= p2EntityDeaths;
 
 				// Behaviour: Now multiply the RD, standardDamage and pointValue by the new quantity
 				getTotalValues();
 
 				// Behavior: Store the ending quantity and cap the ending quantity at 0
-				if(combatParticipantP2.entityQuantity < 0){
+				if(p2BattleParticipant.entityQuantity < 0){
 					p2EndingQuantity = 0;
 				}
 				else{
-					p2EndingQuantity = combatParticipantP2.entityQuantity;
+					p2EndingQuantity = p2BattleParticipant.entityQuantity;
 				}
 
 				// Behaviour: Calculate the difference between the two quantities
@@ -1288,38 +1339,38 @@ void bombardmentRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int*
 				// Behaviour: Decrease the building HP
 				if(p1BuildingDamage != 0){
 					// Behaviour: Set the point value to the buildings point
-					p1PointsLost = combatParticipantP1.pointValue;
+					p1PointsLost = p1BattleParticipant.pointValue;
 
-					combatParticipantP1.entityHealth -= p1BuildingDamage;
+					p1BattleParticipant.entityHealth -= p1BuildingDamage;
 
 					// Behaviour: if the HP of the building is > 0 then do not keep the set the point value
-					if(combatParticipantP1.entityHealth > 0){
+					if(p1BattleParticipant.entityHealth > 0){
 						p1PointsLost = 0;
 					}
 				}
 			}
 			else{
 				// Behavior: Store the starting quantity
-				p1StartingQuantity = combatParticipantP1.entityQuantity;
+				p1StartingQuantity = p1BattleParticipant.entityQuantity;
 
 				// Behaviour: Store how many points the entity is individually worth
-				p1PointsLost = (combatParticipantP1.pointValue / combatParticipantP1.entityQuantity);
+				p1PointsLost = (p1BattleParticipant.pointValue / p1BattleParticipant.entityQuantity);
 
 				// Behaviour: Divide the RD, standardDamage and pointValue by the current quantity to get the values for a quantity of 1
 				getIndividualValues();
 
 				// Behaviour: Now decrease the quantity
-				combatParticipantP1.entityQuantity -= p1EntityDeaths;
+				p1BattleParticipant.entityQuantity -= p1EntityDeaths;
 
 				// Behaviour: Now multiply the RD, standardDamage and pointValue by the new quantity
 				getTotalValues();
 			
 				// Behavior: Store the ending quantity and cap the ending quantity at 0
-				if(combatParticipantP1.entityQuantity < 0){
+				if(p1BattleParticipant.entityQuantity < 0){
 					p1EndingQuantity = 0;
 				}
 				else{
-					p1EndingQuantity = combatParticipantP1.entityQuantity;
+					p1EndingQuantity = p1BattleParticipant.entityQuantity;
 				}
 
 				// Behaviour: Calculate the difference between the two quantities
@@ -1343,10 +1394,10 @@ void bombardmentRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int*
 
 			// Behaviour: Display how many damage die to place if appropriate
 			if(isP1FightingBuilding == true){
-				std::cout << ">> Place " << p2DamageDie << " damage die onto player 2's " << combatParticipantP2.entityName << "\n";
+				std::cout << ">> Place " << p2DamageDie << " damage die onto player 2's " << p2BattleParticipant.entityName << "\n";
 			}
 			else if(isP2FightingBuilding == true){
-				std::cout << ">> Place " << p1DamageDie << " damage die onto player 1's " << combatParticipantP1.entityName << "\n";
+				std::cout << ">> Place " << p1DamageDie << " damage die onto player 1's " << p1BattleParticipant.entityName << "\n";
 			}
 
 			// Behaviour: Display how many points were added if appropriate
@@ -1422,22 +1473,22 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 		d6DieRoll = generateD6DieInput();
 		switch(d6DieRoll){
 			case 1:
-			combatParticipantP2.standardDamage *=2;
+			p2BattleParticipant.standardDamage *=2;
 			break;
 			case 2:
-			combatParticipantP2.standardDamage += (2 * combatParticipantP2.entityQuantity);
+			p2BattleParticipant.standardDamage += (2 * p2BattleParticipant.entityQuantity);
 			break;
 			case 3:
 			// No effect
 			break;
 			case 4:
-			combatParticipantP1.standardDamage += (2 * combatParticipantP2.entityQuantity);
+			p1BattleParticipant.standardDamage += (2 * p2BattleParticipant.entityQuantity);
 			break;
 			case 5:
-			combatParticipantP1.standardDamage += (4 * combatParticipantP2.entityQuantity);
+			p1BattleParticipant.standardDamage += (4 * p2BattleParticipant.entityQuantity);
 			break;
 			case 6:
-			combatParticipantP1.standardDamage *= 2;
+			p1BattleParticipant.standardDamage *= 2;
 			break;
 		}
 	} 
@@ -1453,22 +1504,22 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 		d6DieRoll = generateD6DieInput();
 		switch(d6DieRoll){
 			case 1:
-			combatParticipantP1.standardDamage *=2;
+			p1BattleParticipant.standardDamage *=2;
 			break;
 			case 2:
-			combatParticipantP1.standardDamage += (2 * combatParticipantP1.entityQuantity);
+			p1BattleParticipant.standardDamage += (2 * p1BattleParticipant.entityQuantity);
 			break;
 			case 3:
 			// No effect
 			break;
 			case 4:
-			combatParticipantP2.standardDamage += (2 * combatParticipantP2.entityQuantity);
+			p2BattleParticipant.standardDamage += (2 * p2BattleParticipant.entityQuantity);
 			break;
 			case 5:
-			combatParticipantP2.standardDamage += (4 * combatParticipantP2.entityQuantity);
+			p2BattleParticipant.standardDamage += (4 * p2BattleParticipant.entityQuantity);
 			break;
 			case 6:
-			combatParticipantP2.standardDamage *= 2;
+			p2BattleParticipant.standardDamage *= 2;
 			break;
 		}
 	} 
@@ -1476,45 +1527,45 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 	// Behaviour: Give the person who played the card more attack
 	if(inputP1Events[35] == 1){
 		// [35] The Jester Is Dead, Let's Get Em (Celt) = Sacrifice 1 of your villagers. +4 standardDamage to all defending units this turn
-		combatParticipantP1.standardDamage +=4;
+		p1BattleParticipant.standardDamage +=4;
 	}
 
 	if(inputP2Events[35] == 1){
 		// [35] The Jester Is Dead, Let's Get Em (Celt) = Sacrifice 1 of your villagers. +4 standardDamage to all defending units this turn
-		combatParticipantP2.standardDamage +=4;
+		p2BattleParticipant.standardDamage +=4;
 	}
 
 	// Behaviour: Infantry double standard attack vs cavalry
 	if(inputP1Events[20] == 1){
 		// [20] Muddy Battlefield - Target infantry gets double standardAttack versus Cavalry this turn 
-		if( (combatParticipantP1.armorClass[8]) && (combatParticipantP2.armorClass[4]) ){
-			combatParticipantP1.standardDamage *=2;
+		if( (p1BattleParticipant.armorClass[8]) && (p2BattleParticipant.armorClass[4]) ){
+			p1BattleParticipant.standardDamage *=2;
 		}
 	}
 
 	if(inputP2Events[20] == 1){
 		// [20] Muddy Battlefield - Target infantry gets double standardAttack versus Cavalry this turn 
-		if( (combatParticipantP2.armorClass[8]) && (combatParticipantP1.armorClass[4]) ){
-			combatParticipantP2.standardDamage *=2;
+		if( (p2BattleParticipant.armorClass[8]) && (p1BattleParticipant.armorClass[4]) ){
+			p2BattleParticipant.standardDamage *=2;
 		}
 	}
 
 	// Behaviour: Decrease the standardDamage by two units if event 9 is played
 	if(inputP1Events[9] == 1){
 		// [9] First Battle Jitter - Two tokens on target unit have 0 standardDamage for this battle. Target unit must have five tokens on it
-		if(combatParticipantP2.entityQuantity >=5){
-			int getIndividualAttackP2 = (combatParticipantP2.standardDamage / combatParticipantP2.entityQuantity);
-			combatParticipantP2.standardDamage -= getIndividualAttackP2;
-			combatParticipantP2.standardDamage -= getIndividualAttackP2;
+		if(p2BattleParticipant.entityQuantity >=5){
+			int getIndividualAttackP2 = (p2BattleParticipant.standardDamage / p2BattleParticipant.entityQuantity);
+			p2BattleParticipant.standardDamage -= getIndividualAttackP2;
+			p2BattleParticipant.standardDamage -= getIndividualAttackP2;
 		}
 	}
 
 	if(inputP2Events[9] == 1){
 		// [9] First Battle Jitter - Two tokens on target unit have 0 standardDamage for this battle. Target unit must have five tokens on it
-		if(combatParticipantP1.entityQuantity >=5){
-			int getIndividualAttackP1 = (combatParticipantP2.standardDamage / combatParticipantP2.entityQuantity);
-			combatParticipantP1.standardDamage -= getIndividualAttackP1;
-			combatParticipantP1.standardDamage -= getIndividualAttackP1;
+		if(p1BattleParticipant.entityQuantity >=5){
+			int getIndividualAttackP1 = (p2BattleParticipant.standardDamage / p2BattleParticipant.entityQuantity);
+			p1BattleParticipant.standardDamage -= getIndividualAttackP1;
+			p1BattleParticipant.standardDamage -= getIndividualAttackP1;
 		}
 	}
 
@@ -1527,8 +1578,8 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 		d6DieRoll = 1;
 	}
 
-	if( (combatParticipantP1.armorClass[23] == true) || (combatParticipantP1.armorClass[23] == true) ) { // Fire Ship or Fast Fire Ship
-		combatParticipantP1.standardDamage *= d6DieRoll;
+	if( (p1BattleParticipant.armorClass[23] == true) || (p1BattleParticipant.armorClass[23] == true) ) { // Fire Ship or Fast Fire Ship
+		p1BattleParticipant.standardDamage *= d6DieRoll;
 	}
 
 	d6DieRoll = generateD6DieInput(); 
@@ -1539,8 +1590,8 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 		d6DieRoll = 1;
 	}
 
-	if( (combatParticipantP2.armorClass[23] == true) || (combatParticipantP2.armorClass[23] == true) ) { // Fire Ship or Fast Fire Ship
-		combatParticipantP2.standardDamage *= d6DieRoll;
+	if( (p2BattleParticipant.armorClass[23] == true) || (p2BattleParticipant.armorClass[23] == true) ) { // Fire Ship or Fast Fire Ship
+		p2BattleParticipant.standardDamage *= d6DieRoll;
 	}
 
 	// Behaviour: Run the ranged battle round for X times
@@ -1556,7 +1607,7 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 		// Behaviour: Make sure that no deaths have occured and that the attacking entity is not retreating before proceeding
 		if( (aDeathHasOccured == false) && (isRetreating != "1") ) {
 			// Behaviour: Check if player 1 is fighting a building
-			if(combatParticipantP2.armorClass[1] == true){ // Building p2
+			if(p2BattleParticipant.armorClass[1] == true){ // Building p2
 				isP1FightingBuilding = true;
 			}
 			else{
@@ -1565,27 +1616,27 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 
 			// Behaviour: Calculate the damage against buildings if player 1 is fighting a building
 			if(isP1FightingBuilding == true){
-				p2BuildingDamage = ((combatParticipantP1.standardDamage) - ((combatParticipantP1.standardDamage) % roundDownMultiple));
+				p2BuildingDamage = ((p1BattleParticipant.standardDamage) - ((p1BattleParticipant.standardDamage) % roundDownMultiple));
 				p2DamageDie = p2BuildingDamage/10;
-				remainingDamageP1 += calculateRemainder(p2DamageDie, combatParticipantP1.standardDamage, roundAttackModifiersP1, combatParticipantP2.entityHealth, 1);
+				remainingDamageP1 += calculateRemainingDamage(p2DamageDie, p1BattleParticipant.standardDamage, roundAttackModifiersP1, p2BattleParticipant.entityHealth, 1);
 			}
 			// Behaviour: Calculate the damage against units if player 1 is fighting a unit
 			else{
 				// Behaviour: Check if player 1 has an area effect unit and if so then apply area effect damage
-				if(combatParticipantP1.dealsAreaEffectDamage == true){
-					int p1AreaEffectUnitDamage = ((combatParticipantP1.standardDamage) + roundAttackModifiersP1) / combatParticipantP1.entityQuantity;
-					p2EntityDeaths = std::floor ( (((combatParticipantP2.entityQuantity) * (p1AreaEffectUnitDamage)) / combatParticipantP2.entityHealth) );
-					remainingDamageP1 += calculateRemainder(p2EntityDeaths, combatParticipantP1.standardDamage, roundAttackModifiersP1, combatParticipantP2.entityHealth, 0);
+				if(p1BattleParticipant.dealsAreaEffectDamage == true){
+					int p1AreaEffectUnitDamage = ((p1BattleParticipant.standardDamage) + roundAttackModifiersP1) / p1BattleParticipant.entityQuantity;
+					p2EntityDeaths = std::floor ( (((p2BattleParticipant.entityQuantity) * (p1AreaEffectUnitDamage)) / p2BattleParticipant.entityHealth) );
+					remainingDamageP1 += calculateRemainingDamage(p2EntityDeaths, p1BattleParticipant.standardDamage, roundAttackModifiersP1, p2BattleParticipant.entityHealth, 0);
 				}
 				else{
-					p2EntityDeaths = std::floor( ((combatParticipantP1.standardDamage) + roundAttackModifiersP1) / (combatParticipantP2.entityHealth) ); 
-					remainingDamageP1 += calculateRemainder(p2EntityDeaths, combatParticipantP1.standardDamage, roundAttackModifiersP1, combatParticipantP2.entityHealth, 0);
+					p2EntityDeaths = std::floor( ((p1BattleParticipant.standardDamage) + roundAttackModifiersP1) / (p2BattleParticipant.entityHealth) ); 
+					remainingDamageP1 += calculateRemainingDamage(p2EntityDeaths, p1BattleParticipant.standardDamage, roundAttackModifiersP1, p2BattleParticipant.entityHealth, 0);
 				}
 				
 			}
 
 			// Behaviour: Check if player 1 is fighting a building
-			if(combatParticipantP1.armorClass[1] == true){ // Building p1
+			if(p1BattleParticipant.armorClass[1] == true){ // Building p1
 				isP2FightingBuilding = true;
 			}
 			else{
@@ -1594,21 +1645,21 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 
 			// Behaviour: Calculate the damage against buildings if player 2 is fighting a building
 			if(isP2FightingBuilding == true){
-				p1BuildingDamage = ( ((combatParticipantP2.standardDamage) + roundAttackModifiersP2) - ((combatParticipantP1.entityHealth) % roundDownMultiple));
+				p1BuildingDamage = ( ((p2BattleParticipant.standardDamage) + roundAttackModifiersP2) - ((p1BattleParticipant.entityHealth) % roundDownMultiple));
 				p1DamageDie = p1BuildingDamage/10;
-				remainingDamageP2 += calculateRemainder(p1DamageDie, combatParticipantP2.standardDamage, roundAttackModifiersP2, combatParticipantP1.entityHealth, 1);
+				remainingDamageP2 += calculateRemainingDamage(p1DamageDie, p2BattleParticipant.standardDamage, roundAttackModifiersP2, p1BattleParticipant.entityHealth, 1);
 			}
 			// Behaviour: Calculate the damage against units if player 2 is fighting a unit
 			else{
 				// Behaviour: Check if player 2 has an area effect unit and if so then apply area effect damage
-				if(combatParticipantP2.dealsAreaEffectDamage == true){
-					int p2AreaEffectUnitDamage = ((combatParticipantP2.standardDamage) + roundAttackModifiersP2) / combatParticipantP2.entityQuantity;
-					p1EntityDeaths = std::floor ( (((combatParticipantP1.entityQuantity) * (p2AreaEffectUnitDamage)) / combatParticipantP1.entityHealth) );
-					remainingDamageP2 += calculateRemainder(p1EntityDeaths, combatParticipantP2.standardDamage, roundAttackModifiersP2, combatParticipantP1.entityHealth, 0);
+				if(p2BattleParticipant.dealsAreaEffectDamage == true){
+					int p2AreaEffectUnitDamage = ((p2BattleParticipant.standardDamage) + roundAttackModifiersP2) / p2BattleParticipant.entityQuantity;
+					p1EntityDeaths = std::floor ( (((p1BattleParticipant.entityQuantity) * (p2AreaEffectUnitDamage)) / p1BattleParticipant.entityHealth) );
+					remainingDamageP2 += calculateRemainingDamage(p1EntityDeaths, p2BattleParticipant.standardDamage, roundAttackModifiersP2, p1BattleParticipant.entityHealth, 0);
 				}
 				else{
-					p1EntityDeaths = std::floor( ((combatParticipantP2.standardDamage) + roundAttackModifiersP2) / (combatParticipantP1.entityHealth) ); 
-					remainingDamageP2 += calculateRemainder(p1EntityDeaths, combatParticipantP2.standardDamage, roundAttackModifiersP2, combatParticipantP1.entityHealth, 0);
+					p1EntityDeaths = std::floor( ((p2BattleParticipant.standardDamage) + roundAttackModifiersP2) / (p1BattleParticipant.entityHealth) ); 
+					remainingDamageP2 += calculateRemainingDamage(p1EntityDeaths, p2BattleParticipant.standardDamage, roundAttackModifiersP2, p1BattleParticipant.entityHealth, 0);
 				}
 			}
 
@@ -1619,47 +1670,45 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 		}
 
 		// Behaviour: Clear the results if the entity only attacks once (in the first round of combat) and we are not in the 1st round
-		if( (combatParticipantP1.onlyAttacksOnce == true) && (i+1 != 1) ){
+		if( (p1BattleParticipant.onlyAttacksOnce == true) && (i+1 != 1) ){
 			p2BuildingDamage = 0;
 			p2DamageDie = 0;
 			p2EntityDeaths = 0;
 		}
 		
-		if( (combatParticipantP2.onlyAttacksOnce == true) && (i+1 != 1) ){
+		if( (p2BattleParticipant.onlyAttacksOnce == true) && (i+1 != 1) ){
 			p1BuildingDamage = 0;
 			p1DamageDie = 0;
 			p1EntityDeaths = 0;
 		}
 
 		// Behaviour: Clear the results if the entity only attacks in the second round of combat and we are not in the 2nd round
-		if( (combatParticipantP1.onlyAttacksInTheSecondRoundOfStandardCombat == true) && (i+1 != 2) ){
+		if( (p1BattleParticipant.onlyAttacksInTheSecondRoundOfStandardCombat == true) && (i+1 != 2) ){
 			p2BuildingDamage = 0;
 			p2DamageDie = 0;
 			p2EntityDeaths = 0;
 		}
 		
-		if( (combatParticipantP2.onlyAttacksInTheSecondRoundOfStandardCombat == true) && (i+1 != 2) ){
+		if( (p2BattleParticipant.onlyAttacksInTheSecondRoundOfStandardCombat == true) && (i+1 != 2) ){
 			p1BuildingDamage = 0;
 			p1DamageDie = 0;
 			p1EntityDeaths = 0;
 		}
 
 		// Behaviour: Clear the results if the entity is an infantry unit for the attacking player and we are in the first round of combat
-		/** Need to declare the parameter playerNumber
 		if(inputP1Events[37] == 1){
 			// [37] While They're Sleeping - Target attacking Infantry unit takes no damage for the first round of combat. The ranged round does not count as the first round of combat
-			if( (playerNumber == 1) && (combatParticipantP1.armorClass[8] == true) ){
+			if(p1BattleParticipant.armorClass[8] == true){
 				p1EntityDeaths = 0;
 			}			
 		}
 
 		if(inputP2Events[37] == 1){
 			// [37] While They're Sleeping - Target attacking Infantry unit takes no damage for the first round of combat. The ranged round does not count as the first round of combat
-			if( (playerNumber == 2) && (combatParticipantP2.armorClass[8] == true) ){
+			if(p2BattleParticipant.armorClass[8] == true){
 				p2EntityDeaths = 0;
 			}
 		}
-		**/
 		
 		// Behaviour: Apply the results for p1 if the activation conditions were met
 		if(standardRoundActivated == true){
@@ -1668,38 +1717,38 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 				// Behaviour: Decrease the building HP
 				if(p2BuildingDamage != 0){
 					// Behaviour: Set the point value to the buildings point
-					p2PointsLost = combatParticipantP2.pointValue;
+					p2PointsLost = p2BattleParticipant.pointValue;
 
-					combatParticipantP2.entityHealth -= p2BuildingDamage;
+					p2BattleParticipant.entityHealth -= p2BuildingDamage;
 
 					// Behaviour: if the HP of the building is > 0 then do not keep the set the point value
-					if(combatParticipantP2.entityHealth > 0){
+					if(p2BattleParticipant.entityHealth > 0){
 						p2PointsLost = 0;
 					}
 				}
 			}
 			else{
 				// Behavior: Store the starting quantity
-				p2StartingQuantity = combatParticipantP2.entityQuantity;
+				p2StartingQuantity = p2BattleParticipant.entityQuantity;
 
 				// Behaviour: Store how many points the entity is individually worth
-				p2PointsLost = (combatParticipantP2.pointValue / combatParticipantP2.entityQuantity);
+				p2PointsLost = (p2BattleParticipant.pointValue / p2BattleParticipant.entityQuantity);
 
 				// Behaviour: Divide the RD, standardDamage and pointValue by the current quantity to get the values for a quantity of 1
 				getIndividualValues();
 
 				// Behaviour: Now decrease the quantity
-				combatParticipantP2.entityQuantity -= p2EntityDeaths;
+				p2BattleParticipant.entityQuantity -= p2EntityDeaths;
 
 				// Behaviour: Now multiply the RD, standardDamage and pointValue by the new quantity
 				getTotalValues();
 
 				// Behavior: Store the ending quantity and cap the ending quantity at 0
-				if(combatParticipantP2.entityQuantity < 0){
+				if(p2BattleParticipant.entityQuantity < 0){
 					p2EndingQuantity = 0;
 				}
 				else{
-					p2EndingQuantity = combatParticipantP2.entityQuantity;
+					p2EndingQuantity = p2BattleParticipant.entityQuantity;
 				}
 
 				// Behaviour: Calculate the difference between the two quantities
@@ -1723,38 +1772,38 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 				// Behaviour: Decrease the building HP
 				if(p1BuildingDamage != 0){
 					// Behaviour: Set the point value to the buildings point
-					p1PointsLost = combatParticipantP1.pointValue;
+					p1PointsLost = p1BattleParticipant.pointValue;
 
-					combatParticipantP1.entityHealth -= p1BuildingDamage;
+					p1BattleParticipant.entityHealth -= p1BuildingDamage;
 
 					// Behaviour: if the HP of the building is > 0 then do not keep the set the point value
-					if(combatParticipantP1.entityHealth > 0){
+					if(p1BattleParticipant.entityHealth > 0){
 						p1PointsLost = 0;
 					}
 				}
 			}
 			else{
 				// Behavior: Store the starting quantity
-				p1StartingQuantity = combatParticipantP1.entityQuantity;
+				p1StartingQuantity = p1BattleParticipant.entityQuantity;
 
 				// Behaviour: Store how many points the entity is individually worth
-				p1PointsLost = (combatParticipantP1.pointValue / combatParticipantP1.entityQuantity);
+				p1PointsLost = (p1BattleParticipant.pointValue / p1BattleParticipant.entityQuantity);
 
 				// Behaviour: Divide the RD, standardDamage and pointValue by the current quantity to get the values for a quantity of 1
 				getIndividualValues();
 
 				// Behaviour: Now decrease the quantity
-				combatParticipantP1.entityQuantity -= p1EntityDeaths;
+				p1BattleParticipant.entityQuantity -= p1EntityDeaths;
 
 				// Behaviour: Now multiply the RD, standardDamage and pointValue by the new quantity
 				getTotalValues();
 			
 				// Behavior: Store the ending quantity and cap the ending quantity at 0
-				if(combatParticipantP1.entityQuantity < 0){
+				if(p1BattleParticipant.entityQuantity < 0){
 					p1EndingQuantity = 0;
 				}
 				else{
-					p1EndingQuantity = combatParticipantP1.entityQuantity;
+					p1EndingQuantity = p1BattleParticipant.entityQuantity;
 				}
 
 				// Behaviour: Calculate the difference between the two quantities
@@ -1775,13 +1824,13 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 		// Make sure that the standard round got activated to avoid an arithmetic exception
 		if(standardRoundActivated == true){
 			if(i+1 == 2){
-				if(combatParticipantP1.isKamikaze == true){
-					p1PointsLost = (combatParticipantP1.pointValue / combatParticipantP1.entityQuantity);
-					combatParticipantP1.entityQuantity = 0;
+				if(p1BattleParticipant.isKamikaze == true){
+					p1PointsLost = (p1BattleParticipant.pointValue / p1BattleParticipant.entityQuantity);
+					p1BattleParticipant.entityQuantity = 0;
 				}
-				else if(combatParticipantP1.isKamikaze == true){
-					p2PointsLost = (combatParticipantP2.pointValue / combatParticipantP2.entityQuantity);
-					combatParticipantP2.entityQuantity = 0;
+				else if(p1BattleParticipant.isKamikaze == true){
+					p2PointsLost = (p2BattleParticipant.pointValue / p2BattleParticipant.entityQuantity);
+					p2BattleParticipant.entityQuantity = 0;
 				}
 			}
 		}
@@ -1793,10 +1842,10 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 
 			// Behaviour: Display how many damage die to place if appropriate
 			if(isP1FightingBuilding == true){
-				std::cout << ">> Place " << p2DamageDie << " damage die onto player 2's " << combatParticipantP2.entityName << "\n";
+				std::cout << ">> Place " << p2DamageDie << " damage die onto player 2's " << p2BattleParticipant.entityName << "\n";
 			}
 			else if(isP2FightingBuilding == true){
-				std::cout << ">> Place " << p1DamageDie << " damage die onto player 1's " << combatParticipantP1.entityName << "\n";
+				std::cout << ">> Place " << p1DamageDie << " damage die onto player 1's " << p1BattleParticipant.entityName << "\n";
 			}
 
 			// Behaviour: Display how many points were added if appropriate
@@ -1812,10 +1861,10 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 			// Behaviour: Deal with event 34
 			if(inputP1Events[34] == 1){
 				// [34] The Hammer's Cavalry (Franks) - Play when one of your Cavalry units is reduced to 1 token. Add two tokens to the unit at no cost
-				if(combatParticipantP1.armorClass[4] == true){ // Cavalry
-					if(combatParticipantP1.entityQuantity == 1){
+				if(p1BattleParticipant.armorClass[4] == true){ // Cavalry
+					if(p1BattleParticipant.entityQuantity == 1){
 						getIndividualValues();
-						combatParticipantP1.entityQuantity += 2;
+						p1BattleParticipant.entityQuantity += 2;
 						getTotalValues();
 					}
 				}
@@ -1823,10 +1872,10 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 
 			if(inputP2Events[34] == 1){
 				// [34] The Hammer's Cavalry (Franks) - Play when one of your Cavalry units is reduced to 1 token. Add two tokens to the unit at no cost
-				if(combatParticipantP2.armorClass[4] == true){ // Cavalry
-					if(combatParticipantP2.entityQuantity == 1){
+				if(p2BattleParticipant.armorClass[4] == true){ // Cavalry
+					if(p2BattleParticipant.entityQuantity == 1){
 						getIndividualValues();
-						combatParticipantP2.entityQuantity += 2;
+						p2BattleParticipant.entityQuantity += 2;
 						getTotalValues();
 					}
 				}

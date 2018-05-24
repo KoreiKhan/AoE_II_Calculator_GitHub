@@ -7,16 +7,7 @@
 
 // Functions: The constructor and deconstructor 
 modifiersCalculator::modifiersCalculator(){
-	// Store the default values
-	Entity p1BattleParticipant;
-	Entity p2BattleParticipant;
-	Entity p1AssistingMonkParticipant;
-	Entity p2AssistingMonkParticipant;
-	playerNumber = 0;
-	playerAge = 0;
-	returnMode = 0;
-
-	// Reference: I am not sure how to initialize the int*playerTechnologies or int*playerEvents
+	// Referencing: Storing the default values is unnecessary because I set them via a function
 }
 
 modifiersCalculator::~modifiersCalculator(){}
@@ -845,8 +836,7 @@ void modifiersCalculator::applyEventCardEffects(){
 			applyEventCardModifiers.standardDamage += 3;
 		}
 	}
-	// [26] Relentless Attack - This battle, any damage remaining in a round after casualties have been taken carries over into the next round. Remaining damage at the end of this battle is lost (skip for now)
-	// [26] Incomplete - Having issues with global variables. Have yet to check if the remainder >= 1 and adding to the death toll (will do this if the global information can be kept)
+	// [26] Relentless Attack (done elsewhere)
 	// [27] Retreat (done elsewhere)
 	// [28] Blank
 	// [29] Shots In The Back (Briton) (done elsewhere)
