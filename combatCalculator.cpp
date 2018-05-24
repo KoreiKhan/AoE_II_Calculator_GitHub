@@ -1,7 +1,7 @@
 /** The libaries **/ 
 #include <iostream> // Using: cin, cout
 #include <string> // Using: string
-#include <cstdlib> // Using: exit(EXIT_FAILURE)
+#include <cstdlib> // Using: exit(EXIT_FAILURE), srand(), rand()
 #include <stdlib.h> // Using: atoi
 #include <cmath> // Using: floor
 #include <random>
@@ -43,54 +43,32 @@ void combatCalculator::setCombatParticipants(Entity inputP1CombatParticipant, En
 	roundAttackModifiersP2 = inputRoundAttackModifiersP2;
 }
 
-int combatCalculator::generateD6DieInput(int inputPreferToRollDice){
+int combatCalculator::generateD6DieInput(){
 	// Int: Declare a variable to store the generated integer value
 	int d6Value = 0;
 
-	// Pseudo randomly simulate the roll of a d6 dice
-	if(inputPreferToRollDice == 0){
-		// Reference: https://ideone.com/41fclS
-		// Behaviour: Set a random seed
-		std::random_device rd;
+	// Reference: https://ideone.com/41fclS
+	// Behaviour: Set a random seed
+	std::random_device rd;
 
-		// Behaviour Initialize the Mersenne Twister pseudo-random number generator
-		std::mt19937 gen(rd());
+	// Behaviour Initialize the Mersenne Twister pseudo-random number generator
+	std::mt19937 gen(rd());
 
-	    // Behaviour: Generate pseudo-random numbers. The numbers are uniformly distributed in range (1, 6)
-	    std::uniform_int_distribution<> dis(1, 6);
+	// Behaviour: Generate pseudo-random numbers. The numbers are uniformly distributed in range (1, 6)
+	std::uniform_int_distribution<> dis(1, 6);
 
-	    // Behaviour: Generate 100 pseudo-random numbers
-	    int randomX = 0;
-	    for (int i = 0; i < 100; i++){
-	        randomX = dis(gen);
+	// Behaviour: Generate 100 pseudo-random numbers
+	int randomX = 0;
+	for (int i = 0; i < 100; i++){
+	    randomX = dis(gen);
 	        
-	        // Behaviour: Make sure that the numbers are actually changing each compile (unlike srand(time(0));)
-	        // std::cout << "\nRandom X = " << randomX;  
-	    }
-
-	    // Behaviour: Go with the last generated number
-	    d6Value = randomX;
-	}
-	else if(inputPreferToRollDice == 1){
-		std::string inputD6Value = "";
-		std::cout << "Enter the results of a d6 dice roll" << "\n";
-		std::cin >> inputD6Value;
-		if(
-			(inputD6Value != "1") &&
-			(inputD6Value != "2") &&
-			(inputD6Value != "3") &&
-			(inputD6Value != "4") &&
-			(inputD6Value != "5") &&
-			(inputD6Value != "6")
-		){
-			std::cout << "Error: A d6 die only reads the numbers 1-6" << "\n";
-			exit(EXIT_FAILURE);
-		}
-		else{
-			d6Value = atoi(inputD6Value.c_str());
-		}
+		// Behaviour: Make sure that the numbers are actually changing each compile (unlike srand(time(0));)
+		// std::cout << "\nRandom X = " << randomX;  
 	}
 
+	// Behaviour: Go with the last generated number
+	d6Value = randomX;
+	
 	return d6Value;
 }
 
@@ -98,7 +76,7 @@ int combatCalculator::generateD6DieInput(int inputPreferToRollDice){
 void combatCalculator::checkD6DiceSimulator(){
 	// Behaviour: Check the randomness of the automatic d6 dice roller
 	for(int i = 0; i < 50; i ++){
-		d6DieRoll = generateD6DieInput(0);
+		d6DieRoll = generateD6DieInput();
 		std::cout << "d6 roll " << i << ": " << d6DieRoll << "\n";
 	}
 }
@@ -308,7 +286,7 @@ monkRounds::monkRounds(){}
 monkRounds::~monkRounds(){}
 
 // Function: Calculate the outcome of a monk battle
-void monkRounds::roundOutcome(int inputRunTimes, int inputPreferToRollDice, int inputAttackingPlayerNumber, int* inputP1Events, int* inputP2Events){
+void monkRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP2Events){
 	/** How the monk calculation process works:
 		Conversion Rate = Number of Monks (up to 5)
 		Success if(d6DieRoll (a d6ConversionRoll) <= ConversionRate){}
@@ -419,7 +397,7 @@ void monkRounds::roundOutcome(int inputRunTimes, int inputPreferToRollDice, int 
 				}
 
 				// Behaviour: Generate, validate, and return d6 dice input before proceeding
-				d6DieRoll = generateD6DieInput(inputPreferToRollDice); 
+				d6DieRoll = generateD6DieInput(); 
 
 				if(inputP1Events[39] == 1){
 					// [39] Zealous Monks - Target Monk unit gets 1 conversion roll at a 3 or less rate for each monk attached
@@ -430,7 +408,7 @@ void monkRounds::roundOutcome(int inputRunTimes, int inputPreferToRollDice, int 
 					if(assistingMonksP1 == true){
 						for(int i = 0; i != monkParticipantP1.entityQuantity; i++){
 							if(d6DieRoll <= 3){
-								d6DieRoll = generateD6DieInput(inputPreferToRollDice);
+								d6DieRoll = generateD6DieInput();
 							}
 						}
 					}
@@ -439,7 +417,7 @@ void monkRounds::roundOutcome(int inputRunTimes, int inputPreferToRollDice, int 
 					if(justMonksP1 == true){
 						for(int i = 0; i != combatParticipantP1.entityQuantity; i++){
 							if(d6DieRoll <= 3){
-								d6DieRoll = generateD6DieInput(inputPreferToRollDice);
+								d6DieRoll = generateD6DieInput();
 							}
 						}
 					}
@@ -512,7 +490,7 @@ void monkRounds::roundOutcome(int inputRunTimes, int inputPreferToRollDice, int 
 
 						// Behaviour: Act on the user response 
 						if(getP1Response == "1"){
-							d6DieRoll = generateD6DieInput(inputPreferToRollDice);
+							d6DieRoll = generateD6DieInput();
 							extraConversionAttemptsP1 ++;
 						}
 						else if(getP1Response == "0"){
@@ -641,7 +619,7 @@ void monkRounds::roundOutcome(int inputRunTimes, int inputPreferToRollDice, int 
 				}
 
 				// Behaviour: Generate, validate, and return d6 dice input before proceeding
-				d6DieRoll = generateD6DieInput(inputPreferToRollDice); 
+				d6DieRoll = generateD6DieInput(); 
 
 				if(inputP2Events[39] == 1){
 					// [39] Zealous Monks - Target Monk unit gets 1 conversion roll at a 3 or less rate for each monk attached
@@ -652,7 +630,7 @@ void monkRounds::roundOutcome(int inputRunTimes, int inputPreferToRollDice, int 
 					if(assistingMonksP2 == true){
 						for(int i = 0; i != monkParticipantP2.entityQuantity; i++){
 							if(d6DieRoll <= 3){
-								d6DieRoll = generateD6DieInput(inputPreferToRollDice);
+								d6DieRoll = generateD6DieInput();
 							}
 						}
 					}
@@ -661,7 +639,7 @@ void monkRounds::roundOutcome(int inputRunTimes, int inputPreferToRollDice, int 
 					if(justMonksP2 == true){
 						for(int i = 0; i != combatParticipantP2.entityQuantity; i++){
 							if(d6DieRoll <= 3){
-								d6DieRoll = generateD6DieInput(inputPreferToRollDice);
+								d6DieRoll = generateD6DieInput();
 							}
 						}
 					}
@@ -733,7 +711,7 @@ void monkRounds::roundOutcome(int inputRunTimes, int inputPreferToRollDice, int 
 
 						// Behaviour: Act on the user response 
 						if(getP2Response == "1"){
-							d6DieRoll = generateD6DieInput(inputPreferToRollDice);
+							d6DieRoll = generateD6DieInput();
 							extraConversionAttemptsP2 ++;
 						}
 						else if(getP2Response == "0"){
@@ -876,7 +854,7 @@ archerRounds::archerRounds(){}
 archerRounds::~archerRounds(){}
 
 // Function: Calculate the outcome of a ranged battle
-void archerRounds::roundOutcome(int inputRunTimes, int inputPreferToRollDice, int inputAttackingPlayerNumber, int* inputP1Events, int* inputP2Events){
+void archerRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP2Events){
 	// Bool: Track if a ranged unit from either players did something
 	bool p1ArcherPresent = false, p2ArcherPresent = false;
 
@@ -1165,7 +1143,7 @@ bombardmentRounds::bombardmentRounds(){}
 bombardmentRounds::~bombardmentRounds(){}
 
 // Function: Calculate the outcome of a bombardment round of battle (only for the Crow's nest event card)
-void bombardmentRounds::roundOutcome(int inputRunTimes, int inputPreferToRollDice, int inputAttackingPlayerNumber, int* inputP1Events, int* inputP2Events){ 
+void bombardmentRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP2Events){ 
 	// Bool: Track if the bombardment attack round got activated
 	bool bombardmentRoundActivated = false;
 
@@ -1409,7 +1387,7 @@ standardRounds::standardRounds(){
 standardRounds::~standardRounds(){}
 
 // Function: Calculate the outcome of a standard round of battle
-void standardRounds::roundOutcome(int inputRunTimes, int inputPreferToRollDice, int inputAttackingPlayerNumber, int* inputP1Events, int* inputP2Events){
+void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP2Events){
 	// Bool: Track if the standard attack round got activated
 	bool standardRoundActivated = false;
 
@@ -1432,142 +1410,78 @@ void standardRounds::roundOutcome(int inputRunTimes, int inputPreferToRollDice, 
 	int p1StartingQuantity = 0, p1EndingQuantity = 0;
 	int p2StartingQuantity = 0, p2EndingQuantity = 0;
 
-	// Behaviour: Figure out the attacker/defender for 2 players
-	int currentAttacker = inputAttackingPlayerNumber;
-	int currentDefender = 0;
-	if(currentAttacker == 1){
-		currentDefender = 2;
-	}
-	else if(currentAttacker == 2){
-		currentDefender = 1;
-	}
-
-	// Behaviour: Give the attacker/defender more attack based on a d6 die roll
+	// Behaviour: Give the person who played/did not play the event more attack based on a d6 die roll
 	if(inputP1Events[11] == 1){
 		// [11] = Fortune Favors The Foolish
-		// 1: Defending unit deals double damage
-		// 2: Defending units gain +2 standardDamage per token
+		// 1: Player's unit who did not play the card deals double damage
+		// 2: Player's unit who did not play the card gains +2 standardDamage per token
 		// 3: No effect
-		// 4: Attacking unit gains +2 standardDamage per token
-		// 5: Attacking unit gains +4 standardDamage per token
-		// 6: Attacking unit deals double damage until the end of the turn
-		d6DieRoll = generateD6DieInput(inputPreferToRollDice);
+		// 4: Player's unit who played the card gains +2 standardDamage per token
+		// 5: Player's unit who played the card gains +4 standardDamage per token
+		// 6: Player's unit who played the card gains double damage until the end of the turn
+		d6DieRoll = generateD6DieInput();
 		switch(d6DieRoll){
 			case 1:
-			if(currentDefender == 1){
-				combatParticipantP1.standardDamage *=2;
-			}
-			else if(currentDefender == 2){
-				combatParticipantP2.standardDamage *=2;
-			}
+			combatParticipantP2.standardDamage *=2;
 			break;
 			case 2:
-			if(currentDefender == 1){
-				combatParticipantP1.standardDamage += (combatParticipantP1.entityQuantity * 2);
-			}
-			else if(currentDefender == 2){
-				combatParticipantP2.standardDamage += (combatParticipantP2.entityQuantity * 2);
-			}
+			combatParticipantP2.standardDamage += (2 * combatParticipantP2.entityQuantity);
 			break;
 			case 3:
 			// No effect
 			break;
 			case 4:
-			if(currentAttacker == 1){
-				combatParticipantP1.standardDamage += (combatParticipantP1.entityQuantity * 2);
-			}
-			else if(currentAttacker == 2){
-				combatParticipantP2.standardDamage += (combatParticipantP2.entityQuantity * 2);
-			}
+			combatParticipantP1.standardDamage += (2 * combatParticipantP2.entityQuantity);
 			break;
 			case 5:
-			if(currentAttacker == 1){
-				combatParticipantP1.standardDamage += (combatParticipantP1.entityQuantity * 4);
-			}
-			else if(currentAttacker == 2){
-				combatParticipantP2.standardDamage += (combatParticipantP2.entityQuantity * 4);
-			}
+			combatParticipantP1.standardDamage += (4 * combatParticipantP2.entityQuantity);
 			break;
 			case 6:
-			if(currentAttacker == 1){
-				combatParticipantP1.standardDamage *=2;
-			}
-			else if(currentAttacker == 2){
-				combatParticipantP2.standardDamage *=2;
-			}
+			combatParticipantP1.standardDamage *= 2;
 			break;
 		}
 	} 
 
 	if(inputP2Events[11] == 1){
 		// [11] = Fortune Favors The Foolish
-		// 1: Defending unit deals double damage
-		// 2: Defending units gain +2 standardDamage per token
+		// 1: Player's unit who did not play the card deals double damage
+		// 2: Player's unit who did not play the card gains +2 standardDamage per token
 		// 3: No effect
-		// 4: Attacking unit gains +2 standardDamage per token
-		// 5: Attacking unit gains +4 standardDamage per token
-		// 6: Attacking unit deals double damage until the end of the turn
-		d6DieRoll = generateD6DieInput(inputPreferToRollDice);
+		// 4: Player's unit who played the card gains +2 standardDamage per token
+		// 5: Player's unit who played the card gains +4 standardDamage per token
+		// 6: Player's unit who played the card gains double damage until the end of the turn
+		d6DieRoll = generateD6DieInput();
 		switch(d6DieRoll){
 			case 1:
-			if(currentDefender == 1){
-				combatParticipantP1.standardDamage *=2;
-			}
-			else if(currentDefender == 2){
-				combatParticipantP2.standardDamage *=2;
-			}
+			combatParticipantP1.standardDamage *=2;
 			break;
 			case 2:
-			if(currentDefender == 1){
-				combatParticipantP1.standardDamage += (combatParticipantP1.entityQuantity * 2);
-			}
-			else if(currentDefender == 2){
-				combatParticipantP2.standardDamage += (combatParticipantP2.entityQuantity * 2);
-			}
+			combatParticipantP1.standardDamage += (2 * combatParticipantP1.entityQuantity);
 			break;
 			case 3:
 			// No effect
 			break;
 			case 4:
-			if(currentAttacker == 1){
-				combatParticipantP1.standardDamage += (combatParticipantP1.entityQuantity * 2);
-			}
-			else if(currentAttacker == 2){
-				combatParticipantP2.standardDamage += (combatParticipantP2.entityQuantity * 2);
-			}
+			combatParticipantP2.standardDamage += (2 * combatParticipantP2.entityQuantity);
 			break;
 			case 5:
-			if(currentAttacker == 1){
-				combatParticipantP1.standardDamage += (combatParticipantP1.entityQuantity * 4);
-			}
-			else if(currentAttacker == 2){
-				combatParticipantP2.standardDamage += (combatParticipantP2.entityQuantity * 4);
-			}
+			combatParticipantP2.standardDamage += (4 * combatParticipantP2.entityQuantity);
 			break;
 			case 6:
-			if(currentAttacker == 1){
-				combatParticipantP1.standardDamage *=2;
-			}
-			else if(currentAttacker == 2){
-				combatParticipantP2.standardDamage *=2;
-			}
+			combatParticipantP2.standardDamage *= 2;
 			break;
 		}
 	} 
 
-	// Behaviour: Give the attacker/defender more attack
+	// Behaviour: Give the person who played the card more attack
 	if(inputP1Events[35] == 1){
 		// [35] The Jester Is Dead, Let's Get Em (Celt) = Sacrifice 1 of your villagers. +4 standardDamage to all defending units this turn
-		if(currentDefender == 1){
-			combatParticipantP1.standardDamage +=4;
-		}
+		combatParticipantP1.standardDamage +=4;
 	}
 
 	if(inputP2Events[35] == 1){
 		// [35] The Jester Is Dead, Let's Get Em (Celt) = Sacrifice 1 of your villagers. +4 standardDamage to all defending units this turn
-		if(currentDefender == 2){
-			combatParticipantP2.standardDamage +=4;
-		}
+		combatParticipantP2.standardDamage +=4;
 	}
 
 	// Behaviour: Infantry double standard attack vs cavalry
@@ -1605,7 +1519,7 @@ void standardRounds::roundOutcome(int inputRunTimes, int inputPreferToRollDice, 
 	}
 
 	// Behaviour: Multiply the standardDamage by a random number between 1-6 if a Fire Ship
-	d6DieRoll = generateD6DieInput(inputPreferToRollDice); 
+	d6DieRoll = generateD6DieInput(); 
 
 	// Behaviour: Set the result to 0 if player 2 has Soak_The_Timbers
 	if(inputP2Events[30] == 1){
@@ -1617,7 +1531,7 @@ void standardRounds::roundOutcome(int inputRunTimes, int inputPreferToRollDice, 
 		combatParticipantP1.standardDamage *= d6DieRoll;
 	}
 
-	d6DieRoll = generateD6DieInput(inputPreferToRollDice); 
+	d6DieRoll = generateD6DieInput(); 
 
 	// Behaviour: Set the result to 0 if player 1 has Soak_The_Timbers
 	if(inputP1Events[30] == 1){
@@ -1731,19 +1645,21 @@ void standardRounds::roundOutcome(int inputRunTimes, int inputPreferToRollDice, 
 		}
 
 		// Behaviour: Clear the results if the entity is an infantry unit for the attacking player and we are in the first round of combat
+		/** Need to declare the parameter playerNumber
 		if(inputP1Events[37] == 1){
 			// [37] While They're Sleeping - Target attacking Infantry unit takes no damage for the first round of combat. The ranged round does not count as the first round of combat
-			if( (currentAttacker == 1) && (combatParticipantP1.armorClass[8] == true) ){
+			if( (playerNumber == 1) && (combatParticipantP1.armorClass[8] == true) ){
 				p1EntityDeaths = 0;
 			}			
 		}
 
 		if(inputP2Events[37] == 1){
 			// [37] While They're Sleeping - Target attacking Infantry unit takes no damage for the first round of combat. The ranged round does not count as the first round of combat
-			if( (currentAttacker == 2) && (combatParticipantP2.armorClass[8] == true) ){
+			if( (playerNumber == 2) && (combatParticipantP2.armorClass[8] == true) ){
 				p2EntityDeaths = 0;
 			}
 		}
+		**/
 		
 		// Behaviour: Apply the results for p1 if the activation conditions were met
 		if(standardRoundActivated == true){
