@@ -27,8 +27,6 @@ combatCalculator::~combatCalculator(){}
 
 // Function: Set the battle participants
 void combatCalculator::setCombatParticipants(Entity &inputP1BattleParticipant, Entity &inputP2BattleParticipant, Entity &inputP1AssistingMonkBattleParticipant, Entity &inputP2AssistingMonkBattleParticipant, int &inputRoundAttackModifiersP1, int &inputRoundAttackModifiersP2){
-	std::cout << &inputP1BattleParticipant << "\n";
-
 	// Player 1
 	p1BattleParticipant = inputP1BattleParticipant;
 	p1AssistingMonkParticipant = inputP1AssistingMonkBattleParticipant;
@@ -284,11 +282,13 @@ float combatCalculator::calculateRemainingDamage(int roundedNumber, int inputAtt
 	getTheDecimalValue = ((inputAttackerDamage) + inputAttackerModifier);
 
 	// Behaviour: Get just the remaining damage value for units
-	if(inputSetting == 0){
-		getTheDecimalValue /= inputDefenderHealth;
-	}
-	else if(inputSetting == 1){
-		getTheDecimalValue -= inputDefenderHealth;
+	if(getTheDecimalValue !=0){
+		if(inputSetting == 0){
+			getTheDecimalValue /= inputDefenderHealth;
+		}
+		else if(inputSetting == 1){
+			getTheDecimalValue -= inputDefenderHealth;
+		}	
 	}
 
 	// Behaviour: Get the difference between the current number and the rounded number
@@ -298,28 +298,32 @@ float combatCalculator::calculateRemainingDamage(int roundedNumber, int inputAtt
 }
 
 void combatCalculator::checkRemainingDamage(int* inputP1Events, int* inputP2Events){
-	// Event [26] Relentless Attack - his battle, any damage remaining in a round after casualties have been taken carries over into the next round. Remaining damage at the end of this battle is lost
-	if(remainingDamageP1 >= 1){
-		if(inputP1Events[26] == 1){
-			getIndividualValues();
-			p2BattleParticipant.entityQuantity--;
-			getTotalValues();
-			remainingDamageP1 --;
+	// Reference: For whatever reason, decreasing the quantity of:
+	// [p1/p2]BattleParticipant.entityQuantity by 1 triggers a floating point error in the second round of combat
+
+	// Event [26] Relentless Attack - this battle, any damage remaining in a round after casualties have been taken carries over into the next round. Remaining damage at the end of this battle is lost
+	if(inputP1Events[26] == 1){
+		if(p2BattleParticipant.entityQuantity >=1){
+			if(remainingDamageP1 >= 1){
+				getIndividualValues();
+				p2BattleParticipant.entityQuantity -=1;
+				getTotalValues();
+				remainingDamageP1 -= 1;
+			}
 		}
 	}
 
-	if(remainingDamageP2 >= 1){
-		if(inputP2Events[26] == 1){
-			getIndividualValues();
-			p1BattleParticipant.entityQuantity--;
-			getTotalValues();
-			remainingDamageP2 --;
+
+	if(inputP2Events[26] == 1){
+		if(p1BattleParticipant.entityQuantity >=1){
+			if(remainingDamageP2 >= 1){
+				getIndividualValues();
+				p1BattleParticipant.entityQuantity -=1;
+				getTotalValues();
+				remainingDamageP2 -= 1;
+			}
 		}
 	}
-
-	// Behaviour: Check the remaining damage value
-	std::cout << "remaning damage value p1: " << remainingDamageP1 << "\n";
-	std::cout << "remaning damage value p2: " << remainingDamageP2 << "\n";
 }
 
 
@@ -367,9 +371,6 @@ void monkRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inputP
 	for(int i = 0; i < inputRunTimes; i ++){
 		// Behaviour: Check that no deaths have occured
 		checkIfDead();
-
-		// Behaviour: Check if the remaining damage value triggers a death
-		checkRemainingDamage(inputP1Events, inputP2Events);
 
 		// Behaviour: Make sure that no deaths have occured before proceeding
 		if(aDeathHasOccured == false) {
@@ -942,9 +943,6 @@ void archerRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inpu
 		// Behaviour: Check that no deaths have occured
 		checkIfDead();
 
-		// Behaviour: Check if the remaining damage value triggers a death
-		checkRemainingDamage(inputP1Events, inputP2Events);
-
 		// Behaviour: Make sure that no deaths have occured and that the attacking entity is not retreating before proceeding
 		if( (aDeathHasOccured == false) && (isRetreating != "1") ) {
 			// Behaviour: Check if player 1 has an archer and if they are not fighting cavalry
@@ -1007,7 +1005,16 @@ void archerRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inpu
 			else{
 				p2ArcherPresent = false;
 			}
+		} 
 
+		// Behaviour: Check if the remaining damage value triggers a death
+		checkRemainingDamage(inputP1Events, inputP2Events);
+
+		// Behaviour: Check for deaths again
+		checkIfDead();
+
+		// Behaviour: Make sure that no entities have died again
+		if(aDeathHasOccured == false){
 			// Behaviour: Negate the ranged attack round for p2 if p2 has heavy tree cover
 			if(inputP2Events[15] == 1){
 				// [15] Heavy Tree Cover - Negate range combat round in target battle involving one of your units
@@ -1032,8 +1039,7 @@ void archerRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inpu
 					if(p2BuildingDamage != 0){
 						// Behaviour: Set the point value to the buildings point
 						p2PointsLost = p2BattleParticipant.pointValue;
-
-						p2BattleParticipant.entityHealth -= p2BuildingDamage;
+							p2BattleParticipant.entityHealth -= p2BuildingDamage;
 
 						// Behaviour: if the HP of the building is > 0 then do not keep the set the point value
 						if(p2BattleParticipant.entityHealth > 0){
@@ -1133,54 +1139,54 @@ void archerRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* inpu
 					}
 				}
 			}
+		}
+		
+		// Behaviour: Display the outcome of the archer combat round only if changes occured 
+		if ( (p1ArcherPresent == true) || (p2ArcherPresent == true) ) {
+			std::string outputString = "Phase 2) Archer round "+std::to_string(i+1)+" calculations...";
+			outputEntityInformation(outputString);
 
-			// Behaviour: Display the outcome of the archer combat round only if changes occured 
-			if ( (p1ArcherPresent == true) || (p2ArcherPresent == true) ) {
-				std::string outputString = "Phase 2) Archer round "+std::to_string(i+1)+" calculations...";
-				outputEntityInformation(outputString);
+			// Behaviour: Display how many damage die to place if appropriate
+			if(isP1FightingBuilding == true){
+				std::cout << ">> Place " << p2DamageDie << " damage die onto player 2's " << p2BattleParticipant.entityName << "\n";
+			}
+			else if(isP2FightingBuilding == true){
+				std::cout << ">> Place " << p1DamageDie << " damage die onto player 1's " << p1BattleParticipant.entityName << "\n";
+			}
 
-				// Behaviour: Display how many damage die to place if appropriate
-				if(isP1FightingBuilding == true){
-					std::cout << ">> Place " << p2DamageDie << " damage die onto player 2's " << p2BattleParticipant.entityName << "\n";
-				}
-				else if(isP2FightingBuilding == true){
-					std::cout << ">> Place " << p1DamageDie << " damage die onto player 1's " << p1BattleParticipant.entityName << "\n";
-				}
+			// Behaviour: Display how many points were added if appropriate
+			if(p2PointsLost !=0){
+				std::cout << ">> Player 1 gets " << p2PointsLost << " points" << "\n";
+			}
+			if(p1PointsLost !=0){
+				std::cout << ">> Player 2 gets " << p1PointsLost << " points" << "\n";
+			}
 
-				// Behaviour: Display how many points were added if appropriate
-				if(p2PointsLost !=0){
-					std::cout << ">> Player 1 gets " << p2PointsLost << " points" << "\n";
-				}
-				if(p1PointsLost !=0){
-					std::cout << ">> Player 2 gets " << p1PointsLost << " points" << "\n";
-				}
+			std::cout << "\n";
 
-				std::cout << "\n";
+			// Behaviour: Check if a death has occured
+			checkIfDead();
 
-				// Behaviour: Check if a death has occured
-				checkIfDead();
+			// Behaviour: Check if the attacking archer is retreating
+			if(aDeathHasOccured == false){
+				checkIfRetreating();
 
-				// Behaviour: Check if the attacking archer is retreating
-				if(aDeathHasOccured == false){
-					checkIfRetreating();
+				if( (inputP1Events[29] == 1) || (inputP2Events[29] == 1) ){
+					//  [29] Shots In The Back (Briton) - If a unit in combat with your Archer retreats, your Archer deals an additional round of range damage without taking any damage
+					std::string getAnswer = "";
 
-					if( (inputP1Events[29] == 1) || (inputP2Events[29] == 1) ){
-						//  [29] Shots In The Back (Briton) - If a unit in combat with your Archer retreats, your Archer deals an additional round of range damage without taking any damage
-						std::string getAnswer = "";
+					std::cout << "Did the conditions of Shots_In_The_Back_(Briton) get satisfied for player 1 or 2? Enter 1 for yes. 0 for no" << "\n";
+					std::cin >> getAnswer;
 
-						std::cout << "Did the conditions of Shots_In_The_Back_(Briton) get satisfied for player 1 or 2? Enter 1 for yes. 0 for no" << "\n";
-						std::cin >> getAnswer;
-
-						if(getAnswer == "1"){
-							// Behaviour: Have another round of ranged combat
-							inputRunTimes ++;
-						}
+					if(getAnswer == "1"){
+						// Behaviour: Have another round of ranged combat
+						inputRunTimes ++;
 					}
 				}
 			}
-			else{
-				std::cout << "\n" << "Skipping Phase 2) Archer round "+std::to_string(i+1)+" calculations..." << "\n";
-			}
+		}
+		else{
+			std::cout << "\n" << "Skipping Phase 2) Archer round "+std::to_string(i+1)+" calculations..." << "\n";
 		}
 	}
 }
@@ -1277,112 +1283,121 @@ void bombardmentRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int*
 			bombardmentRoundActivated = false;
 		}
 		
-		// Behaviour: Apply the results for p1 if the activation conditions were met
-		if(bombardmentRoundActivated == true){
-			// Behaviour: Apply the results to buildings or non-buildings
-			if(isP1FightingBuilding == true){
-				// Behaviour: Decrease the building HP
-				if(p2BuildingDamage != 0){
-					// Behaviour: Set the point value to the buildings point
-					p2PointsLost = p2BattleParticipant.pointValue;
+		// Behaviour: Check if the remaining damage value triggers a death
+		checkRemainingDamage(inputP1Events, inputP2Events);
 
-					p2BattleParticipant.entityHealth -= p2BuildingDamage;
+		// Behaviour: Check for deaths
+		checkIfDead();
 
-					// Behaviour: if the HP of the building is > 0 then do not keep the set the point value
-					if(p2BattleParticipant.entityHealth > 0){
+		// Behaviour: Make sure that no deaths have occured
+		if(aDeathHasOccured == false){
+			// Behaviour: Apply the results for p1 if the activation conditions were met
+			if(bombardmentRoundActivated == true){
+				// Behaviour: Apply the results to buildings or non-buildings
+				if(isP1FightingBuilding == true){
+					// Behaviour: Decrease the building HP
+					if(p2BuildingDamage != 0){
+						// Behaviour: Set the point value to the buildings point
+						p2PointsLost = p2BattleParticipant.pointValue;
+
+						p2BattleParticipant.entityHealth -= p2BuildingDamage;
+
+						// Behaviour: if the HP of the building is > 0 then do not keep the set the point value
+						if(p2BattleParticipant.entityHealth > 0){
+							p2PointsLost = 0;
+						}
+					}
+				}
+				else{
+					// Behavior: Store the starting quantity
+					p2StartingQuantity = p2BattleParticipant.entityQuantity;
+
+					// Behaviour: Store how many points the entity is individually worth
+					p2PointsLost = (p2BattleParticipant.pointValue / p2BattleParticipant.entityQuantity);
+
+					// Behaviour: Divide the RD, standardDamage and pointValue by the current quantity to get the values for a quantity of 1
+					getIndividualValues();
+
+					// Behaviour: Now decrease the quantity
+					p2BattleParticipant.entityQuantity -= p2EntityDeaths;
+
+					// Behaviour: Now multiply the RD, standardDamage and pointValue by the new quantity
+					getTotalValues();
+
+					// Behavior: Store the ending quantity and cap the ending quantity at 0
+					if(p2BattleParticipant.entityQuantity < 0){
+						p2EndingQuantity = 0;
+					}
+					else{
+						p2EndingQuantity = p2BattleParticipant.entityQuantity;
+					}
+
+					// Behaviour: Calculate the difference between the two quantities
+					int p2QuantityDifference = (p2StartingQuantity - p2EndingQuantity);
+
+					// Behaviour: Award points if deaths occured
+					if(p2EntityDeaths >=0){
+						// Behavior: Calculate the difference between the two quantities
+						p2PointsLost *= p2QuantityDifference;
+					}
+					else{
 						p2PointsLost = 0;
 					}
 				}
 			}
-			else{
-				// Behavior: Store the starting quantity
-				p2StartingQuantity = p2BattleParticipant.entityQuantity;
 
-				// Behaviour: Store how many points the entity is individually worth
-				p2PointsLost = (p2BattleParticipant.pointValue / p2BattleParticipant.entityQuantity);
+			// Behaviour: Apply the results for p2 if bombardment damage occured
+			if(bombardmentRoundActivated == true){
+				// Behaviour: Apply the results to buildings or non-buildings
+				if(isP2FightingBuilding == true){
+					// Behaviour: Decrease the building HP
+					if(p1BuildingDamage != 0){
+						// Behaviour: Set the point value to the buildings point
+						p1PointsLost = p1BattleParticipant.pointValue;
 
-				// Behaviour: Divide the RD, standardDamage and pointValue by the current quantity to get the values for a quantity of 1
-				getIndividualValues();
+						p1BattleParticipant.entityHealth -= p1BuildingDamage;
 
-				// Behaviour: Now decrease the quantity
-				p2BattleParticipant.entityQuantity -= p2EntityDeaths;
-
-				// Behaviour: Now multiply the RD, standardDamage and pointValue by the new quantity
-				getTotalValues();
-
-				// Behavior: Store the ending quantity and cap the ending quantity at 0
-				if(p2BattleParticipant.entityQuantity < 0){
-					p2EndingQuantity = 0;
-				}
-				else{
-					p2EndingQuantity = p2BattleParticipant.entityQuantity;
-				}
-
-				// Behaviour: Calculate the difference between the two quantities
-				int p2QuantityDifference = (p2StartingQuantity - p2EndingQuantity);
-
-				// Behaviour: Award points if deaths occured
-				if(p2EntityDeaths >=0){
-					// Behavior: Calculate the difference between the two quantities
-					p2PointsLost *= p2QuantityDifference;
-				}
-				else{
-					p2PointsLost = 0;
-				}
-			}
-		}
-
-		// Behaviour: Apply the results for p2 if bombardment damage occured
-		if(bombardmentRoundActivated == true){
-			// Behaviour: Apply the results to buildings or non-buildings
-			if(isP2FightingBuilding == true){
-				// Behaviour: Decrease the building HP
-				if(p1BuildingDamage != 0){
-					// Behaviour: Set the point value to the buildings point
-					p1PointsLost = p1BattleParticipant.pointValue;
-
-					p1BattleParticipant.entityHealth -= p1BuildingDamage;
-
-					// Behaviour: if the HP of the building is > 0 then do not keep the set the point value
-					if(p1BattleParticipant.entityHealth > 0){
-						p1PointsLost = 0;
+						// Behaviour: if the HP of the building is > 0 then do not keep the set the point value
+						if(p1BattleParticipant.entityHealth > 0){
+							p1PointsLost = 0;
+						}
 					}
 				}
-			}
-			else{
-				// Behavior: Store the starting quantity
-				p1StartingQuantity = p1BattleParticipant.entityQuantity;
-
-				// Behaviour: Store how many points the entity is individually worth
-				p1PointsLost = (p1BattleParticipant.pointValue / p1BattleParticipant.entityQuantity);
-
-				// Behaviour: Divide the RD, standardDamage and pointValue by the current quantity to get the values for a quantity of 1
-				getIndividualValues();
-
-				// Behaviour: Now decrease the quantity
-				p1BattleParticipant.entityQuantity -= p1EntityDeaths;
-
-				// Behaviour: Now multiply the RD, standardDamage and pointValue by the new quantity
-				getTotalValues();
-			
-				// Behavior: Store the ending quantity and cap the ending quantity at 0
-				if(p1BattleParticipant.entityQuantity < 0){
-					p1EndingQuantity = 0;
-				}
 				else{
-					p1EndingQuantity = p1BattleParticipant.entityQuantity;
-				}
+					// Behavior: Store the starting quantity
+					p1StartingQuantity = p1BattleParticipant.entityQuantity;
 
-				// Behaviour: Calculate the difference between the two quantities
-				int p1QuantityDifference = (p1StartingQuantity - p1EndingQuantity);
+					// Behaviour: Store how many points the entity is individually worth
+					p1PointsLost = (p1BattleParticipant.pointValue / p1BattleParticipant.entityQuantity);
 
-				// Behaviour: Award points if deaths occured
-				if(p1EntityDeaths >=0){
-					// Behavior: Calculate the difference between the two quantities
-					p1PointsLost *= p1QuantityDifference;
-				}
-				else{
-					p1PointsLost = 0;
+					// Behaviour: Divide the RD, standardDamage and pointValue by the current quantity to get the values for a quantity of 1
+					getIndividualValues();
+
+					// Behaviour: Now decrease the quantity
+					p1BattleParticipant.entityQuantity -= p1EntityDeaths;
+
+					// Behaviour: Now multiply the RD, standardDamage and pointValue by the new quantity
+					getTotalValues();
+				
+					// Behavior: Store the ending quantity and cap the ending quantity at 0
+					if(p1BattleParticipant.entityQuantity < 0){
+						p1EndingQuantity = 0;
+					}
+					else{
+						p1EndingQuantity = p1BattleParticipant.entityQuantity;
+					}
+
+					// Behaviour: Calculate the difference between the two quantities
+					int p1QuantityDifference = (p1StartingQuantity - p1EndingQuantity);
+
+					// Behaviour: Award points if deaths occured
+					if(p1EntityDeaths >=0){
+						// Behavior: Calculate the difference between the two quantities
+						p1PointsLost *= p1QuantityDifference;
+					}
+					else{
+						p1PointsLost = 0;
+					}
 				}
 			}
 		}
@@ -1430,10 +1445,7 @@ void bombardmentRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int*
 }
 
 // Functions: The constructor and deconstructor
-standardRounds::standardRounds(){
-
-
-}
+standardRounds::standardRounds(){}
 
 standardRounds::~standardRounds(){}
 
@@ -1596,6 +1608,9 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 
 	// Behaviour: Run the ranged battle round for X times
 	for(int i = 0; i < inputRunTimes; i ++){
+		// Behaviour: Check if the remaining damage value triggers a death
+		checkRemainingDamage(inputP1Events, inputP2Events);
+
 		// Behaviour: Check that no deaths have occured
 		checkIfDead();
 
@@ -1709,128 +1724,137 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 				p2EntityDeaths = 0;
 			}
 		}
-		
-		// Behaviour: Apply the results for p1 if the activation conditions were met
-		if(standardRoundActivated == true){
-			// Behaviour: Apply the results to buildings or non-buildings
-			if(isP1FightingBuilding == true){
-				// Behaviour: Decrease the building HP
-				if(p2BuildingDamage != 0){
-					// Behaviour: Set the point value to the buildings point
-					p2PointsLost = p2BattleParticipant.pointValue;
 
-					p2BattleParticipant.entityHealth -= p2BuildingDamage;
+		// Behaviour: Check if the remaining damage value triggers a death
+		checkRemainingDamage(inputP1Events, inputP2Events);
 
-					// Behaviour: if the HP of the building is > 0 then do not keep the set the point value
-					if(p2BattleParticipant.entityHealth > 0){
+		// Behaviour: Check for the deaths
+		checkIfDead();
+
+		// Behaviour: Make sure that there have been no deaths before proceeding
+		if(aDeathHasOccured == false){
+			// Behaviour: Apply the results for p1 if the activation conditions were met
+			if(standardRoundActivated == true){
+				// Behaviour: Apply the results to buildings or non-buildings
+				if(isP1FightingBuilding == true){
+					// Behaviour: Decrease the building HP
+					if(p2BuildingDamage != 0){
+						// Behaviour: Set the point value to the buildings point
+						p2PointsLost = p2BattleParticipant.pointValue;
+
+						p2BattleParticipant.entityHealth -= p2BuildingDamage;
+
+						// Behaviour: if the HP of the building is > 0 then do not keep the set the point value
+						if(p2BattleParticipant.entityHealth > 0){
+							p2PointsLost = 0;
+						}
+					}
+				}
+				else{
+					// Behavior: Store the starting quantity
+					p2StartingQuantity = p2BattleParticipant.entityQuantity;
+
+					// Behaviour: Store how many points the entity is individually worth
+					p2PointsLost = (p2BattleParticipant.pointValue / p2BattleParticipant.entityQuantity);
+
+					// Behaviour: Divide the RD, standardDamage and pointValue by the current quantity to get the values for a quantity of 1
+					getIndividualValues();
+
+					// Behaviour: Now decrease the quantity
+					p2BattleParticipant.entityQuantity -= p2EntityDeaths;
+
+					// Behaviour: Now multiply the RD, standardDamage and pointValue by the new quantity
+					getTotalValues();
+
+					// Behavior: Store the ending quantity and cap the ending quantity at 0
+					if(p2BattleParticipant.entityQuantity < 0){
+						p2EndingQuantity = 0;
+					}
+					else{
+						p2EndingQuantity = p2BattleParticipant.entityQuantity;
+					}
+
+					// Behaviour: Calculate the difference between the two quantities
+					int p2QuantityDifference = (p2StartingQuantity - p2EndingQuantity);
+
+					// Behaviour: Award points if deaths occured
+					if(p2EntityDeaths >=0){
+						// Behavior: Calculate the difference between the two quantities
+						p2PointsLost *= p2QuantityDifference;
+					}
+					else{
 						p2PointsLost = 0;
 					}
 				}
 			}
-			else{
-				// Behavior: Store the starting quantity
-				p2StartingQuantity = p2BattleParticipant.entityQuantity;
 
-				// Behaviour: Store how many points the entity is individually worth
-				p2PointsLost = (p2BattleParticipant.pointValue / p2BattleParticipant.entityQuantity);
+			// Behaviour: Apply the results for p2 if ranged damage occured
+			if(standardRoundActivated == true){
+				// Behaviour: Apply the results to buildings or non-buildings
+				if(isP2FightingBuilding == true){
+					// Behaviour: Decrease the building HP
+					if(p1BuildingDamage != 0){
+						// Behaviour: Set the point value to the buildings point
+						p1PointsLost = p1BattleParticipant.pointValue;
 
-				// Behaviour: Divide the RD, standardDamage and pointValue by the current quantity to get the values for a quantity of 1
-				getIndividualValues();
+						p1BattleParticipant.entityHealth -= p1BuildingDamage;
 
-				// Behaviour: Now decrease the quantity
-				p2BattleParticipant.entityQuantity -= p2EntityDeaths;
-
-				// Behaviour: Now multiply the RD, standardDamage and pointValue by the new quantity
-				getTotalValues();
-
-				// Behavior: Store the ending quantity and cap the ending quantity at 0
-				if(p2BattleParticipant.entityQuantity < 0){
-					p2EndingQuantity = 0;
+						// Behaviour: if the HP of the building is > 0 then do not keep the set the point value
+						if(p1BattleParticipant.entityHealth > 0){
+							p1PointsLost = 0;
+						}
+					}
 				}
 				else{
-					p2EndingQuantity = p2BattleParticipant.entityQuantity;
-				}
+					// Behavior: Store the starting quantity
+					p1StartingQuantity = p1BattleParticipant.entityQuantity;
 
-				// Behaviour: Calculate the difference between the two quantities
-				int p2QuantityDifference = (p2StartingQuantity - p2EndingQuantity);
+					// Behaviour: Store how many points the entity is individually worth
+					p1PointsLost = (p1BattleParticipant.pointValue / p1BattleParticipant.entityQuantity);
 
-				// Behaviour: Award points if deaths occured
-				if(p2EntityDeaths >=0){
-					// Behavior: Calculate the difference between the two quantities
-					p2PointsLost *= p2QuantityDifference;
-				}
-				else{
-					p2PointsLost = 0;
-				}
-			}
-		}
+					// Behaviour: Divide the RD, standardDamage and pointValue by the current quantity to get the values for a quantity of 1
+					getIndividualValues();
 
-		// Behaviour: Apply the results for p2 if ranged damage occured
-		if(standardRoundActivated == true){
-			// Behaviour: Apply the results to buildings or non-buildings
-			if(isP2FightingBuilding == true){
-				// Behaviour: Decrease the building HP
-				if(p1BuildingDamage != 0){
-					// Behaviour: Set the point value to the buildings point
-					p1PointsLost = p1BattleParticipant.pointValue;
+					// Behaviour: Now decrease the quantity
+					p1BattleParticipant.entityQuantity -= p1EntityDeaths;
 
-					p1BattleParticipant.entityHealth -= p1BuildingDamage;
+					// Behaviour: Now multiply the RD, standardDamage and pointValue by the new quantity
+					getTotalValues();
+				
+					// Behavior: Store the ending quantity and cap the ending quantity at 0
+					if(p1BattleParticipant.entityQuantity < 0){
+						p1EndingQuantity = 0;
+					}
+					else{
+						p1EndingQuantity = p1BattleParticipant.entityQuantity;
+					}
 
-					// Behaviour: if the HP of the building is > 0 then do not keep the set the point value
-					if(p1BattleParticipant.entityHealth > 0){
+					// Behaviour: Calculate the difference between the two quantities
+					int p1QuantityDifference = (p1StartingQuantity - p1EndingQuantity);
+
+					// Behaviour: Award points if deaths occured
+					if(p1EntityDeaths >=0){
+						// Behavior: Calculate the difference between the two quantities
+						p1PointsLost *= p1QuantityDifference;
+					}
+					else{
 						p1PointsLost = 0;
 					}
 				}
 			}
-			else{
-				// Behavior: Store the starting quantity
-				p1StartingQuantity = p1BattleParticipant.entityQuantity;
 
-				// Behaviour: Store how many points the entity is individually worth
-				p1PointsLost = (p1BattleParticipant.pointValue / p1BattleParticipant.entityQuantity);
-
-				// Behaviour: Divide the RD, standardDamage and pointValue by the current quantity to get the values for a quantity of 1
-				getIndividualValues();
-
-				// Behaviour: Now decrease the quantity
-				p1BattleParticipant.entityQuantity -= p1EntityDeaths;
-
-				// Behaviour: Now multiply the RD, standardDamage and pointValue by the new quantity
-				getTotalValues();
-			
-				// Behavior: Store the ending quantity and cap the ending quantity at 0
-				if(p1BattleParticipant.entityQuantity < 0){
-					p1EndingQuantity = 0;
-				}
-				else{
-					p1EndingQuantity = p1BattleParticipant.entityQuantity;
-				}
-
-				// Behaviour: Calculate the difference between the two quantities
-				int p1QuantityDifference = (p1StartingQuantity - p1EndingQuantity);
-
-				// Behaviour: Award points if deaths occured
-				if(p1EntityDeaths >=0){
-					// Behavior: Calculate the difference between the two quantities
-					p1PointsLost *= p1QuantityDifference;
-				}
-				else{
-					p1PointsLost = 0;
-				}
-			}
-		}
-
-		// Apply the effects of certain entities that automatically die in the second round of combat
-		// Make sure that the standard round got activated to avoid an arithmetic exception
-		if(standardRoundActivated == true){
-			if(i+1 == 2){
-				if(p1BattleParticipant.isKamikaze == true){
-					p1PointsLost = (p1BattleParticipant.pointValue / p1BattleParticipant.entityQuantity);
-					p1BattleParticipant.entityQuantity = 0;
-				}
-				else if(p1BattleParticipant.isKamikaze == true){
-					p2PointsLost = (p2BattleParticipant.pointValue / p2BattleParticipant.entityQuantity);
-					p2BattleParticipant.entityQuantity = 0;
+			// Apply the effects of certain entities that automatically die in the second round of combat
+			// Make sure that the standard round got activated to avoid an arithmetic exception
+			if(standardRoundActivated == true){
+				if(i+1 == 2){
+					if(p1BattleParticipant.isKamikaze == true){
+						p1PointsLost = (p1BattleParticipant.pointValue / p1BattleParticipant.entityQuantity);
+						p1BattleParticipant.entityQuantity = 0;
+					}
+					else if(p1BattleParticipant.isKamikaze == true){
+						p2PointsLost = (p2BattleParticipant.pointValue / p2BattleParticipant.entityQuantity);
+						p2BattleParticipant.entityQuantity = 0;
+					}
 				}
 			}
 		}
@@ -1903,7 +1927,7 @@ void standardRounds::roundOutcome(int inputRunTimes, int* inputP1Events, int* in
 			if( (aDeathHasOccured == false) && (isRetreating != "1") ) {
 				std::cout << "Skipping Phase 3) Standard round "+std::to_string(i+1)+" calculations..." << "\n";
 			}
-		}
+		}	
 	}
 
 	// Behaviour: Make some final checks in regards to the healing modifiers

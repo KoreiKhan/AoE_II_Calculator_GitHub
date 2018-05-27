@@ -9,6 +9,13 @@
 #include "modifiersCalculator.h" // Using: modifiers calculator class
 #include "combatCalculator.h" // Using: combat calculator class
 
+/** Output the remaning damage **/
+void outputRemainingDamage(float inputRemainingDamageP1, float inputRemainingDamageP2){
+	// Behaviour: Check the remaining damage value
+	std::cout << "remaning damage value p1: " << inputRemainingDamageP1 << "\n";
+	std::cout << "remaning damage value p2: " << inputRemainingDamageP2 << "\n";
+}
+
 /** The main function **/
 int main(){
 	/** Simple declarations **/
@@ -221,6 +228,9 @@ int main(){
 	}
 
 	/** Part 4: Return the outcome of each round of combat for the input entities **/
+	// Behaviour: Output the remaining damage
+	// outputRemainingDamage(p1RemainingDamage, p2RemainingDamage);
+
 	/** Part 4.1: Round 1 **/
 	// Behaviour: Set the superclass to the monk rounds
 	theCombatCalculator = &monkRounds;
@@ -237,18 +247,15 @@ int main(){
 	// Behaviour: Get the results after monkCombatRounds rounds of monk combat
 		// Player 1
 		p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);
-		p1RemainingDamage = theCombatCalculator->returnRemaningDamage(player1);
+		p1RemainingDamage += theCombatCalculator->returnRemaningDamage(player1);
 
 		// Player 2
 		p2BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player2);
-		p2RemainingDamage = theCombatCalculator->returnRemaningDamage(player2);
+		p2RemainingDamage += theCombatCalculator->returnRemaningDamage(player2);
 
 	/** Part 4.2: Round 2 **/
 	// Behaviour: Set the combat calculator to the archer rounds
 	theCombatCalculator = &rangedRounds;
-
-	// Behaviour: Get a pointer of a class
-	std::cout << &p1BattleParticipant << "\n";
 
 	// Behaviour: Set the battle participants
 	theCombatCalculator->setCombatParticipants(p1BattleParticipant, p2BattleParticipant, p1AssistingMonkBattleParticipant, p2AssistingMonkBattleParticipant, modifyRoundAttackP1, modifyRoundAttackP2);
@@ -262,11 +269,15 @@ int main(){
 	// Behaviour: Get the results after archerCombatRounds rounds of ranged combat
 		// Player 1
 		p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);
-		p2BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player2);
+		p1RemainingDamage += theCombatCalculator->returnRemaningDamage(player1);
 	
 		// Player 2
-		p1RemainingDamage = theCombatCalculator->returnRemaningDamage(player1);
-		p2RemainingDamage = theCombatCalculator->returnRemaningDamage(player2);
+		p2BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player2);
+		p2RemainingDamage += theCombatCalculator->returnRemaningDamage(player2);
+
+
+	// Behaviour: Output the remaining damage
+	// outputRemainingDamage(p1RemainingDamage, p2RemainingDamage);
 
 	/** Part 4.3: Bonus round **/
 	// Behaviour: Check for the Caught from the Crow's Nest extra bombardment round
@@ -287,11 +298,11 @@ int main(){
 		// Behaviour: Get the results after bombardmentCombatRounds rounds of standard combat
 			// Player 1
 			p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);
-			p1RemainingDamage = theCombatCalculator->returnRemaningDamage(player1);
+			p1RemainingDamage += theCombatCalculator->returnRemaningDamage(player1);
 
 			// Player 2		
 			p2BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player2);
-			p2RemainingDamage = theCombatCalculator->returnRemaningDamage(player2);
+			p2RemainingDamage += theCombatCalculator->returnRemaningDamage(player2);
 	}
 
 	/** Part 4.4: Round 3 & 4 **/
@@ -310,11 +321,14 @@ int main(){
 	// Behaviour: Get the results after normalCombatRounds rounds of standard combat
 		// Player 1
 		p1BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player1);
-		p1RemainingDamage = theCombatCalculator->returnRemaningDamage(player1);
+		p1RemainingDamage += theCombatCalculator->returnRemaningDamage(player1);
 
 		// Player 2
 		p2BattleParticipant = theCombatCalculator->returnModifiedBattleParticipants(player2);
-		p2RemainingDamage = theCombatCalculator->returnRemaningDamage(player2);
+		p2RemainingDamage += theCombatCalculator->returnRemaningDamage(player2);
+
+	// Behaviour: Output the remaining damage
+	// outputRemainingDamage(p1RemainingDamage, p2RemainingDamage);
 
 	// Behaviour: A required return statement for the system in C++
 	return 0;
